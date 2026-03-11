@@ -1,6 +1,7 @@
 import { WhoCanJoin } from "../components/WhoCanJoin";
 import { MovementCare } from "../components/MovementCare";
 import { WhyChooseUs } from "../components/WhyChooseUs";
+import { MeetPhysiotherapist } from "../components/MeetPhysiotherapist";
 
 export default function HomePage() {
   return (
@@ -46,6 +47,7 @@ export default function HomePage() {
       <WhoCanJoin />
       <MovementCare />
       <WhyChooseUs />
+      <MeetPhysiotherapist />
     </div>
   );
 }

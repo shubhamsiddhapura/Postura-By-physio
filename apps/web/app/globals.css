@@ -6,3 +6,13 @@
   --color-primary: #008080;
   --color-secondary: #BE6C25;
 }
+
+/* Hide scrollbars where needed while keeping scroll functionality */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}

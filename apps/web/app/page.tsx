@@ -3,6 +3,7 @@ import { MovementCare } from "../components/MovementCare";
 import { WhyChooseUs } from "../components/WhyChooseUs";
 import { MeetPhysiotherapist } from "../components/MeetPhysiotherapist";
 import { ServicesSection } from "../components/ServicesSection";
+import { MomentsOfProgress } from "../components/MomentsOfProgress";
 
 export default function HomePage() {
   return (
@@ -50,6 +51,7 @@ export default function HomePage() {
       <WhyChooseUs />
       <MeetPhysiotherapist />
       <ServicesSection />
+      <MomentsOfProgress />
     </div>
   );
 }

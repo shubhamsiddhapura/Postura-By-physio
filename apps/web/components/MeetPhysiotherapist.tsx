@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { ArrowUpRight, Sparkle } from "lucide-react";
+import { Sparkle } from "lucide-react";
+import { PrimaryCTAButton } from "./PrimaryCTAButton";
 
 export function MeetPhysiotherapist() {
   return (
@@ -30,18 +31,12 @@ export function MeetPhysiotherapist() {
                   reliable, and impactful for every individual.
                 </p>
 
-                <div className="mt-8 inline-flex items-center relative group">
-                  <a
-                    href="#book-session"
-                    className="group inline-flex items-center gap-3 rounded-full bg-secondary px-5 py-3 text-xs font-semibold text-white shadow-sm transition hover:opacity-95 md:text-sm"
-                  >
-                    Start Your Recovery Journey
-                    
-                  </a>
-                  <span className="grid h-6 w-6 place-items-center rounded-full bg-[#FEF9E0] absolute -right-3 top-3">
-                      <ArrowUpRight className="h-4 w-4 text-primary transition-transform duration-300 group-hover:rotate-45" />
-                    </span>
-                </div>
+                <PrimaryCTAButton
+                  href="#book-session"
+                  label="Start Your Recovery Journey"
+                  size="sm"
+                  className="mt-8"
+                />
               </div>
 
               {/* Right */}

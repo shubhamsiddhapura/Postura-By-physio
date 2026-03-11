@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { PrimaryCTAButton } from "./PrimaryCTAButton";
 
 const navItems = [
   { label: "Home", href: "#home" },
@@ -39,18 +39,13 @@ export function Navbar() {
               </Link>
             ))}
           </nav>
-          <div className="group relative pr-8">
-          <Link
+
+          <PrimaryCTAButton
             href="#book-session"
-            className="inline-flex items-center gap-3 rounded-full bg-secondary px-6 py-4 text-sm  text-white shadow-sm hover:opacity-95 transition"
-          >
-            Book Session
-            
-          </Link>
-          <span className="absolute right-5 top-3 grid h-7 w-7 place-items-center rounded-full bg-[#FEF9E0]">
-              <ArrowUpRight className="h-4 w-4 text-primary transition-transform duration-300 group-hover:rotate-45" />
-            </span>
-          </div>
+            label="Book Session"
+            size="md"
+            className="pr-8"
+          />
 
         </div>
       </div>

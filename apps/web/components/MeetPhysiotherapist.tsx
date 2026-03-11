@@ -57,13 +57,13 @@ export function MeetPhysiotherapist() {
                   />
                 </div>
 
-<div className="absolute -bottom-14 w-[50vw] h-[320px] md:h-[600px]">  
+<div className="absolute -bottom-28 -right-8 w-[40vw] h-[320px] md:h-[600px]">  
                 <Image
                   src="/doctor.png"
                   alt="Physiotherapist"
                   fill
                   priority={false}
-                  className="object-cover scale-x-[-1]"
+                  className="object-contain scale-x-[-1]"
                 />
                 </div>
               </div>

@@ -43,7 +43,7 @@ const cards: Card[] = [
 export function WhoCanJoin() {
   return (
     <section id="who-can-join" className="bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-16 md:py-20">
+      <div className="mx-auto max-w-[90vw] px-4 py-16 md:py-20">
         <div className="grid gap-10 md:grid-cols-[1fr,1.15fr] md:items-end">
           <div>
             <div className="flex items-center gap-2 text-sm font-medium text-gray-500">

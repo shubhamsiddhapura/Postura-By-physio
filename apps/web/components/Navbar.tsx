@@ -15,7 +15,7 @@ const navItems = [
 export function Navbar() {
   return (
     <header className="fixed inset-x-0 top-5 z-50">
-      <div className="mx-auto max-w-7xl px-4 py-3">
+      <div className="mx-auto max-w-[90vw] px-4 py-3">
         <div className="flex items-center justify-between rounded-tl-lg rounded-bl-3xl rounded-tr-3xl rounded-br-lg bg-white pl-4 py-3 shadow-sm">
           <Link href="#home" className="flex items-center gap-3">
             <Image

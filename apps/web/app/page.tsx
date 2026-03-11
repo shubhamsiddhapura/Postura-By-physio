@@ -1,10 +1,12 @@
 import { WhoCanJoin } from "../components/WhoCanJoin";
+import { MovementCare } from "../components/MovementCare";
+import { WhyChooseUs } from "../components/WhyChooseUs";
 
 export default function HomePage() {
   return (
     <div id="home">
       <section className="bg-primary pt-20 rounded-b-3xl">
-        <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 md:pb-28 md:pt-14">
+        <div className="mx-auto max-w-[90vw] px-4 pb-20 pt-10 md:pb-28 md:pt-14">
           <div className="grid items-center gap-10 md:grid-cols-2">
             <div className="text-white">
               <p className="text-sm/6 font-medium text-white/80">
@@ -35,13 +37,15 @@ export default function HomePage() {
             </div>
 
             <div className="relative">
-              <div className="aspect-[4/3] w-full rounded-3xl bg-white/10 ring-1 ring-white/15 backdrop-blur-sm" />
+              <div className="w-full h-[400px] rounded-3xl bg-white/10 ring-1 ring-white/15 backdrop-blur-sm" />
             </div>
           </div>
         </div>
       </section>
 
       <WhoCanJoin />
+      <MovementCare />
+      <WhyChooseUs />
     </div>
   );
 }

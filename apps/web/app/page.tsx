@@ -2,6 +2,7 @@ import { WhoCanJoin } from "../components/WhoCanJoin";
 import { MovementCare } from "../components/MovementCare";
 import { WhyChooseUs } from "../components/WhyChooseUs";
 import { MeetPhysiotherapist } from "../components/MeetPhysiotherapist";
+import { ServicesSection } from "../components/ServicesSection";
 
 export default function HomePage() {
   return (
@@ -48,6 +49,7 @@ export default function HomePage() {
       <MovementCare />
       <WhyChooseUs />
       <MeetPhysiotherapist />
+      <ServicesSection />
     </div>
   );
 }

@@ -44,11 +44,11 @@ export function FaqSection() {
 
   return (
     <section id="faqs" className="bg-white py-16 md:pb-24 md:pt-10">
-      <div className="mx-auto max-w-[90vw] px-4">
+      <div className="mx-auto max-w-[90vw] md:px-4">
         <div className="grid gap-10 md:grid-cols-[0.9fr,1.4fr] md:items-start">
           {/* Left copy */}
-          <div>
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+          <div className="text-center md:text-left">
+            <div className="flex items-center gap-2 text-xs justify-center md:justify-start font-semibold uppercase tracking-[0.18em] text-primary">
               <Sparkle className="h-4 w-4" />
               <span>You Ask. We Answer.</span>
             </div>
@@ -67,7 +67,7 @@ export function FaqSection() {
               href="#contact"
               label="Still have question?"
               size="sm"
-              className="mt-10"
+              className="mt-10 hidden md:inline-flex"
             />
           </div>
 
@@ -119,6 +119,13 @@ export function FaqSection() {
               );
             })}
           </div>
+
+          <PrimaryCTAButton
+              href="#contact"
+              label="Still have question?"
+              size="sm"
+              className="md:hidden flex justify-center items-center w-40"
+            />
         </div>
       </div>
     </section>

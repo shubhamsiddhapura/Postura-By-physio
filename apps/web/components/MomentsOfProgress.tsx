@@ -68,11 +68,11 @@ export function MomentsOfProgress() {
   const progress = ((currentIndex + 1) / galleryImages.length) * 100;
 
   return (
-    <section className="bg-white py-16 md:py-24">
-      <div className="pl-20">
+    <section className="bg-white py-10 md:py-24">
+      <div className="md:pl-20 px-4 md:px-0">
         <div className="grid gap-10 md:grid-cols-[1.2fr,1fr] md:items-end">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-primary">
+          <div className="text-center md:text-left">
+            <div className="flex items-center gap-2 text-sm justify-center md:justify-start font-medium text-primary">
               <Sparkle className="h-4 w-4" />
               <span>Moments of Progress</span>
             </div>
@@ -83,7 +83,7 @@ export function MomentsOfProgress() {
             </h2>
           </div>
 
-          <p className="max-w-lg text-sm leading-6 text-gray-500 md:text-[13px]">
+          <p className="max-w-lg text-sm leading-6 text-gray-500 md:text-[13px] text-center md:text-left">
             See how we bring physiotherapy and fitness together in real-life
             settings — helping people move better, feel stronger, and live
             healthier.
@@ -115,8 +115,8 @@ export function MomentsOfProgress() {
             ))}
           </div>
 
-          <div className="mt-8 flex items-center justify-between gap-4">
-            <div>
+          <div className="mt-8 flex flex-col md:flex-row items-center md:justify-between justify-center gap-4">
+            <div className="w-full">
               <div className="flex items-baseline gap-2 text-sm font-medium text-gray-900">
                 <span className="text-lg font-semibold">
                   {String(currentIndex + 1).padStart(2, "0")}
@@ -125,7 +125,7 @@ export function MomentsOfProgress() {
                   /{String(galleryImages.length).padStart(2, "0")}
                 </span>
               </div>
-              <div className="mt-3 h-1 w-40 rounded-full bg-[#E5F3F3]">
+              <div className="mt-3 h-1 md:w-40 rounded-full bg-[#E5F3F3]">
                 <div
                   className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
                   style={{ width: `${progress}%` }}
@@ -133,7 +133,7 @@ export function MomentsOfProgress() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3 pr-20">
+            <div className="flex items-center gap-3 md:pr-20">
               <button
                 type="button"
                 onClick={handlePrev}

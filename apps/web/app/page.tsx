@@ -6,6 +6,7 @@ import { ServicesSection } from "../components/ServicesSection";
 import { MomentsOfProgress } from "../components/MomentsOfProgress";
 import { FaqSection } from "../components/FaqSection";
 import { AskPhysioSection } from "../components/AskPhysioSection";
+import { Footer } from "../components/Footer";
 
 export default function HomePage() {
   return (
@@ -56,6 +57,7 @@ export default function HomePage() {
       <MomentsOfProgress />
       <FaqSection />
       <AskPhysioSection />
+        <Footer />
     </div>
   );
 }

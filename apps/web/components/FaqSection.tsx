@@ -43,7 +43,7 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faqs" className="bg-white py-16 md:py-24">
+    <section id="faqs" className="bg-white py-16 md:pb-24 md:pt-10">
       <div className="mx-auto max-w-[90vw] px-4">
         <div className="grid gap-10 md:grid-cols-[0.9fr,1.4fr] md:items-start">
           {/* Left copy */}

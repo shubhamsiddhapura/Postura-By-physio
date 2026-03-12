@@ -31,7 +31,7 @@ export function AskPhysioSection() {
       id="book-session"
       className="relative overflow-hidden pb-20 pt-10 md:pb-24 md:pt-20"
     >
-      <div className="absolute inset-0 -z-10 ">
+      <div className="absolute inset-0 -z-10">
         <Image
           src="/askphysio-image.jpg"
           alt="Physio background"

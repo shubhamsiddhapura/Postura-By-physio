@@ -5,12 +5,12 @@ import { PrimaryCTAButton } from "./PrimaryCTAButton";
 export function MeetPhysiotherapist() {
   return (
     <section id="contact" className="bg-white">
-      <div className="py-14 md:py-16">
-          <div className="relative overflow-hidden rounded-bl-2xl rounded-tl-[180px] rounded-br-[180px] rounded-tr-2xl bg-primary px-6 py-10 md:px-10 md:py-12">
+      <div className="py-10 md:py-16">
+          <div className="relative overflow-hidden rounded-bl-xl md:rounded-tl-[180px] rounded-tl-[90px] md:rounded-br-[180px] rounded-br-[90px] md:rounded-tr-2xl rounded-tr-xl bg-primary px-6 py-10 md:px-10 md:py-12">
             <div className="grid items-center gap-10 md:grid-cols-[1.1fr,0.9fr]">
               {/* Left */}
-              <div className="text-white pl-20">
-                <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] ">
+              <div className="text-white md:pl-20 text-center md:text-left">
+                <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center md:justify-start ">
                   <Sparkle className="h-4 w-4" />
                   <span>About Us</span>
                 </div>
@@ -18,8 +18,8 @@ export function MeetPhysiotherapist() {
                   Meet Your Physiotherapist...
                 </h2>
 
-                <p className="mt-4 text-xs leading-5 text-white/85 md:text-sm md:leading-6">
-                  Postura by Physio is led by Dr. Priyanshi Pandya (PT) BPT,
+                <p className="mt-4 text-sm leading-5 text-white/85 md:text-sm md:leading-6">
+                  Postura by Physio is led by <span className="font-bold text-[#FEF9E0]">Dr. Priyanshi Pandya (PT) </span> BPT,
                   MPT(MAAT), a qualified and registered physiotherapist with
                   strong academic and clinical experience. With a passion for
                   preventive healthcare and functional rehabilitation, she is
@@ -42,7 +42,7 @@ export function MeetPhysiotherapist() {
               {/* Right */}
               <div className="relative h-[60vh]">
                 {/* Watermark SVG behind doctor */}
-                <div className="pointer-events-none absolute right-5 -top-12 hidden md:block z-5">
+                <div className="pointer-events-none absolute right-5 -top-12 z-5">
                   <Image
                     src="/white-logo-svg.png"
                     alt=""
@@ -52,7 +52,7 @@ export function MeetPhysiotherapist() {
                   />
                 </div>
 
-<div className="absolute -bottom-28 -right-8 w-[40vw] h-[320px] md:h-[600px]">  
+<div className="absolute md:-bottom-28 -bottom-10 md:-right-8 right-0 md:w-[40vw] w-full h-full md:h-[600px]">  
                 <Image
                   src="/doctor.png"
                   alt="Physiotherapist"

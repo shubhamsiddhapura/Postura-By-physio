@@ -9,7 +9,7 @@ const services = [
     imageSrc: "/aerobics.png",
     tags: ["Weight loss", "Stamina", "Energy"],
     imageWrapperClass:
-      "h-40 -bottom-36 right-0 w-full max-w-[220px] md:h-full md:max-w-full",
+      "h-40 md:-bottom-36 -bottom-20 md:right-0 right-14 w-full max-w-[220px] md:h-full h-72 md:max-w-full",
     iconSrc: "/aerobics-icon.png",
   },
   {
@@ -19,7 +19,7 @@ const services = [
     imageSrc: "/Pilates.png",
     tags: ["Core", "Posture", "Injury Prevention"],
     imageWrapperClass:
-      "h-40 -bottom-20 right-10 w-full max-w-[260px] md:h-full md:max-w-full",
+      "h-40 md:-bottom-20 right-10 w-full max-w-[260px] md:h-full md:max-w-full",
     iconSrc: "/plates-icon.png",
   },
   {
@@ -29,7 +29,7 @@ const services = [
     imageSrc: "/yoga.png",
     tags: ["Stress", "Flexibility", "Balance"],
     imageWrapperClass:
-      "h-40 -bottom-40 right-0 w-full max-w-[220px] md:h-full md:max-w-full",
+      "md:-bottom-40 -bottom-16 md:right-0 right-14 w-full max-w-[220px] md:h-full h-72 md:max-w-full",
     iconSrc: "/yoga-icon.png",
   },
   {
@@ -39,7 +39,7 @@ const services = [
     imageSrc: "/Physiotherapy.png",
     tags: ["Pain", "Recovery", "Mobility"],
     imageWrapperClass:
-      "h-44 top-0 right-0 w-full max-w-[260px] md:h-[100vh] md:max-w-full",
+      "h-96 md:top-0 top-28 md:right-0 right-10 w-full max-w-[260px] md:h-[100vh] md:max-w-full",
     iconSrc: "/Physiotherapy-icon.png",
   },
 ];
@@ -50,7 +50,7 @@ export function ServicesSection() {
       id="services"
       className="bg-[#E5F7F6] -mt-16 pb-16 pt-16 md:-mt-52 md:pb-24 md:pt-52"
     >
-      <div className="mx-auto max-w-[90vw] px-4">
+      <div className="mx-auto max-w-[90vw] md:px-4">
         <div className="grid gap-6 md:grid-cols-[1.2fr,0.9fr] md:items-end">
           <div>
             <div className="flex items-center gap-2 text-sm font-medium text-primary">
@@ -74,9 +74,9 @@ export function ServicesSection() {
           {services.map((service) => (
             <article
               key={service.title}
-              className="relative overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl h-[60vh] bg-[#FFFDF1] p-8 shadow-[0_18px_40px_rgba(15,23,42,0.08)] md:px-5 md:py-5"
+              className="relative text-center md:text-left overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl h-[60vh] bg-[#FFFDF1] md:p-8 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.08)] md:px-5 md:py-5"
             >
-              <div>
+              <div className="flex flex-col items-center md:items-start">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
                   <Image
                     src={(service as any).iconSrc}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sparkle, ChevronDown } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
+import { FadeIn } from "../ui/FadeIn";
 
 type FaqItem = {
   question: string;
@@ -48,27 +49,34 @@ export function FaqSection() {
         <div className="grid gap-10 md:grid-cols-[0.9fr,1.4fr] md:items-start">
           {/* Left copy */}
           <div className="text-center md:text-left">
-            <div className="flex items-center gap-2 text-xs justify-center md:justify-start font-semibold uppercase tracking-[0.18em] text-primary">
-              <Sparkle className="h-4 w-4" />
-              <span>You Ask. We Answer.</span>
-            </div>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
-              Your Questions,
-              <br />
-              Explained
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-6 text-gray-500">
-              We believe informed clients recover better. Explore common
-              questions about our services, safety, and personalized care
-              approach.
-            </p>
+            <FadeIn direction="up" duration={800} distance={28} delay={0}>
+              <div className="flex items-center gap-2 text-xs justify-center md:justify-start font-semibold uppercase tracking-[0.18em] text-primary">
+                <Sparkle className="h-4 w-4" />
+                <span>You Ask. We Answer.</span>
+              </div>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
+                Your Questions,
+                <br />
+                Explained
+              </h2>
+            </FadeIn>
 
-            <PrimaryCTAButton
-              href="#contact"
-              label="Still have question?"
-              size="sm"
-              className="mt-10 hidden md:inline-flex"
-            />
+            <FadeIn direction="up" duration={800} distance={28} delay={160}>
+              <p className="mt-4 max-w-md text-sm leading-6 text-gray-500">
+                We believe informed clients recover better. Explore common
+                questions about our services, safety, and personalized care
+                approach.
+              </p>
+            </FadeIn>
+
+            <FadeIn direction="up" duration={800} distance={28} delay={300}>
+              <PrimaryCTAButton
+                href="#contact"
+                label="Still have question?"
+                size="sm"
+                className="mt-10 hidden md:inline-flex"
+              />
+            </FadeIn>
           </div>
 
           {/* Right accordion */}
@@ -76,8 +84,8 @@ export function FaqSection() {
             {faqs.map((item, index) => {
               const isOpen = index === openIndex;
               return (
+                <FadeIn key={item.question} direction="left" duration={750} distance={40} delay={100 + index * 110}>
                 <div
-                  key={item.question}
                   className="border-b border-gray-200 last:border-b-0"
                 >
                   <button
@@ -116,16 +124,19 @@ export function FaqSection() {
                     <p className="leading-6">{item.answer}</p>
                   </div>
                 </div>
+                </FadeIn>
               );
             })}
           </div>
 
-          <PrimaryCTAButton
+          <FadeIn direction="up" duration={800} distance={28} delay={350}>
+            <PrimaryCTAButton
               href="#contact"
               label="Still have question?"
               size="sm"
               className="md:hidden flex justify-center items-center w-40"
             />
+          </FadeIn>
         </div>
       </div>
     </section>

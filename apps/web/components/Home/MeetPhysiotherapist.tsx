@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Sparkle } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
+import { FadeIn } from "../ui/FadeIn";
 
 export function MeetPhysiotherapist() {
   return (
@@ -10,36 +11,49 @@ export function MeetPhysiotherapist() {
             <div className="grid items-center gap-10 md:grid-cols-[1.1fr,0.9fr]">
               {/* Left */}
               <div className="text-white md:pl-20 text-center md:text-left">
-                <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center md:justify-start ">
-                  <Sparkle className="h-4 w-4" />
-                  <span>About Us</span>
-                </div>
-                <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
-                  Meet Your Physiotherapist...
-                </h2>
+                <FadeIn direction="up" duration={800} distance={28} delay={100}>
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center md:justify-start ">
+                    <Sparkle className="h-4 w-4" />
+                    <span>About Us</span>
+                  </div>
+                </FadeIn>
 
-                <p className="mt-4 text-sm leading-5 text-white/85 md:text-sm md:leading-6">
-                  Postura by Physio is led by <span className="font-bold text-[#FEF9E0]">Dr. Priyanshi Pandya (PT) </span> BPT,
-                  MPT(MAAT), a qualified and registered physiotherapist with
-                  strong academic and clinical experience. With a passion for
-                  preventive healthcare and functional rehabilitation, she is
-                  committed to delivering evidence-based, compassionate, and
-                  result-oriented care.
-                </p>
-                <p className="mt-4 text-xs leading-5 text-white/85 md:text-sm md:leading-6">
-                  Her vision is to make quality physiotherapy accessible,
-                  reliable, and impactful for every individual.
-                </p>
+                <FadeIn direction="up" duration={800} distance={28} delay={230}>
+                  <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+                    Meet Your Physiotherapist...
+                  </h2>
+                </FadeIn>
 
-                <PrimaryCTAButton
-                  href="#book-session"
-                  label="Start Your Recovery Journey"
-                  size="sm"
-                  className="mt-8"
-                />
+                <FadeIn direction="up" duration={800} distance={28} delay={370}>
+                  <p className="mt-4 text-sm leading-5 text-white/85 md:text-sm md:leading-6">
+                    Postura by Physio is led by <span className="font-bold text-[#FEF9E0]">Dr. Priyanshi Pandya (PT) </span> BPT,
+                    MPT(MAAT), a qualified and registered physiotherapist with
+                    strong academic and clinical experience. With a passion for
+                    preventive healthcare and functional rehabilitation, she is
+                    committed to delivering evidence-based, compassionate, and
+                    result-oriented care.
+                  </p>
+                </FadeIn>
+
+                <FadeIn direction="up" duration={800} distance={28} delay={490}>
+                  <p className="mt-4 text-xs leading-5 text-white/85 md:text-sm md:leading-6">
+                    Her vision is to make quality physiotherapy accessible,
+                    reliable, and impactful for every individual.
+                  </p>
+                </FadeIn>
+
+                <FadeIn direction="up" duration={800} distance={28} delay={600}>
+                  <PrimaryCTAButton
+                    href="#book-session"
+                    label="Start Your Recovery Journey"
+                    size="sm"
+                    className="mt-8"
+                  />
+                </FadeIn>
               </div>
 
               {/* Right */}
+              <FadeIn direction="left" duration={900} distance={60} delay={200}>
               <div className="relative h-[60vh]">
                 {/* Watermark SVG behind doctor */}
                 <div className="pointer-events-none absolute right-5 -top-12 z-5">
@@ -62,6 +76,7 @@ export function MeetPhysiotherapist() {
                 />
                 </div>
               </div>
+              </FadeIn>
             </div>
 
           </div>

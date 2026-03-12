@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Sparkle } from "lucide-react";
+import { FadeIn } from "../ui/FadeIn";
 
 const services = [
   {
@@ -52,28 +53,32 @@ export function ServicesSection() {
     >
       <div className="mx-auto max-w-[90vw] md:px-4">
         <div className="grid gap-6 md:grid-cols-[1.2fr,0.9fr] md:items-end">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-primary">
-              <Sparkle className="h-4 w-4" />
-              <span>Our Service</span>
+          <FadeIn direction="up" duration={800} distance={30} delay={0}>
+            <div>
+              <div className="flex items-center gap-2 text-sm font-medium text-primary">
+                <Sparkle className="h-4 w-4" />
+                <span>Our Service</span>
+              </div>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
+                Our Services Designed
+                <br />
+                for Real Life
+              </h2>
             </div>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
-              Our Services Designed
-              <br />
-              for Real Life
-            </h2>
-          </div>
+          </FadeIn>
 
-          <p className="max-w-md text-sm leading-6 text-gray-500 md:text-[13px]">
-            Scientifically designed sessions tailored to your body. We focus on
-            long-term results, not temporary relief.
-          </p>
+          <FadeIn direction="up" duration={800} distance={30} delay={150}>
+            <p className="max-w-md text-sm leading-6 text-gray-500 md:text-[13px]">
+              Scientifically designed sessions tailored to your body. We focus on
+              long-term results, not temporary relief.
+            </p>
+          </FadeIn>
         </div>
 
         <div className="mt-10 grid gap-8 md:mt-12 md:grid-cols-2">
-          {services.map((service) => (
+          {services.map((service, index) => (
+            <FadeIn key={service.title} direction="up" duration={850} distance={40} delay={200 + index * 120}>
             <article
-              key={service.title}
               className="relative text-center md:text-left overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl h-[60vh] bg-[#FFFDF1] md:p-8 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.08)] md:px-5 md:py-5"
             >
               <div className="flex flex-col items-center md:items-start">
@@ -120,6 +125,7 @@ export function ServicesSection() {
                 ))}
               </div>
             </article>
+            </FadeIn>
           ))}
         </div>
       </div>

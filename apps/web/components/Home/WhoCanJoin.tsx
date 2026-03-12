@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight, Sparkle } from "lucide-react";
+import { FadeIn } from "../ui/FadeIn";
 
 type Card = {
   title: string;
@@ -45,27 +46,31 @@ export function WhoCanJoin() {
     <section id="who-can-join" className="bg-white">
       <div className="mx-auto max-w-[90vw] md:px-4 py-16 md:py-20">
         <div className="grid gap-10 md:grid-cols-[1fr,1.15fr] md:items-end">
-          <div>
-            <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-              <Sparkle className="h-4 w-4 text-primary" />
-              <span className="text-primary">Care for all.</span>
+          <FadeIn direction="up" delay={10}>
+            <div>
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
+                <Sparkle className="h-4 w-4 text-primary" />
+                <span className="text-primary">Care for all.</span>
+              </div>
+              <h2 className="mt-3 text-5xl font-bold tracking-tight text-gray-900">
+                Who Can Join Us?
+              </h2>
             </div>
-            <h2 className="mt-3 text-5xl font-bold tracking-tight text-gray-900">
-              Who Can Join Us?
-            </h2>
-          </div>
+          </FadeIn>
 
-          <p className="max-w-2xl text-sm leading-6 text-gray-500 md:mt-2 md:justify-self-end">
-            Whether you&apos;re dealing with pain, recovering from injury, or
-            simply looking to stay active, our programs are designed for
-            individuals at every stage of life.
-          </p>
+          <FadeIn direction="up" delay={120} className="md:justify-self-end">
+            <p className="max-w-2xl text-sm leading-6 text-gray-500 md:mt-2">
+              Whether you&apos;re dealing with pain, recovering from injury, or
+              simply looking to stay active, our programs are designed for
+              individuals at every stage of life.
+            </p>
+          </FadeIn>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
-          {cards.map((card) => (
+          {cards.map((card, index) => (
+            <FadeIn key={card.title} direction="up" delay={index * 100}>
             <div
-              key={card.title}
               className="group relative cursor-pointer overflow-hidden rounded-bl-xl rounded-tl-[36px] rounded-br-[36px] rounded-tr-xl bg-gray-100"
             >
               <div className="relative aspect-[4/5] w-full h-[450px]">
@@ -97,6 +102,7 @@ export function WhoCanJoin() {
               {/* subtle inner stroke like screenshot */}
               <div className="pointer-events-none absolute inset-5 rounded-bl-lg rounded-tl-3xl rounded-br-3xl rounded-tr-lg ring-1 ring-[#FEF9E0]" />
             </div>
+            </FadeIn>
           ))}
         </div>
       </div>

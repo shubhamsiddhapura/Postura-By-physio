@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Sparkle, ArrowLeft, ArrowRight } from "lucide-react";
 import { useRef, useState } from "react";
+import { FadeIn } from "../ui/FadeIn";
 
 const galleryImages = [
   {
@@ -71,25 +72,30 @@ export function MomentsOfProgress() {
     <section className="bg-white py-10 md:py-24">
       <div className="md:pl-20 px-4 md:px-0">
         <div className="grid gap-10 md:grid-cols-[1.2fr,1fr] md:items-end">
-          <div className="text-center md:text-left">
-            <div className="flex items-center gap-2 text-sm justify-center md:justify-start font-medium text-primary">
-              <Sparkle className="h-4 w-4" />
-              <span>Moments of Progress</span>
+          <FadeIn direction="up" duration={800} distance={30} delay={0}>
+            <div className="text-center md:text-left">
+              <div className="flex items-center gap-2 text-sm justify-center md:justify-start font-medium text-primary">
+                <Sparkle className="h-4 w-4" />
+                <span>Moments of Progress</span>
+              </div>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
+                Where Recovery Meets
+                <br />
+                Results
+              </h2>
             </div>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
-              Where Recovery Meets
-              <br />
-              Results
-            </h2>
-          </div>
+          </FadeIn>
 
-          <p className="max-w-lg text-sm leading-6 text-gray-500 md:text-[13px] text-center md:text-left">
-            See how we bring physiotherapy and fitness together in real-life
-            settings — helping people move better, feel stronger, and live
-            healthier.
-          </p>
+          <FadeIn direction="up" duration={800} distance={30} delay={150}>
+            <p className="max-w-lg text-sm leading-6 text-gray-500 md:text-[13px] text-center md:text-left">
+              See how we bring physiotherapy and fitness together in real-life
+              settings — helping people move better, feel stronger, and live
+              healthier.
+            </p>
+          </FadeIn>
         </div>
 
+        <FadeIn direction="up" duration={900} distance={40} delay={300}>
         <div className="mt-10 md:mt-20">
           <div
             ref={trackRef}
@@ -153,6 +159,7 @@ export function MomentsOfProgress() {
             </div>
           </div>
         </div>
+        </FadeIn>
       </div>
     </section>
   );

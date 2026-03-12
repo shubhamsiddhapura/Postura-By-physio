@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
+import { FadeIn } from "../ui/FadeIn";
 
 const questions = [
   {
@@ -48,45 +49,54 @@ export function AskPhysioSection() {
           {/* Left contact info cards */}
           <div className="relative h-full w-full">
             <div className="flex h-full w-full flex-col justify-end gap-4 px-2 md:px-10">
-              <div className="max-w-2xl rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE]/95 px-6 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.28)] backdrop-blur-sm">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
-                  Service Area
-                </p>
-                <p className="mt-1 text-sm font-semibold text-[#008080]">
-                  Doorstep & Society-Based Services Available
-                </p>
-              </div>
+              <FadeIn direction="up" duration={800} distance={30} delay={0} className="w-full">
+                <div className="max-w-2xl rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE]/95 px-6 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.28)] backdrop-blur-sm">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
+                    Service Area
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#008080]">
+                    Doorstep & Society-Based Services Available
+                  </p>
+                </div>
+              </FadeIn>
 
-              <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
-                  Whatsapp / Phone no.
-                </p>
-                <p className="mt-1 text-sm font-semibold text-[#008080]">
-                  +91 635401290
-                </p>
-              </div>
+              <FadeIn direction="up" duration={800} distance={30} delay={130} className="w-full">
+                <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
+                    Whatsapp / Phone no.
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#008080]">
+                    +91 635401290
+                  </p>
+                </div>
+              </FadeIn>
 
-              <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
-                  Email
-                </p>
-                <p className="mt-1 text-sm font-semibold text-[#008080]">
-                  posturabyphysio@gmail.com
-                </p>
-              </div>
+              <FadeIn direction="up" duration={800} distance={30} delay={250} className="w-full">
+                <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
+                    Email
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#008080]">
+                    posturabyphysio@gmail.com
+                  </p>
+                </div>
+              </FadeIn>
 
-              <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
-                  Working Hours
-                </p>
-                <p className="mt-1 text-sm font-semibold text-[#008080]">
-                  Monday – Saturday
-                </p>
-              </div>
+              <FadeIn direction="up" duration={800} distance={30} delay={370} className="w-full">
+                <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
+                    Working Hours
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#008080]">
+                    Monday – Saturday
+                  </p>
+                </div>
+              </FadeIn>
             </div>
           </div>
 
           {/* Right question card */}
+          <FadeIn direction="left" duration={900} distance={55} delay={150} className="w-full">
           <div className="relative w-full">
             <div className="relative overflow-hidden rounded-bl-xl rounded-tl-[36px] rounded-br-[36px] rounded-tr-xl   bg-white px-6 py-6 shadow-[0_18px_40px_rgba(15,23,42,0.12)] md:px-10 md:py-8">
               <div>
@@ -137,6 +147,7 @@ export function AskPhysioSection() {
               </form>
             </div>
           </div>
+          </FadeIn>
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
+import { FadeIn } from "../ui/FadeIn";
 
 export function Footer() {
   return (
@@ -10,28 +11,32 @@ export function Footer() {
       <div className="bg-[#E5F7F6] py-8 md:pt-72 pt-60">
         <div className="mx-auto max-w-[90vw]">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
-            <div className="flex-1 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2">
-                <div className="h-2 w-2 rotate-45 bg-secondary" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
-                  Take Control of Your Health
-                </span>
+            <FadeIn direction="up" duration={800} distance={30} delay={0} className="flex-1">
+              <div className="text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start gap-2">
+                  <div className="h-2 w-2 rotate-45 bg-secondary" />
+                  <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
+                    Take Control of Your Health
+                  </span>
+                </div>
+                <h3 className="mt-2 text-2xl font-semibold text-gray-900 md:text-4xl">
+                  Take the First Step Towards Better Health.
+                </h3>
+                <p className="mt-4 text-sm text-gray-600">
+                  Schedule Your Appointment Easily via Call, WhatsApp or Online
+                  Form
+                </p>
               </div>
-              <h3 className="mt-2 text-2xl font-semibold text-gray-900 md:text-4xl">
-                Take the First Step Towards Better Health.
-              </h3>
-              <p className="mt-4 text-sm text-gray-600">
-                Schedule Your Appointment Easily via Call, WhatsApp or Online
-                Form
-              </p>
-            </div>
+            </FadeIn>
 
-            <PrimaryCTAButton
-              href="#book-session"
-              label="Whatsapp Now"
-              size="md"
-              className="pr-8 cursor-pointer"
-            />
+            <FadeIn direction="up" duration={800} distance={30} delay={180}>
+              <PrimaryCTAButton
+                href="#book-session"
+                label="Whatsapp Now"
+                size="md"
+                className="pr-8 cursor-pointer"
+              />
+            </FadeIn>
           </div>
         </div>
       </div>
@@ -45,7 +50,8 @@ export function Footer() {
         <div className="mx-auto max-w-[90vw] px-4">
           <div className="grid gap-10 md:grid-cols-12">
             {/* Left Column - Brand and Social */}
-            <div className="md:col-span-4">
+            <FadeIn direction="up" duration={800} distance={30} delay={0} className="md:col-span-4">
+            <div>
               <div className="flex items-center gap-3">
                 <Image
                   src="/logo.png"
@@ -99,9 +105,11 @@ export function Footer() {
                 </div>
               </div>
             </div>
+            </FadeIn>
 
             {/* Middle Columns - Quick Links and Services */}
-            <div className="md:col-span-4">
+            <FadeIn direction="up" duration={800} distance={30} delay={150} className="md:col-span-4">
+            <div>
               <div className="grid grid-cols-2 gap-8">
                 <div>
                   <h4 className="text-xl font-semibold text-gray-900">
@@ -149,9 +157,11 @@ export function Footer() {
                 </div>
               </div>
             </div>
+            </FadeIn>
 
             {/* Right Column - Contact Info */}
-            <div className="md:col-span-4">
+            <FadeIn direction="up" duration={800} distance={30} delay={300} className="md:col-span-4">
+            <div>
               <h4 className="text-xl font-semibold text-gray-900">
                 Contact Info
               </h4>
@@ -180,6 +190,7 @@ export function Footer() {
                 </div>
               </div>
             </div>
+            </FadeIn>
           </div>
         </div>
       </div>
@@ -191,6 +202,7 @@ export function Footer() {
       {/* Copyright Bar */}
       <div className="py-4 bg-[#E5F7F6]">
         <div className="mx-auto max-w-[90vw]">
+          <FadeIn direction="up" duration={700} distance={20} delay={0}>
           <div className="flex flex-col items-center justify-between gap-4 text-xs text-[#6B6B6B] md:flex-row">
             <p>© 2026 <span className="font-semibold text-secondary">Postura by Physio</span>. All Rights Reserved.</p>
             <div className="flex items-center flex-wrap justify-center md:justify-start md:gap-4 gap-2">
@@ -216,6 +228,7 @@ export function Footer() {
               </Link>
             </div>
           </div>
+          </FadeIn>
         </div>
       </div>
     </footer>

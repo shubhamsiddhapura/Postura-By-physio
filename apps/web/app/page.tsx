@@ -10,7 +10,7 @@ import { Footer } from "../components/Footer";
 
 export default function HomePage() {
   return (
-    <div id="home" className="overflow-x-hidden md:overflow-x-visible">
+    <div id="home" className="md:overflow-x-visible">
       <section className="bg-primary pt-20 rounded-b-3xl">
         <div className="mx-auto max-w-[90vw] px-4 pb-20 pt-10 md:pb-28 md:pt-14">
           <div className="grid items-center gap-10 md:grid-cols-2">

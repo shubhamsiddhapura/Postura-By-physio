@@ -36,15 +36,15 @@ export function AskPhysioSection() {
           src="/askphysio-image.jpg"
           alt="Physio background"
           fill
-          className="object-cover rounded-bl-[180px] rounded-tl-3xl rounded-br-3xl rounded-tr-[180px]"
+          className="object-cover md:rounded-bl-[180px] rounded-bl-[90px] md:rounded-tl-3xl rounded-tl-xl md:rounded-br-3xl rounded-br-xl md:rounded-tr-[180px] rounded-tr-[90px]"
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/10 to-transparent rounded-bl-[180px] rounded-tl-3xl rounded-br-3xl rounded-tr-[180px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/10 to-transparent md:rounded-bl-[180px] rounded-bl-[90px] md:rounded-tl-3xl rounded-tl-xl md:rounded-br-3xl rounded-br-xl md:rounded-tr-[180px] rounded-tr-[90px]" />
       </div>
 
-      <div className="mx-auto max-w-[80vw] px-4">
-        <div className="flex items-end justify-between gap-20">
+      <div className="mx-auto md:max-w-[80vw] px-4">
+        <div className="flex flex-col md:flex-row items-end justify-between gap-10">
           {/* Left contact info cards */}
           <div className="relative h-full w-full">
             <div className="flex h-full w-full flex-col justify-end gap-4 px-2 md:px-10">

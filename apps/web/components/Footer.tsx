@@ -7,11 +7,11 @@ export function Footer() {
   return (
     <footer className="relative h-0 -z-20 bg-[#E5F7F6] -mt-44">
       {/* CTA Banner */}
-      <div className="bg-[#E5F7F6] py-8 md:pt-72">
+      <div className="bg-[#E5F7F6] py-8 md:pt-72 pt-60">
         <div className="mx-auto max-w-[90vw]">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start gap-2">
                 <div className="h-2 w-2 rotate-45 bg-secondary" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
                   Take Control of Your Health
@@ -36,7 +36,7 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="bg-[#E5F7F6] pt-10">
+      <div className="bg-[#E5F7F6] md:pt-10 pt-4">
         <div className="w-[90vw] h-[1px] bg-[#D9D9D9] mx-auto" />
       </div>
 
@@ -193,7 +193,7 @@ export function Footer() {
         <div className="mx-auto max-w-[90vw]">
           <div className="flex flex-col items-center justify-between gap-4 text-xs text-[#6B6B6B] md:flex-row">
             <p>© 2026 <span className="font-semibold text-secondary">Postura by Physio</span>. All Rights Reserved.</p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center flex-wrap justify-center md:justify-start md:gap-4 gap-2">
               <Link
                 href="#"
                 className="transition hover:text-secondary"

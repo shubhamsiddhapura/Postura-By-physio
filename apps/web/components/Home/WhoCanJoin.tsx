@@ -46,7 +46,7 @@ export function WhoCanJoin() {
     <section id="who-can-join" className="bg-white">
       <div className="mx-auto max-w-[90vw] md:px-4 py-16 md:py-20">
         <div className="grid gap-10 md:grid-cols-[1fr,1.15fr] md:items-end">
-          <FadeIn direction="up" delay={10}>
+          <FadeIn direction="up" distance={32} duration={800} delay={0}>
             <div>
               <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
                 <Sparkle className="h-4 w-4 text-primary" />
@@ -69,11 +69,11 @@ export function WhoCanJoin() {
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {cards.map((card, index) => (
-            <FadeIn key={card.title} direction="up" delay={index * 100}>
+            <FadeIn key={card.title} direction="up" delay={index * 20}>
             <div
               className="group relative cursor-pointer overflow-hidden rounded-bl-xl rounded-tl-[36px] rounded-br-[36px] rounded-tr-xl bg-gray-100"
             >
-              <div className="relative aspect-[4/5] w-full h-[450px] overflow-hidden">
+              <div className="relative aspect-[4/5] w-full md:h-[450px] overflow-hidden">
                 <Image
                   src={card.imageSrc}
                   alt={card.title}

@@ -1,12 +1,12 @@
-import { WhoCanJoin } from "../components/WhoCanJoin";
-import { MovementCare } from "../components/MovementCare";
-import { WhyChooseUs } from "../components/WhyChooseUs";
-import { MeetPhysiotherapist } from "../components/MeetPhysiotherapist";
-import { ServicesSection } from "../components/ServicesSection";
-import { MomentsOfProgress } from "../components/MomentsOfProgress";
-import { FaqSection } from "../components/FaqSection";
-import { AskPhysioSection } from "../components/AskPhysioSection";
-import { Footer } from "../components/Footer";
+import { WhoCanJoin } from "../components/Home/WhoCanJoin";
+import { MovementCare } from "../components/Home/MovementCare";
+import { WhyChooseUs } from "../components/Home/WhyChooseUs";
+import { MeetPhysiotherapist } from "../components/Home/MeetPhysiotherapist";
+import { ServicesSection } from "../components/Home/ServicesSection";
+import { MomentsOfProgress } from "../components/Home/MomentsOfProgress";
+import { FaqSection } from "../components/Home/FaqSection";
+import { AskPhysioSection } from "../components/Home/AskPhysioSection";
+import { Footer } from "../components/Home/Footer";
 
 export default function HomePage() {
   return (

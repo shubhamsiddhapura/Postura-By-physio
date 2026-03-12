@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
-import { PrimaryCTAButton } from "./PrimaryCTAButton";
+import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
 export function Footer() {
   return (

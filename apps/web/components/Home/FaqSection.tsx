@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Sparkle, ChevronDown } from "lucide-react";
-import { PrimaryCTAButton } from "./PrimaryCTAButton";
+import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
 type FaqItem = {
   question: string;
@@ -131,4 +131,3 @@ export function FaqSection() {
     </section>
   );
 }
-

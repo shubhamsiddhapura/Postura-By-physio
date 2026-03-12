@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
-import { PrimaryCTAButton } from "./PrimaryCTAButton";
+import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { useState } from "react";
 
 const navItems = [
@@ -102,4 +102,3 @@ export function Navbar() {
     </header>
   );
 }
-

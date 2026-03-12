@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Sparkle } from "lucide-react";
-import { PrimaryCTAButton } from "./PrimaryCTAButton";
+import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
 export function MeetPhysiotherapist() {
   return (
@@ -69,4 +69,3 @@ export function MeetPhysiotherapist() {
     </section>
   );
 }
-

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { PrimaryCTAButton } from "./PrimaryCTAButton";
+import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
 const questions = [
   {
@@ -142,4 +142,3 @@ export function AskPhysioSection() {
     </section>
   );
 }
-

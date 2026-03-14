@@ -14,15 +14,15 @@ const slides = [
     body: "Small daily habits create long-term consequences. Poor posture and tight muscles silently reduce productivity, increase fatigue, and cause chronic pain.",
     sub: "Start correcting today for a stronger tomorrow.",
   },
-  {
-    src: "/hero-2.png",
-    mobileSrc: "/responsive-banner-2.png",
-    alt: "Doorstep Care",
-    tag: "Convenience Meets Care",
-    headline: "Professional Care.<br/> Right at Your </br> Doorstep.",
-    body: "No travel. No waiting rooms.",
-    sub: "We bring expert physiotherapy sessions to your home, society, or even online so your recovery fits into your life.",
-  },
+//   {
+//     src: "/hero-2.png",
+//     mobileSrc: "/responsive-banner-2.png",
+//     alt: "Doorstep Care",
+//     tag: "Convenience Meets Care",
+//     headline: "Professional Care.<br/> Right at Your </br> Doorstep.",
+//     body: "No travel. No waiting rooms.",
+//     sub: "We bring expert physiotherapy sessions to your home, society, or even online so your recovery fits into your life.",
+//   },
   {
     src: "/hero-3.png",
     mobileSrc: "/responsive-banner-3.png",
@@ -51,7 +51,7 @@ export function HeroSection() {
   }, [next]);
 
   return (
-    <section className="relative w-full h-[120vh] overflow-hidden">
+    <section className="relative w-full h-screen overflow-hidden rounded-br-[100px]">
       {/* Slides */}
       {slides.map((slide, index) => (
         <div

@@ -68,10 +68,10 @@ export function WhyChooseUs() {
           </FadeIn>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-5">
+        <div className="mt-12 grid gap-6 md:grid-cols-5 md:items-stretch">
           {items.map((item, index) => (
-            <FadeIn key={item.title} direction="up" duration={750} distance={35} delay={200 + index * 100}>
-              <div className="rounded-bl-xl rounded-tl-[36px] flex flex-col items-center md:items-start rounded-br-[36px] rounded-tr-xl bg-gray-50 px-7 py-8 shadow-[0_0_0_1px_rgba(0,0,0,0.02)] transition-transform duration-300 hover:scale-105 cursor-pointer">
+            <FadeIn key={item.title} direction="up" duration={750} distance={35} delay={200 + index * 100} className="h-full">
+              <div className="h-full rounded-bl-xl rounded-tl-[36px] flex flex-col items-center md:items-start rounded-br-[36px] rounded-tr-xl bg-gray-50 px-7 py-8 shadow-[0_0_0_1px_rgba(0,0,0,0.02)] transition-transform duration-300 hover:scale-105 cursor-pointer">
                 <div className="grid h-14 w-14 place-items-center rounded-full bg-primary">
                   <item.icon className="h-6 w-6 text-white" />
                 </div>

@@ -31,7 +31,7 @@ export function Footer() {
 
             <FadeIn direction="up" duration={800} distance={30} delay={180}>
               <PrimaryCTAButton
-                href="#book-session"
+                href="https://wa.me/91635401290"
                 label="Whatsapp Now"
                 size="md"
                 className="pr-8 cursor-pointer"

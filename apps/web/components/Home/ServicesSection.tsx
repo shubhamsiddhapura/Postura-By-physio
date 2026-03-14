@@ -11,7 +11,7 @@ const services = [
     tags: ["Weight loss", "Stamina", "Energy"],
     imageWrapperClass:
       "h-40 md:-bottom-36 -bottom-20 md:right-0 right-14 w-full max-w-[220px] md:h-full h-72 md:max-w-full",
-    iconSrc: "/aerobics-icon.png",
+    iconSrc: "/aerobics-icon.svg",
   },
   {
     title: "Pilates",
@@ -21,7 +21,7 @@ const services = [
     tags: ["Core", "Posture", "Injury Prevention"],
     imageWrapperClass:
       "h-40 md:-bottom-20 right-10 w-full max-w-[260px] md:h-full md:max-w-full",
-    iconSrc: "/plates-icon.png",
+    iconSrc: "/plates-icon.svg",
   },
   {
     title: "Yoga",
@@ -31,7 +31,7 @@ const services = [
     tags: ["Stress", "Flexibility", "Balance"],
     imageWrapperClass:
       "md:-bottom-40 -bottom-16 md:right-0 right-14 w-full max-w-[220px] md:h-full h-72 md:max-w-full",
-    iconSrc: "/yoga-icon.png",
+    iconSrc: "/yoga-icon.svg",
   },
   {
     title: "Physiotherapy",
@@ -41,7 +41,7 @@ const services = [
     tags: ["Pain", "Recovery", "Mobility"],
     imageWrapperClass:
       "h-96 md:top-0 top-28 md:right-0 right-10 w-full max-w-[260px] md:h-[100vh] md:max-w-full",
-    iconSrc: "/Physiotherapy-icon.png",
+    iconSrc: "/Physiotherapy-icon.svg",
   },
 ];
 

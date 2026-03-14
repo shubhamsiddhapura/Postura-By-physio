@@ -85,7 +85,7 @@ export function AskPhysioSection() {
               <FadeIn direction="up" duration={800} distance={30} delay={370} className="w-full">
                 <div className="max-w-full rounded-bl-lg rounded-tl-2xl rounded-br-2xl rounded-tr-lg bg-[#FFF6DE] px-6 py-4 shadow-sm">
                   <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-gray-500">
-                    Working Hours
+                    Working Days
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[#008080]">
                     Monday – Saturday

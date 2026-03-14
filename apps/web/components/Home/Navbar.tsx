@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const navItems = [
   { label: "Home", href: "#home" },
@@ -18,11 +18,33 @@ const navItems = [
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Change background when scrolled past hero section (approximately 100vh)
+      const scrollY = window.scrollY;
+      const heroHeight = window.innerHeight;
+      setIsScrolled(scrollY > heroHeight * 0.8);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    // Check initial scroll position
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header className="fixed inset-x-0 top-5 z-50">
       <div className="mx-auto max-w-[90vw] md:px-4 py-3">
-        <div className="flex items-center justify-between rounded-tl-lg rounded-bl-3xl rounded-tr-3xl rounded-br-lg backdrop-blur-md bg-white/10 pl-4 py-3 shadow-sm">
+        <div
+          className={`flex items-center justify-between rounded-tl-lg rounded-bl-3xl rounded-tr-3xl rounded-br-lg backdrop-blur-md pl-4 py-3 shadow-sm transition-all duration-300 ${
+            isScrolled
+              ? "bg-primary/60"
+              : "bg-white/10"
+          }`}
+        >
           <Link href="#home" className="flex items-center gap-3">
             <Image
               src="/navbar-logo.png"
@@ -39,7 +61,7 @@ export function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-white hover:text-primary transition-colors"
+                className="text-sm font-medium transition-colors text-white hover:text-secondary"
               >
                 {item.label}
               </Link>
@@ -61,9 +83,17 @@ export function Navbar() {
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
-                <X className="h-6 w-6 text-[#FEF9E0]" />
+                <X
+                  className={`h-6 w-6 transition-colors ${
+                    isScrolled ? "text-gray-900" : "text-[#FEF9E0]"
+                  }`}
+                />
               ) : (
-                <Menu className="h-6 w-6 text-[#FEF9E0]" />
+                <Menu
+                  className={`h-6 w-6 transition-colors ${
+                    isScrolled ? "text-gray-900" : "text-[#FEF9E0]"
+                  }`}
+                />
               )}
             </button>
           </div>

@@ -36,15 +36,29 @@ export function PrimaryCTAButton({
   const iconColorClasses =
     arrowVariant === "light" ? "text-primary" : "text-[#FEF9E0]";
 
+  // Check if href is an external URL
+  const isExternal = href.startsWith("http://") || href.startsWith("https://") || href.startsWith("mailto:") || href.startsWith("tel:");
+
   return (
     <div
       className={`group relative inline-flex items-center transform transition-transform duration-300 hover:scale-105 ${
         className ?? ""
       }`}
     >
-      <Link href={href} className={`${baseButtonClasses} ${sizeClasses}`}>
-        {label}
-      </Link>
+      {isExternal ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${baseButtonClasses} ${sizeClasses}`}
+        >
+          {label}
+        </a>
+      ) : (
+        <Link href={href} className={`${baseButtonClasses} ${sizeClasses}`}>
+          {label}
+        </Link>
+      )}
       <span
         className={`absolute grid place-items-center rounded-full ${badgeVariantClasses} ${badgeSizeClasses}`}
       >

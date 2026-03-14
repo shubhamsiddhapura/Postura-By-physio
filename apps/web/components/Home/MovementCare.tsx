@@ -4,15 +4,15 @@ import { FadeIn } from "../ui/FadeIn";
 
 const features = [
   {
-    imageSrc: "/Prehabilitation-vector.png",
+    imageSrc: "/Prehabilitation-vector.svg",
     label: "Prehabilitation",
   },
   {
-    imageSrc: "/Rehabilitation-vector.png",
+    imageSrc: "/Rehabilitation-vector.svg",
     label: "Rehabilitation",
   },
   {
-    imageSrc: "/gym-vector.png",
+    imageSrc: "/gym-vector.svg",
     label: "Fitness Integration",
   },
 ];

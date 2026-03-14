@@ -10,7 +10,7 @@ const services = [
     imageSrc: "/aerobics.png",
     tags: ["Weight loss", "Stamina", "Energy"],
     imageWrapperClass:
-      "h-40 md:-bottom-36 -bottom-32 md:right-0 right-20 w-full max-w-[220px] md:h-full h-full md:max-w-full",
+      "-bottom-5 left-1/2 -translate-x-1/2 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-36 md:right-0 md:w-full md:h-full md:max-w-full",
     iconSrc: "/aerobics-icon.svg",
   },
   {
@@ -20,7 +20,7 @@ const services = [
     imageSrc: "/Pilates.png",
     tags: ["Core", "Posture", "Injury Prevention"],
     imageWrapperClass:
-      "h-full md:-bottom-20 -bottom-16 scale-[1.75] md:scale-100 md:right-10 right-16 w-full max-w-[260px] md:h-full md:max-w-full",
+      "bottom-0 left-1/2 -translate-x-1/2 scale-[1.5] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-20 md:right-10 md:w-full md:h-full md:max-w-full",
     iconSrc: "/plates-icon.svg",
   },
   {
@@ -30,7 +30,7 @@ const services = [
     imageSrc: "/yoga.png",
     tags: ["Stress", "Flexibility", "Balance"],
     imageWrapperClass:
-      "md:-bottom-40 scale-125 md:scale-100 -bottom-44 md:right-0 right-14 w-full max-w-[220px] md:h-full h-full md:max-w-full",
+      "-bottom-16 left-1/2 -translate-x-1/2 scale-[1.5] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-40 md:right-0 md:w-full md:h-full md:max-w-full",
     iconSrc: "/yoga-icon.svg",
   },
   {
@@ -40,7 +40,7 @@ const services = [
     imageSrc: "/Physiotherapy.png",
     tags: ["Pain", "Recovery", "Mobility"],
     imageWrapperClass:
-      "h-full scale-[1.75] md:scale-100 md:top-0 top-34 md:right-0 right-10 w-full max-w-[260px] md:h-[100vh] md:max-w-full",
+      "-bottom-10 left-1/2 -translate-x-1/2 scale-[2] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:bottom-auto md:top-0 md:right-0 md:w-full md:h-[100vh] md:max-w-full",
     iconSrc: "/Physiotherapy-icon.svg",
   },
 ];
@@ -85,7 +85,7 @@ export function ServicesSection() {
               delay={index * 20}
             >
             <article
-              className="group relative text-center md:text-left overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl h-[50vh] md:h-[60vh] bg-[#FFFDF1] md:p-8 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.08)] md:px-5 md:py-5 transition-transform duration-300 hover:scale-[1.02]"
+              className="group relative text-center md:text-left overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl h-[400px] md:h-[60vh] bg-[#FFFDF1] md:p-8 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.08)] md:px-5 md:py-5 transition-transform duration-300 hover:scale-[1.02]"
             >
               <div className="flex flex-col items-center md:items-start">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
@@ -120,7 +120,7 @@ export function ServicesSection() {
                 />
               </div>
 
-              <div className="mt-5 absolute bottom-8 right-1/2 translate-x-1/2 flex flex-nowrap md:flex-wrap justify-center gap-2 md:gap-3 overflow-x-auto">
+              <div className="mt-5 absolute z-10 bottom-8 right-1/2 translate-x-1/2 flex flex-nowrap md:flex-wrap justify-center gap-2 md:gap-3 overflow-x-auto">
                 {service.tags.map((tag) => (
                   <span
                     key={tag}

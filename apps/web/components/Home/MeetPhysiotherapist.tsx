@@ -7,8 +7,8 @@ export function MeetPhysiotherapist() {
   return (
     <section id="contact" className="bg-white">
       <div className="py-10 md:py-16">
-          <div className="relative overflow-hidden h-screen md:h-auto rounded-bl-xl md:rounded-tl-[180px] rounded-tl-[90px] md:rounded-br-[180px] rounded-br-[90px] md:rounded-tr-2xl rounded-tr-xl bg-primary px-6 py-10 md:px-10 md:py-12">
-            <div className="grid items-center gap-10 md:grid-cols-[1.1fr,0.9fr]">
+          <div className="relative overflow-hidden md:h-auto rounded-bl-xl md:rounded-tl-[180px] rounded-tl-[90px] md:rounded-br-[180px] rounded-br-[90px] md:rounded-tr-2xl rounded-tr-xl bg-primary px-6 pt-10 md:px-10 md:py-12">
+            <div className="grid items-start md:items-center gap-8 md:gap-10 md:grid-cols-[1.1fr,0.9fr]">
               {/* Left */}
               <div className="text-white md:pl-20 text-center md:text-left">
                 <FadeIn direction="up" duration={800} distance={28} delay={100}>
@@ -54,7 +54,7 @@ export function MeetPhysiotherapist() {
 
               {/* Right */}
               <FadeIn direction="left" duration={900} distance={60} delay={200}>
-              <div className="relative md:h-[60vh] h-[50vh]">
+              <div className="relative h-[350px] md:h-[60vh]">
                 {/* Watermark SVG behind doctor */}
                 <div className="pointer-events-none absolute md:right-5 -top-12 -right-10 z-5">
                   <Image
@@ -66,14 +66,14 @@ export function MeetPhysiotherapist() {
                   />
                 </div>
 
-<div className="absolute md:-bottom-28 -bottom-5 md:-right-8 right-0 md:w-[40vw] w-full h-[450px] md:h-[600px]">  
-                <Image
-                  src="/doctor.png"
-                  alt="Physiotherapist"
-                  fill
-                  priority={false}
-                  className="object-contain scale-x-[-1]"
-                />
+                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-[80%] h-[110%] md:left-auto md:translate-x-0 md:-bottom-28 md:-right-8 md:w-[40vw] md:h-[600px]">
+                  <Image
+                    src="/doctor.png"
+                    alt="Physiotherapist"
+                    fill
+                    priority={false}
+                    className="object-contain scale-x-[-1]"
+                  />
                 </div>
               </div>
               </FadeIn>

@@ -10,7 +10,7 @@ const services = [
     imageSrc: "/aerobics.png",
     tags: ["Weight loss", "Stamina", "Energy"],
     imageWrapperClass:
-      "-bottom-5 left-1/2 -translate-x-1/2 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-36 md:right-0 md:w-full md:h-full md:max-w-full",
+      "-bottom-12 left-1/2 -translate-x-1/2 scale-[1.25] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-36 md:right-0 md:w-full md:h-full md:max-w-full",
     iconSrc: "/aerobics-icon.svg",
   },
   {
@@ -40,7 +40,7 @@ const services = [
     imageSrc: "/Physiotherapy.png",
     tags: ["Pain", "Recovery", "Mobility"],
     imageWrapperClass:
-      "-bottom-10 left-1/2 -translate-x-1/2 scale-[2] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:bottom-auto md:top-0 md:right-0 md:w-full md:h-[100vh] md:max-w-full",
+      "-bottom-20 left-1/2 -translate-x-1/2 scale-[2] md:scale-100 h-[70%] w-[60%] md:left-auto md:translate-x-0 md:bottom-auto md:top-0 md:right-0 md:w-full md:h-[100vh] md:max-w-full",
     iconSrc: "/Physiotherapy-icon.svg",
   },
 ];

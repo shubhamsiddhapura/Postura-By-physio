@@ -66,7 +66,7 @@ export function MeetPhysiotherapist() {
                   />
                 </div>
 
-<div className="absolute md:-bottom-28 -bottom-10 md:-right-8 right-0 md:w-[40vw] w-full h-full md:h-[600px]">  
+<div className="absolute md:-bottom-28 -bottom-16 md:-right-8 right-0 md:w-[40vw] w-full h-full md:h-[600px]">  
                 <Image
                   src="/doctor.png"
                   alt="Physiotherapist"

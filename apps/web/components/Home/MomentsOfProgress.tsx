@@ -118,7 +118,7 @@ export function MomentsOfProgress() {
   const handlePrev = () => scrollBy("prev");
 
   return (
-    <section className="bg-white py-16 md:py-24">
+    <section className="bg-white py-16 md:py-24" id="gallery">
       <div className="md:pl-20 px-4 md:px-0">
         <div className="grid md:gap-10 gap-3 md:grid-cols-[1.2fr,1fr] md:items-end">
           <FadeIn direction="up" duration={800} distance={30} delay={0}>

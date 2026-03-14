@@ -52,7 +52,7 @@ export function Navbar() {
               width={150}
               height={5}
               priority
-              className="md:h-14 h-16 w-auto object-contain"
+              className="md:h-14 h-14 w-auto object-contain"
             />
           </Link>
 
@@ -84,15 +84,11 @@ export function Navbar() {
             >
               {isMenuOpen ? (
                 <X
-                  className={`h-6 w-6 transition-colors ${
-                    isScrolled ? "text-gray-900" : "text-[#FEF9E0]"
-                  }`}
+                  className="h-6 w-6 transition-colors text-[#FEF9E0]"
                 />
               ) : (
                 <Menu
-                  className={`h-6 w-6 transition-colors ${
-                    isScrolled ? "text-gray-900" : "text-[#FEF9E0]"
-                  }`}
+                  className="h-6 w-6 transition-colors text-[#FEF9E0]"
                 />
               )}
             </button>
@@ -117,11 +113,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setIsMenuOpen(false)}
-                className={`text-sm font-medium transition-colors ${
-                  isScrolled
-                    ? "text-gray-900 hover:text-primary"
-                    : "text-white hover:text-secondary"
-                }`}
+                className="text-sm font-medium transition-colors text-white hover:text-secondary "
               >
                 {item.label}
               </Link>

@@ -93,7 +93,7 @@ export function WhoCanJoin() {
 
               {/* Content (sits on top of the primary gradient) */}
               <div className="absolute inset-x-10 bottom-8 z-10 text-white">
-                <div className="text-2xl font-semibold">{card.title}</div>
+                <div className="text-2xl font-semibold font-cabinet">{card.title}</div>
                 <div className="mt-2 text-sm text-white/85">
                   {card.subtitle}
                 </div>

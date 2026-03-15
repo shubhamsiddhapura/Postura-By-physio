@@ -7,6 +7,11 @@
   --color-secondary: #BE6C25;
 }
 
+/* Apply CabinetGrotesk to all headings automatically */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-cabinet), sans-serif;
+}
+
 /* Hide scrollbars where needed while keeping scroll functionality */
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */

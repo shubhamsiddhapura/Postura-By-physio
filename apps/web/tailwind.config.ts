@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        switzer: ["var(--font-switzer)", "sans-serif"],
+        cabinet: ["var(--font-cabinet)", "sans-serif"],
+      },
       colors: {
         primary: "#008080",
         secondary: "#BE6C25",

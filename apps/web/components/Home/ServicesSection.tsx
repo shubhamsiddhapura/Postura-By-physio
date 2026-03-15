@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Sparkle } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 
 const services = [
@@ -56,7 +55,7 @@ export function ServicesSection() {
           <FadeIn direction="up" duration={800} distance={30} delay={0}>
             <div>
               <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                <Sparkle className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                 <span>Our Service</span>
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">

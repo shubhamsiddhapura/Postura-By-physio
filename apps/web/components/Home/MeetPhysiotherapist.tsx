@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Sparkle } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
 
@@ -13,7 +12,7 @@ export function MeetPhysiotherapist() {
               <div className="text-white md:pl-20 text-center md:text-left">
                 <FadeIn direction="up" duration={800} distance={28} delay={100}>
                   <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center md:justify-start ">
-                    <Sparkle className="h-4 w-4" />
+                    <Image src="/white-sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                     <span>About Us</span>
                   </div>
                 </FadeIn>

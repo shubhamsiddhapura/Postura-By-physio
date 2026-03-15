@@ -14,7 +14,7 @@ export function Footer() {
             <FadeIn direction="up" duration={800} distance={30} delay={0} className="flex-1">
               <div className="text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-2">
-                  <div className="h-2 w-2 rotate-45 bg-secondary" />
+                  <Image src="/orange-sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
                     Take Control of Your Health
                   </span>

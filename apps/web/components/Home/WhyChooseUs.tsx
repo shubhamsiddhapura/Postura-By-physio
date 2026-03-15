@@ -4,8 +4,8 @@ import {
   Dumbbell,
   HeartHandshake,
   Monitor,
-  Sparkle,
 } from "lucide-react";
+import Image from "next/image";
 import { FadeIn } from "../ui/FadeIn";
 
 type Item = {
@@ -51,7 +51,7 @@ export function WhyChooseUs() {
           <FadeIn direction="up" duration={800} distance={30} delay={0}>
             <div className="text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start gap-2 text-sm font-medium text-primary">
-                <Sparkle className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                 <span>Expertise you can trust.</span>
               </div>
               <h2 className="mt-4 text-3xl font-bold tracking-tight text-gray-900">

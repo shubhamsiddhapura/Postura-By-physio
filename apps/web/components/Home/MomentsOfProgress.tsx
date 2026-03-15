@@ -1,7 +1,7 @@
  "use client";
 
 import Image from "next/image";
-import { Sparkle, ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRef, useEffect } from "react";
 import { FadeIn } from "../ui/FadeIn";
 
@@ -124,7 +124,7 @@ export function MomentsOfProgress() {
           <FadeIn direction="up" duration={800} distance={30} delay={0}>
             <div className="text-center md:text-left">
               <div className="flex items-center gap-2 text-sm justify-center md:justify-start font-medium text-primary">
-                <Sparkle className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                 <span>Moments of Progress</span>
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">

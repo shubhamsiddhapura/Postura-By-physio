@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowUpRight, Sparkle } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 
 type Card = {
@@ -49,7 +49,7 @@ export function WhoCanJoin() {
           <FadeIn direction="up" distance={32} duration={800} delay={0}>
             <div>
               <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
-                <Sparkle className="h-4 w-4 text-primary" />
+                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                 <span className="text-primary">Care for all.</span>
               </div>
               <h2 className="mt-3 text-5xl font-bold tracking-tight text-gray-900">

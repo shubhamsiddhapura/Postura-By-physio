@@ -1,7 +1,8 @@
  "use client";
 
 import { useState } from "react";
-import { Sparkle, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import Image from "next/image";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
 
@@ -51,7 +52,7 @@ export function FaqSection() {
           <div className="text-center md:text-left">
             <FadeIn direction="up" duration={800} distance={28} delay={0}>
               <div className="flex items-center gap-2 text-xs justify-center md:justify-start font-semibold uppercase tracking-[0.18em] text-primary">
-                <Sparkle className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                 <span>You Ask. We Answer.</span>
               </div>
               <h2 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">

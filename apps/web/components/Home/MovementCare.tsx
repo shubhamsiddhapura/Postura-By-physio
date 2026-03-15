@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Sparkle } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 
 const features = [
@@ -54,7 +53,7 @@ export function MovementCare() {
           <div className="text-center md:text-left">
             <FadeIn direction="up" duration={800} distance={30} delay={150}>
               <div className="flex items-center justify-center md:justify-start gap-2 text-sm font-medium text-primary">
-                <Sparkle className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                 <span>Prevent. Recover. Perform</span>
               </div>
             </FadeIn>

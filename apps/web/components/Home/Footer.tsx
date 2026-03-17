@@ -5,32 +5,9 @@ import Link from "next/link";
 import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
+import { scrollToHash } from "../../lib/scroll";
 
 export function Footer() {
-  const scrollToHash = (hash: string) => {
-    if (typeof window === "undefined") return;
-    if (!hash?.startsWith("#")) return;
-
-    if (hash === "#home") {
-      window.history.pushState(null, "", hash);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    const target = document.querySelector(hash) as HTMLElement | null;
-    if (!target) return;
-
-    const headerEl = document.querySelector("header") as HTMLElement | null;
-    const headerOffset = (headerEl?.offsetHeight ?? 0) + 12;
-    const targetTop = target.getBoundingClientRect().top + window.scrollY;
-
-    window.history.pushState(null, "", hash);
-    window.scrollTo({
-      top: Math.max(0, targetTop - headerOffset),
-      behavior: "smooth",
-    });
-  };
-
   return (
     <footer className="relative h-0 -z-20 bg-[#E5F7F6] -mt-44">
       {/* CTA Banner */}
@@ -161,7 +138,8 @@ export function Footer() {
                           onClick={(e) => {
                             e.preventDefault();
                             scrollToHash(
-                              `#${link.toLowerCase().replace(" ", "-")}`
+                              `#${link.toLowerCase().replace(" ", "-")}`,
+                              { headerSelector: "header", extraOffsetPx: 12 }
                             );
                           }}
                           className="text-sm text-gray-600 transition hover:text-primary"
@@ -185,7 +163,10 @@ export function Footer() {
                             href="#services"
                             onClick={(e) => {
                               e.preventDefault();
-                              scrollToHash("#services");
+                              scrollToHash("#services", {
+                                headerSelector: "header",
+                                extraOffsetPx: 12,
+                              });
                             }}
                             className="text-sm text-gray-600 transition hover:text-primary"
                           >

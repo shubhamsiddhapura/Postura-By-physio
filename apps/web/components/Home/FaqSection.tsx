@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
+import { scrollToHash } from "../../lib/scroll";
 
 type FaqItem = {
   question: string;
@@ -77,6 +78,10 @@ export function FaqSection() {
                 size="sm"
                 className="mt-10 hidden md:inline-flex"
                 arrowVariant="dark"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToHash("#contact", { headerSelector: "header", extraOffsetPx: 12 });
+                }}
               />
             </FadeIn>
           </div>
@@ -138,6 +143,10 @@ export function FaqSection() {
               size="sm"
               className="md:hidden flex justify-center items-center w-40"
               arrowVariant="dark"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToHash("#contact", { headerSelector: "header", extraOffsetPx: 12 });
+              }}
             />
           </FadeIn>
         </div>

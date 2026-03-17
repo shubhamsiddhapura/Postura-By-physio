@@ -79,13 +79,6 @@ export function Footer() {
                 </h4>
                 <div className="mt-3 flex items-center gap-3">
                   <a
-                    href="#"
-                    className="grid h-9 w-9 place-items-center rounded-full border-[1px] border-secondary hover:bg-secondary hover:text-white text-secondary hover:opacity-90"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="h-4 w-4" />
-                  </a>
-                  <a
                     href="https://www.instagram.com/postura_by_physio?igsh=MTk0NGNyZ3htY3U1Zg=="
                     className="grid h-9 w-9 place-items-center rounded-full border-[1px] border-secondary text-secondary transition hover:bg-secondary hover:text-white"
                     aria-label="Instagram"
@@ -93,13 +86,6 @@ export function Footer() {
                     rel="noopener noreferrer"
                   >
                     <Instagram className="h-4 w-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="grid h-9 w-9 place-items-center rounded-full border-[1px] border-secondary text-secondary transition hover:bg-secondary hover:text-white"
-                    aria-label="Twitter"
-                  >
-                    <Twitter className="h-4 w-4" />
                   </a>
                   <a
                     href="https://www.linkedin.com/in/dr-priyanshi-pandya-pt-b91133217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
@@ -139,7 +125,7 @@ export function Footer() {
                             e.preventDefault();
                             scrollToHash(
                               `#${link.toLowerCase().replace(" ", "-")}`,
-                              { headerSelector: "header", extraOffsetPx: 12 }
+                              { extraOffsetPx: 12 }
                             );
                           }}
                           className="text-sm text-gray-600 transition hover:text-primary"
@@ -164,7 +150,6 @@ export function Footer() {
                             onClick={(e) => {
                               e.preventDefault();
                               scrollToHash("#services", {
-                                headerSelector: "header",
                                 extraOffsetPx: 12,
                               });
                             }}
@@ -226,7 +211,14 @@ export function Footer() {
         <div className="mx-auto max-w-[90vw]">
           <FadeIn direction="up" duration={700} distance={20} delay={0}>
           <div className="flex flex-col items-center justify-between gap-4 text-xs text-[#6B6B6B] md:flex-row">
-            <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
+            
+            <p>
+                Design and Develop by{" "}
+                <a href="https://codenixlabs.com" className="font-semibold text-secondary underline">
+                  Codenix Labs
+                </a>
+              </p>
+              <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
               <p>
                 © 2026{" "}
                 <span className="font-semibold text-secondary">
@@ -234,19 +226,7 @@ export function Footer() {
                 </span>
                 . All Rights Reserved.
               </p>
-              <p>
-                Design and Develop by{" "}
-                <span className="font-semibold text-secondary">
-                  Codenix Labs
-                </span>{" "}
-                |{" "}
-                <a
-                  href="mailto:codenixlabs.com"
-                  className="underline hover:text-secondary"
-                >
-                  codenixlabs.com
-                </a>
-              </p>
+              
             </div>
             <div className="flex items-center flex-wrap justify-center md:justify-start md:gap-4 gap-2">
               <Link

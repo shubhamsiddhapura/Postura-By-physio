@@ -80,7 +80,7 @@ export function FaqSection() {
                 arrowVariant="dark"
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToHash("#contact", { headerSelector: "header", extraOffsetPx: 12 });
+                  scrollToHash("#contact", { extraOffsetPx: 12 });
                 }}
               />
             </FadeIn>
@@ -145,7 +145,7 @@ export function FaqSection() {
               arrowVariant="dark"
               onClick={(e) => {
                 e.preventDefault();
-                scrollToHash("#contact", { headerSelector: "header", extraOffsetPx: 12 });
+                scrollToHash("#contact", { extraOffsetPx: 12 });
               }}
             />
           </FadeIn>

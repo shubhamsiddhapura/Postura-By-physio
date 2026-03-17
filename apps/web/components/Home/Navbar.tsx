@@ -36,12 +36,13 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useSmoothHashScroll({ headerSelector: "header", extraOffsetPx: 12 });
+  useSmoothHashScroll({ extraOffsetPx: 12 });
 
   return (
     <header className="fixed inset-x-0 top-3 z-50">
       <div className="mx-auto max-w-[90vw] md:px-4 py-3">
         <div
+          data-scroll-header
           className={`flex items-center justify-between rounded-tl-lg rounded-bl-3xl rounded-tr-3xl rounded-br-lg backdrop-blur-md pl-4 py-3 shadow-sm transition-all duration-300 ${isScrolled
               ? "bg-primary/60"
               : "bg-white/10"
@@ -51,7 +52,7 @@ export function Navbar() {
             href="#home"
             onClick={(e) => {
               e.preventDefault();
-              scrollToHash("#home", { headerSelector: "header", extraOffsetPx: 12 });
+              scrollToHash("#home", { extraOffsetPx: 12 });
             }}
             className="flex items-center gap-3"
           >
@@ -72,7 +73,7 @@ export function Navbar() {
                 href={item.href}
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollToHash(item.href, { headerSelector: "header", extraOffsetPx: 12 });
+                  scrollToHash(item.href, { extraOffsetPx: 12 });
                 }}
                 className="text-sm font-medium transition-colors text-white hover:text-secondary"
               >
@@ -126,7 +127,7 @@ export function Navbar() {
                 onClick={(e) => {
                   e.preventDefault();
                   setIsMenuOpen(false);
-                  scrollToHash(item.href, { headerSelector: "header", extraOffsetPx: 12 });
+                  scrollToHash(item.href, { extraOffsetPx: 0 });
                 }}
                 className="text-sm font-medium transition-colors text-white hover:text-secondary "
               >

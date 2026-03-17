@@ -10,15 +10,56 @@ export type ScrollToHashOptions = {
   /** Whether to update the URL hash */
   updateHash?: boolean;
   behavior?: ScrollBehavior;
+  /**
+   * When true (default), performs a quick correction pass after the first scroll.
+   * This improves accuracy on responsive layouts where fonts/images shift content.
+   */
+  correctAfterScroll?: boolean;
+  /** Allowed px error between the target's top and the desired offset */
+  tolerancePx?: number;
 };
+
+function getHeaderOffsetPx(
+  headerSelector: string,
+  extraOffsetPx: number
+): number {
+  const headerEl =
+    (document.querySelector(headerSelector) as HTMLElement | null) ??
+    (document.querySelector("header") as HTMLElement | null);
+  if (!headerEl) return extraOffsetPx;
+
+  // `bottom` includes header height + any top offset (your header is `top-3`).
+  const rect = headerEl.getBoundingClientRect();
+  return Math.max(0, rect.bottom) + extraOffsetPx;
+}
+
+function getNegativeMarginCompensationPx(target: HTMLElement): number {
+  const marginTop = Number.parseFloat(
+    window.getComputedStyle(target).marginTop || "0"
+  );
+  return marginTop < 0 ? -marginTop : 0;
+}
+
+function computeDesiredScrollTop(
+  target: HTMLElement,
+  headerSelector: string,
+  extraOffsetPx: number
+) {
+  const headerOffset = getHeaderOffsetPx(headerSelector, extraOffsetPx);
+  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+  const negativeMarginCompensation = getNegativeMarginCompensationPx(target);
+  return Math.max(0, targetTop - headerOffset + negativeMarginCompensation);
+}
 
 export function scrollToHash(
   hash: string,
   {
-    headerSelector = "header",
+    headerSelector = "[data-scroll-header]",
     extraOffsetPx = 12,
     updateHash = true,
     behavior = "smooth",
+    correctAfterScroll = true,
+    tolerancePx = 6,
   }: ScrollToHashOptions = {}
 ) {
   if (typeof window === "undefined") return;
@@ -33,14 +74,31 @@ export function scrollToHash(
   const target = document.querySelector(hash) as HTMLElement | null;
   if (!target) return;
 
-  const headerEl = document.querySelector(headerSelector) as HTMLElement | null;
-  const headerOffset = (headerEl?.offsetHeight ?? 0) + extraOffsetPx;
-  const targetTop = target.getBoundingClientRect().top + window.scrollY;
+  const desiredTop = computeDesiredScrollTop(target, headerSelector, extraOffsetPx);
 
   if (updateHash) window.history.pushState(null, "", hash);
   window.scrollTo({
-    top: Math.max(0, targetTop - headerOffset),
+    top: desiredTop,
     behavior,
+  });
+
+  if (!correctAfterScroll) return;
+
+  // Correction pass: after layout settles (responsive fonts/images), re-measure and nudge.
+  // This keeps landing positions consistent across breakpoints.
+  const correct = () => {
+    const currentDesiredTop = computeDesiredScrollTop(
+      target,
+      headerSelector,
+      extraOffsetPx
+    );
+    const delta = currentDesiredTop - window.scrollY;
+    if (Math.abs(delta) <= tolerancePx) return;
+    window.scrollTo({ top: currentDesiredTop, behavior });
+  };
+
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(correct);
   });
 }
 
@@ -60,9 +118,16 @@ export function useSmoothHashScroll(options: UseSmoothHashScrollOptions = {}) {
 
     const handle = () => {
       if (window.location.hash) {
-        window.requestAnimationFrame(() =>
-          scrollToHash(window.location.hash, { ...rest, behavior: "smooth" })
-        );
+        // Two RAFs: allow layout to settle before first measurement.
+        window.requestAnimationFrame(() => {
+          window.requestAnimationFrame(() => {
+            scrollToHash(window.location.hash, {
+              ...rest,
+              behavior: "smooth",
+              correctAfterScroll: true,
+            });
+          });
+        });
       }
     };
 

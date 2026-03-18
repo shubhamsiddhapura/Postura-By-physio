@@ -36,10 +36,10 @@ export function KeyBenefits({
 }: KeyBenefitsProps) {
   return (
     <section id="key-benefits" className="bg-white">
-      <div className="mx-auto max-w-[90vw] py-12 md:px-4 md:py-10">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+      <div className="mx-auto max-w-[90vw] pt-12 pb-20  md:px-10 md:pt-10">
+        <div className="grid items-center gap-5 md:flex md:items-center md:justify-between md:gap-14">
           {/* Left content */}
-          <div className="max-w-xl text-center md:text-left">
+          <div className="w-full max-w-xl text-center md:text-left">
             <FadeIn direction="up" duration={800} distance={30} delay={140}>
               <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-500 md:justify-start">
                 <Image
@@ -83,10 +83,16 @@ export function KeyBenefits({
           </div>
 
           {/* Right image */}
-          <FadeIn direction="left" duration={900} distance={60} delay={120}>
-            <div className="relative md:pr-16">
-              <div className="relative overflow-hidden rounded-tr-[84px] rounded-tl-xl rounded-br-xl rounded-bl-[84px] bg-gray-100 md:ml-auto md:w-[32vw]">
-                <div className="relative h-[52vh] w-full md:h-[68vh]">
+          <FadeIn
+            direction="left"
+            duration={900}
+            distance={60}
+            delay={120}
+            className="w-full md:w-auto md:flex-shrink-0"
+          >
+             <div className="relative mt-8 w-full md:mt-0 md:w-[32vw] md:max-w-[520px]">
+               <div className="relative w-full overflow-hidden rounded-tr-[84px] rounded-tl-xl rounded-br-xl rounded-bl-[84px] bg-gray-100">
+                <div className="relative h-[52vh] min-h-[320px] w-full md:h-[68vh]">
                   <Image
                     src={image.src}
                     alt={image.alt}
@@ -98,14 +104,14 @@ export function KeyBenefits({
                 </div>
               </div>
 
-              {/* Watermark overlay */}
-              <div className="pointer-events-none absolute -left-5 md:left-10 bottom-0">
+              {/* Watermark overlay (pinned to the same fixed-height box so it won't shift on zoom) */}
+              <div className="pointer-events-none absolute bottom-0 md:-left-10 -left-5">
                 <Image
                   src={watermarkSrc}
                   alt=""
                   width={190}
                   height={320}
-                  className="h-auto w-[150px] opacity-60 md:w-[220px]"
+                  className="h-auto md:w-[220px] w-[150px] opacity-60"
                 />
               </div>
             </div>

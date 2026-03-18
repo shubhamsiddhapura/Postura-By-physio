@@ -26,7 +26,7 @@ export function MeetPhysiotherapist() {
                 <FadeIn direction="up" duration={800} distance={28} delay={370}>
                   <p className="mt-4 text-sm leading-5 text-white/85 md:text-sm md:leading-6">
                     Postura by Physio is led by <span className="font-bold text-[#FEF9E0]">Dr. Priyanshi Pandya (PT) </span> BPT,
-                    MPT(MAAT), a qualified and registered physiotherapist with
+                    MPT,MIAFT(MOT,MIAFT) a qualified and registered physiotherapist with
                     strong academic and clinical experience. With a passion for
                     preventive healthcare and functional rehabilitation, she is
                     committed to delivering evidence-based, compassionate, and

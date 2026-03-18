@@ -84,7 +84,7 @@ export function KeyBenefits({
 
           {/* Right image */}
           <FadeIn direction="left" duration={900} distance={60} delay={120}>
-            <div className="relative md:pr-32 lg:20">
+            <div className="relative md:pr-16">
               <div className="relative overflow-hidden rounded-tr-[84px] rounded-tl-xl rounded-br-xl rounded-bl-[84px] bg-gray-100 md:ml-auto md:w-[32vw]">
                 <div className="relative h-[52vh] w-full md:h-[68vh]">
                   <Image
@@ -99,7 +99,7 @@ export function KeyBenefits({
               </div>
 
               {/* Watermark overlay */}
-              <div className="pointer-events-none absolute left-0 bottom-0 md:left-0 lg:-left-8">
+              <div className="pointer-events-none absolute -left-5 md:left-10 bottom-0">
                 <Image
                   src={watermarkSrc}
                   alt=""

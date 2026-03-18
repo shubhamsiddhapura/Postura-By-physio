@@ -115,7 +115,6 @@ export function Footer() {
                       "About",
                       "Services",
                       "FAQs",
-                      "Health Tips",
                       "Contact",
                     ].map((link) => (
                       <li key={link}>

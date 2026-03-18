@@ -145,7 +145,7 @@ export function AskPhysioSection() {
               </div>
 
               <form className="mt-6 space-y-5 md:space-y-6">
-                {questions.map((q, index) => (
+                {questions.map((q) => (
                   <div key={q.name} className="space-y-2">
                     <label
                       htmlFor={q.name}
@@ -153,31 +153,17 @@ export function AskPhysioSection() {
                     >
                       {q.label}
                     </label>
-                    {index === questions.length - 1 ? (
-                      <textarea
-                        id={q.name}
-                        name={q.name}
-                        rows={3}
-                        placeholder={q.placeholder}
-                        value={values[q.name]}
-                        onChange={(e) =>
-                          setValues((prev) => ({ ...prev, [q.name]: e.target.value }))
-                        }
-                        className="w-full resize-none border-0 border-b border-gray-200 bg-transparent px-0 pb-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none ring-0 focus:border-primary focus:ring-0 md:text-sm"
-                      />
-                    ) : (
-                      <input
-                        id={q.name}
-                        name={q.name}
-                        type="text"
-                        placeholder={q.placeholder}
-                        value={values[q.name]}
-                        onChange={(e) =>
-                          setValues((prev) => ({ ...prev, [q.name]: e.target.value }))
-                        }
-                        className="w-full border-0 border-b border-gray-200 bg-transparent px-0 pb-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none ring-0 focus:border-primary focus:ring-0 md:text-sm"
-                      />
-                    )}
+                    <input
+                      id={q.name}
+                      name={q.name}
+                      type="text"
+                      placeholder={q.placeholder}
+                      value={values[q.name]}
+                      onChange={(e) =>
+                        setValues((prev) => ({ ...prev, [q.name]: e.target.value }))
+                      }
+                      className="w-full border-0 border-b border-gray-200 bg-transparent px-0 pb-2 text-xs text-gray-900 placeholder:text-gray-400 outline-none ring-0 focus:border-primary focus:ring-0 md:text-sm"
+                    />
                   </div>
                 ))}
 

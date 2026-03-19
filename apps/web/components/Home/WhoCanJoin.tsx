@@ -31,6 +31,7 @@ const cards: Card[] = [
     title: "Geriatric Rehabilitation",
     subtitle: "Stay steady. Stay independent.",
     imageSrc: "/wcju-4.jpg",
+    href: "/geriatric-rehabilitation",
   },
   {
     title: "Physiotherapy Services",

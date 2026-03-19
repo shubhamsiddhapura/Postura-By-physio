@@ -45,6 +45,7 @@ const cards: Card[] = [
     title: "Prehab for Fitness Lovers",
     subtitle: "Train smart. Prevent injuries.",
     imageSrc: "/wcju-6.jpg",
+    href: "/athlete-rehab",
   },
 ];
 

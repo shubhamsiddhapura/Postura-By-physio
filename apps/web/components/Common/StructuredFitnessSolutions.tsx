@@ -46,6 +46,13 @@ export function StructuredFitnessSolutions({
     },
   ],
 }: StructuredFitnessSolutionsProps) {
+  const getGridColsClass = (count: number) => {
+    if (count <= 1) return "md:grid-cols-1 md:max-w-[320px] md:mx-auto";
+    if (count === 2) return "md:grid-cols-2";
+    if (count === 3) return "md:grid-cols-3";
+    return "md:grid-cols-4";
+  };
+
   return (
     <section id="structured-fitness-solutions" className="bg-white">
       <div className="py-10 md:py-16">
@@ -78,7 +85,7 @@ export function StructuredFitnessSolutions({
           </div>
 
           {/* Cards */}
-          <div className="mt-14 grid gap-8 md:grid-cols-4">
+          <div className={`mt-14 grid gap-8 ${getGridColsClass(items.length)}`}>
             {items.map((item, idx) => (
               <FadeIn
                 key={item.title}

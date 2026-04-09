@@ -153,7 +153,7 @@ export default function BlogsPage() {
         </section>
       </main>
 
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Struggling with Neck or Back Pain at<br/> Work?" ctaDescription="Get expert physiotherapy guidance to improve posture, relieve discomfort, and restore comfortable daily<br/> movement." />
     </div>
   );
 }

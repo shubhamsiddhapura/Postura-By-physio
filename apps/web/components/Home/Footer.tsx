@@ -8,7 +8,34 @@ import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
 import { scrollToHash } from "../../lib/scroll";
 
-export function Footer() {
+type FooterProps = {
+  /** Small label above the CTA title */
+  ctaEyebrow?: string | React.ReactNode;
+  /** Main CTA title */
+  ctaTitle?: string | React.ReactNode;
+  /** Supporting CTA description */
+  ctaDescription?: string | React.ReactNode;
+};
+
+function renderWithBr(value: string) {
+  const parts = value.split(/<br\s*\/?>/i);
+  return parts.map((part, idx) => (
+    <span key={idx}>
+      {part}
+      {idx < parts.length - 1 ? <br /> : null}
+    </span>
+  ));
+}
+
+function renderTextOrNode(value: string | React.ReactNode) {
+  return typeof value === "string" ? renderWithBr(value) : value;
+}
+
+export function Footer({
+  ctaEyebrow = "Take Control of Your Health",
+  ctaTitle = "Take the First Step Towards Better Health.",
+  ctaDescription = "Schedule Your Appointment Easily via Call, WhatsApp or Online Form",
+}: FooterProps) {
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -39,15 +66,14 @@ export function Footer() {
                 <div className="flex items-center justify-center md:justify-start gap-2">
                   <Image src="/orange-sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                   <span className="text-xs font-semibold uppercase tracking-wider text-secondary">
-                    Take Control of Your Health
+                    {renderTextOrNode(ctaEyebrow)}
                   </span>
                 </div>
                 <h3 className="mt-2 text-2xl font-semibold text-gray-900 md:text-4xl">
-                  Take the First Step Towards Better Health.
+                  {renderTextOrNode(ctaTitle)}
                 </h3>
                 <p className="mt-4 text-sm text-gray-600">
-                  Schedule Your Appointment Easily via Call, WhatsApp or Online
-                  Form
+                  {renderTextOrNode(ctaDescription)}
                 </p>
               </div>
             </FadeIn>
@@ -55,7 +81,7 @@ export function Footer() {
             <FadeIn direction="up" duration={800} distance={30} delay={180}>
               <PrimaryCTAButton
                 href="https://wa.me/916354011290"
-                label="Whatsapp Now"
+                label="Book Your Session"
                 size="md"
                 className="pr-8 cursor-pointer"
                 arrowVariant="dark"

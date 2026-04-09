@@ -271,7 +271,7 @@ export default function TermsAndConditionsPage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Don’t Let Pain Affect Your Productivity" ctaDescription="Start a structured recovery plan designed to help you move better, stay active, and work with confidence." />
     </div>
   );
 }

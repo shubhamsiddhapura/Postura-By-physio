@@ -268,7 +268,7 @@ export default function PrivacyPolicyPage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Ready to Improve Your Posture & Mobility?" ctaDescription="Our personalized physiotherapy programs help reduce stiffness, build strength, and prevent recurring pain." />
     </div>
   );
 }

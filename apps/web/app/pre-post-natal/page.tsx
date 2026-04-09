@@ -92,7 +92,7 @@ export default function PrePostNatalPage() {
         image={{ src: "/pn-4.jpg", alt: "Senior wellness session" }}
         flipImageX={false}
       />
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Support Your Journey to a Healthier<br/> Motherhood" ctaDescription="Join our specialized pre- and post-natal wellness programs to stay strong, active, and confident during every<br/> stage of motherhood." />
     </div>
   );
 }

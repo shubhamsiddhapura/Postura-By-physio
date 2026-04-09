@@ -92,7 +92,7 @@ export default function PhysiotherapyManagementPage() {
         image={{ src: "/physio-4.jpg", alt: "Physiotherapy recovery session" }}
         flipImageX={false}
       />
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Start Your Journey Towards Stronger<br/> Recovery" ctaDescription="Experience structured physiotherapy care designed to help you move freely, regain strength, and return to<br/> your active lifestyle with confidence." />
     </div>
   );
 }

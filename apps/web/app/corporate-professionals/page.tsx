@@ -34,7 +34,7 @@ export default function CorporateProfessionalsPage() {
             <CommonChallenges />
             <StructuredFitnessSolutions />
             <KeyBenefits flipImageX={true} />
-            <Footer />
+            <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Ready to Build a Healthier and More <br/> Productive Work Routine?" ctaDescription="Join our Corporate Fitness & Physiotherapy Programs and experience structured wellness support designed<br/> for modern professionals." />
         </div>
     );
 }

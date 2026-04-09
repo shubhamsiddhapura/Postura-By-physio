@@ -86,7 +86,7 @@ export default function AthleteRehabPage() {
         image={{ src: "/athlete-4.jpg", alt: "Athlete recovery and strength training" }}
         flipImageX={false}
       />
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Train Smarter. Recover Stronger. Perform<br/> Better." ctaDescription="Join our structured sports rehabilitation programs to regain strength, improve performance, and return to your<br/> sport with confidence." />
     </div>
   );
 }

@@ -92,7 +92,7 @@ export default function GeriatricRehabilitationPage() {
                 image={{ src: "/gr-4.jpg", alt: "Senior wellness session" }}
                 flipImageX={false}
             />
-            <Footer />
+            <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Support Healthy Aging with Guided<br/> Rehabilitation" ctaDescription="Help your loved ones stay active, confident, and independent with our specialized geriatric wellness programs." />
         </div>
     );
 }

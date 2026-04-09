@@ -92,7 +92,7 @@ export default function SocietyExercisePage() {
         image={{ src: "/society-4.jpg", alt: "Society wellness session" }}
         flipImageX={false}
       />
-      <Footer />
+      <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Build a Healthier Community Together" ctaDescription="Encourage active living and stronger social connections through our professionally guided society fitness<br/> programs." />
     </div>
   );
 }

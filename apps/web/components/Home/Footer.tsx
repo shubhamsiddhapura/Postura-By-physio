@@ -15,6 +15,7 @@ export function Footer() {
   const quickLinks: Array<{ label: string; href: string }> = [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
+    { label: "Blogs", href: "/blogs" },
     { label: "Services", href: "#services" },
     { label: "FAQs", href: "#faq" },
     { label: "Contact", href: "#contact" },

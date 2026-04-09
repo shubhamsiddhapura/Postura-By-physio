@@ -239,14 +239,14 @@ export function Footer() {
             </div>
             <div className="flex items-center flex-wrap justify-center md:justify-start md:gap-4 gap-2">
               <Link
-                href="#"
+                href="/privacy-policy"
                 className="transition hover:text-secondary"
               >
                 Privacy Policy
               </Link>
               <span>|</span>
               <Link
-                href="#"
+                href="/terms-and-conditions"
                 className="transition hover:text-secondary"
               >
                 Terms & Condition

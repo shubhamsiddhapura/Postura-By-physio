@@ -29,6 +29,8 @@ type HeroSectionProps = {
   id?: string;
   /** Optional extra className for the outer section */
   className?: string;
+  /** Tailwind height class for the hero (e.g. "h-screen", "h-[70vh]"). Defaults to "h-screen". */
+  heightClassName?: string;
   /** Desktop background image for a single, non-slideshow hero */
   bgImageDesktop?: string;
   /** Mobile background image for a single, non-slideshow hero */
@@ -45,6 +47,8 @@ type HeroSectionProps = {
   sub?: string;
   /** When true, shows a “Book Session” CTA in the hero (WhatsApp). Hidden by default. */
   showBookSessionButton?: boolean;
+  /** Controls where the Book Session button appears when enabled. */
+  bookSessionButtonPlacement?: "below" | "right";
 };
 
 const defaultSlides: HeroSlide[] = [
@@ -83,6 +87,7 @@ export function HeroSection({
   slides,
   id = "hero",
   className = "",
+  heightClassName = "h-screen",
   bgImageDesktop,
   bgImageMobile,
   alt,
@@ -91,12 +96,13 @@ export function HeroSection({
   body,
   sub,
   showBookSessionButton = false,
+  bookSessionButtonPlacement = "below",
 }: HeroSectionProps) {
   const resolvedSlides: HeroSlide[] =
     slides && slides.length > 0
       ? slides
       : bgImageDesktop || bgImageMobile || headline || body
-      ? [
+        ? [
           {
             src: bgImageDesktop || "/hero-1.png",
             mobileSrc: bgImageMobile || bgImageDesktop || "/responsive-banner-1.png",
@@ -111,7 +117,7 @@ export function HeroSection({
             sub: sub,
           },
         ]
-      : defaultSlides;
+        : defaultSlides;
 
   const [current, setCurrent] = useState(0);
 
@@ -131,15 +137,14 @@ export function HeroSection({
   return (
     <section
       id={id}
-      className={`relative w-full h-screen overflow-hidden rounded-br-[100px] ${className}`}
+      className={`relative w-full ${heightClassName} overflow-hidden rounded-br-[100px] ${className}`}
     >
       {/* Slides */}
       {resolvedSlides.map((slide, index) => (
         <div
           key={slide.src}
-          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-            index === current ? "opacity-100 z-10" : "opacity-0 z-0"
-          }`}
+          className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === current ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
         >
           {/* Mobile background image (below md) */}
           <Image
@@ -161,6 +166,17 @@ export function HeroSection({
             sizes="100vw"
           />
 
+          {showBookSessionButton && bookSessionButtonPlacement === "right" && (
+            <div className="hidden md:block absolute md:bottom-auto md:left-auto md:top-1/2 md:right-28">
+              <PrimaryCTAButton
+                href="https://wa.me/916354011290"
+                label="Book Session"
+                size="sm"
+                className="md:mt-2"
+              />
+            </div>
+          )}
+
           {/* Text Content */}
           <div className="absolute bottom-24 left-0 right-0 md:bottom-auto md:top-60 flex flex-col px-6 md:px-16 lg:px-24 md:max-w-3xl">
             {/* Tag */}
@@ -173,10 +189,20 @@ export function HeroSection({
 
             {/* Headline */}
             <FadeIn direction="up" distance={30} duration={800} delay={150}>
-              <h1
-                className="text-3xl md:text-6xl font-bold text-[#FEF9E0] leading-tight mb-4 md:mb-5 text-center md:text-left"
-                dangerouslySetInnerHTML={{ __html: slide.headline }}
-              />
+              <div
+                className={[
+                  "flex flex-col items-center gap-4",
+                  "md:flex-row md:items-start md:justify-between md:gap-8",
+                ].join(" ")}
+              >
+                <h1
+                  className={[
+                    "text-3xl md:text-6xl font-bold text-[#FEF9E0] leading-tight text-center md:text-left",
+                    bookSessionButtonPlacement === "below" ? "mb-4 md:mb-5" : "",
+                  ].join(" ")}
+                  dangerouslySetInnerHTML={{ __html: slide.headline }}
+                />
+              </div>
             </FadeIn>
 
             {/* Body */}
@@ -195,15 +221,38 @@ export function HeroSection({
               </FadeIn>
             )}
 
-            {showBookSessionButton && (
-              <FadeIn direction="up" duration={800} distance={28} delay={300} className="flex justify-center md:justify-start">
-              <PrimaryCTAButton
-                href="https://wa.me/916354011290"
-                label="Book Session"
-                size="sm"
-                className="mt-10"
-              />
-            </FadeIn>
+            {showBookSessionButton && bookSessionButtonPlacement === "right" && (
+              <FadeIn
+                direction="up"
+                duration={800}
+                distance={28}
+                delay={300}
+                className="flex md:hidden justify-center"
+              >
+                <PrimaryCTAButton
+                  href="https://wa.me/916354011290"
+                  label="Book Session"
+                  size="sm"
+                  className="mt-10"
+                />
+              </FadeIn>
+            )}
+
+            {showBookSessionButton && bookSessionButtonPlacement === "below" && (
+              <FadeIn
+                direction="up"
+                duration={800}
+                distance={28}
+                delay={300}
+                className="flex justify-center md:justify-start"
+              >
+                <PrimaryCTAButton
+                  href="https://wa.me/916354011290"
+                  label="Book Session"
+                  size="sm"
+                  className="mt-10"
+                />
+              </FadeIn>
             )}
           </div>
         </div>
@@ -225,11 +274,10 @@ export function HeroSection({
                 type="button"
                 onClick={() => goTo(index)}
                 aria-label={`Go to slide ${index + 1}`}
-                className={`rounded-full transition-all duration-300 ${
-                  index === current
+                className={`rounded-full transition-all duration-300 ${index === current
                     ? "w-6 h-2 bg-white"
                     : "w-2 h-2 bg-white/50 hover:bg-white/75"
-                }`}
+                  }`}
               />
             ))}
           </div>

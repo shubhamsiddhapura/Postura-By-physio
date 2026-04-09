@@ -17,7 +17,7 @@ const privacySlides = [
 
 function BulletList({ items }: { items: string[] }) {
   return (
-    <ul className="mt-5 space-y-3 text-left text-sm text-gray-600 md:mt-6">
+    <ul className="mt-5 space-y-3 text-left text-sm text-gray-600 md:mt-6 mx-auto w-full max-w-2xl md:mx-0 md:max-w-none">
       {items.map((b, idx) => (
         <li key={`${idx}-${b}`} className="flex gap-3">
           <span
@@ -26,7 +26,7 @@ function BulletList({ items }: { items: string[] }) {
           >
             <CheckCheckIcon className="h-4 w-4 text-white" />
           </span>
-          <span>{b}</span>
+          <span className="text-left">{b}</span>
         </li>
       ))}
     </ul>
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
       />
 
       <main className="bg-white">
-        <div className="mx-auto max-w-[90vw] px-4 py-12 md:max-w-6xl md:py-16">
+        <div className="mx-auto px-4 py-12 md:max-w-6xl md:py-16 text-center md:text-left">
           <FadeIn direction="up" duration={850} distance={30} delay={0}>
             <section>
               <p className="font-semibold text-gray-900 text-2xl">

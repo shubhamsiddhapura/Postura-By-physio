@@ -21,7 +21,7 @@ const athleteSlides = [
 export default function AthleteRehabPage() {
   return (
     <div className="md:overflow-x-visible">
-      <HeroSection slides={athleteSlides} id="athlete-rehab-hero" />
+      <HeroSection slides={athleteSlides} showBookSessionButton id="athlete-rehab-hero" />
       <BrandIntroduction
         eyebrow="Introduction"
         title="Your Journey Back to Peak Performance"

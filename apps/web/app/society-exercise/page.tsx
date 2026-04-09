@@ -21,7 +21,7 @@ const societySlides = [
 export default function SocietyExercisePage() {
   return (
     <div className="md:overflow-x-visible">
-      <HeroSection slides={societySlides} id="society-exercise-hero" />
+      <HeroSection slides={societySlides} showBookSessionButton id="society-exercise-hero" />
       <BrandIntroduction
         eyebrow="Introduction"
         title="Fitness That Brings Communities Together"

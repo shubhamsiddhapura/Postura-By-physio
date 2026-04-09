@@ -21,7 +21,7 @@ const aboutSlides = [
 export default function GeriatricRehabilitationPage() {
     return (
         <div className="md:overflow-x-visible">
-            <HeroSection slides={aboutSlides} id="geriatric-rehabilitation-hero" />
+            <HeroSection slides={aboutSlides} showBookSessionButton id="geriatric-rehabilitation-hero" />
             <BrandIntroduction
                 eyebrow="Introduction"
                 title="Helping Seniors Stay Active & Independent"

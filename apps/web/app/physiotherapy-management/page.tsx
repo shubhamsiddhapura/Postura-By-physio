@@ -21,7 +21,7 @@ const physiotherapySlides = [
 export default function PhysiotherapyManagementPage() {
   return (
     <div className="md:overflow-x-visible">
-      <HeroSection slides={physiotherapySlides} id="physiotherapy-management-hero" />
+      <HeroSection slides={physiotherapySlides} showBookSessionButton id="physiotherapy-management-hero" />
       <BrandIntroduction
         eyebrow="Introduction"
         title="Your Path to Safe & Effective Recovery"

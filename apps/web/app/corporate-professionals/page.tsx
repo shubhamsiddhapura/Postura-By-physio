@@ -21,7 +21,7 @@ const aboutSlides = [
 export default function CorporateProfessionalsPage() {
     return (
         <div className="md:overflow-x-visible">
-            <HeroSection slides={aboutSlides} id="corporate-professionals-hero" />
+            <HeroSection slides={aboutSlides} showBookSessionButton id="corporate-professionals-hero" />
             <BrandIntroduction
                 eyebrow="Introduction"
                 title="Corporate Wellness for Better Productivity"

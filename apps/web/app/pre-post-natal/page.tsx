@@ -21,7 +21,7 @@ const aboutSlides = [
 export default function PrePostNatalPage() {
   return (
     <div className="md:overflow-x-visible">
-      <HeroSection slides={aboutSlides} id="pre-post-natal-hero" />
+      <HeroSection slides={aboutSlides} showBookSessionButton id="pre-post-natal-hero" />
       <BrandIntroduction
         eyebrow="Introduction"
         title="Care for Every Stage of Motherhood"

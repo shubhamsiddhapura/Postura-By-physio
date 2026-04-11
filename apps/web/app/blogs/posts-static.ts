@@ -15,7 +15,7 @@ export const blogPosts: BlogPost[] = [
     id: "1",
     imageSrc: "/blog1-details.jpg",
     title: "Neck Pain in IT Professionals: Causes & Physiotherapy Solutions",
-    date: "February 27, 2025",
+    date: "February 27, 2026",
     author: "Edward",
     eyebrow: "Here is a detailed blog article content you can use for",
     paragraphs: [

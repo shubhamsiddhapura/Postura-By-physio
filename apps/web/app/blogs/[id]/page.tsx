@@ -40,16 +40,16 @@ export default function BlogDetailPage({ params }: PageProps) {
   if (!post) notFound();
 
   return (
-    <div className="md:overflow-x-visible">
+    <div className="overflow-x-hidden">
       {/* Hero: teal panel + overlapping image */}
       <section className="relative pb-0">
         <div
-          className="relative overflow-hidden rounded-br-[clamp(3rem,12vw,7.5rem)] rounded-bl-3xl pb-[clamp(8rem,22vw,14rem)] flex items-center pt-10 md:pt-14 h-screen"
+          className="relative overflow-hidden rounded-br-[clamp(3rem,12vw,7.5rem)] rounded-bl-3xl pb-[clamp(8rem,22vw,14rem)] flex items-center pt-10 md:pt-14 md:h-screen h-[90vh]"
           style={{ backgroundColor: heroTeal }}
         >
-          <div className="px-4 mx-32">
+          <div className="px-4 md:mx-32 text-center md:text-left">
 
-            <p className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center md:justify-start">
+            <p className="flex items-center gap-2 md:text-sm text-xs font-medium text-[#FEF9E0] justify-center md:justify-start">
               <span>✦</span>
               {post.eyebrow}
             </p>
@@ -60,8 +60,8 @@ export default function BlogDetailPage({ params }: PageProps) {
               {post.title}
             </h1>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4 md:gap-6">
-              <div className="flex items-center gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-20 md:gap-6 justify-center md:justify-start">
+              <div className="flex items-center gap-3 flex-col md:flex-row">
                 <span
                   className="grid h-10 w-10 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]"
                 >
@@ -78,7 +78,7 @@ export default function BlogDetailPage({ params }: PageProps) {
                   {post.date}
                 </span>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-col md:flex-row">
                 <span
                   className="grid h-10 w-10 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]"
                 >
@@ -99,8 +99,8 @@ export default function BlogDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto -mt-60 max-w-7xl px-4">
-          <div className="relative h-[580px] w-full overflow-hidden rounded-tl-3xl rounded-br-3xl rounded-tr-[84px] rounded-bl-[84px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)]">
+        <div className="relative z-10 mx-auto md:-mt-60 -mt-40 max-w-7xl px-4">
+          <div className="relative h-[300px] md:h-[580px] w-full overflow-hidden rounded-tl-3xl rounded-br-3xl rounded-tr-[84px] rounded-bl-[84px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)]">
             <Image
               src={post.imageSrc}
               alt={post.title}
@@ -263,7 +263,7 @@ export default function BlogDetailPage({ params }: PageProps) {
           </section>
 
           <section className="bg-white pb-16 pt-10 md:pb-20 md:pt-12">
-            <div className="mx-auto max-w-[90vw] px-4">
+            <div className="mx-auto max-w-[90vw] px-4 text-center md:text-left">
               <div className="h-px w-full bg-gray-200" />
               <h2 className="mt-10 text-4xl font-bold tracking-tight text-gray-900 md:mt-12 md:text-5xl">
                 Conclusion

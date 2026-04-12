@@ -5,7 +5,9 @@ import { useState } from "react";
 import { FadeIn } from "../ui/FadeIn";
 import { cn } from "../../lib/utils";
 
-type AnswerKey = "about" | "activity" | "discomfort" | "cause";
+export type AnswerKey = "about" | "activity" | "discomfort" | "cause";
+
+export type PatientInteractionAnswers = Record<AnswerKey, string>;
 
 const QUESTIONS: Array<{
   key: AnswerKey;
@@ -76,22 +78,41 @@ const QUESTIONS: Array<{
   },
 ];
 
-const DEFAULT_ANSWERS: Record<AnswerKey, string> = {
+export const DEFAULT_PATIENT_ANSWERS: PatientInteractionAnswers = {
   about: "IT / Software Professional",
   activity: "Less than 4 hours sitting",
   discomfort: "Neck",
   cause: "Prolonged sitting / Poor posture",
 };
 
-export function PatientInteractionQuestionnaire() {
-  const [answers, setAnswers] = useState<Record<AnswerKey, string>>(DEFAULT_ANSWERS);
+type PatientInteractionQuestionnaireProps = {
+  /** When set with `onAnswerChange`, answers are controlled by the parent (e.g. patient-interaction summary modal). */
+  answers?: PatientInteractionAnswers;
+  onAnswerChange?: (key: AnswerKey, value: string) => void;
+  sectionId?: string;
+};
+
+export function PatientInteractionQuestionnaire({
+  answers: controlledAnswers,
+  onAnswerChange,
+  sectionId,
+}: PatientInteractionQuestionnaireProps = {}) {
+  const [uncontrolled, setUncontrolled] =
+    useState<PatientInteractionAnswers>(DEFAULT_PATIENT_ANSWERS);
+
+  const isControlled = controlledAnswers !== undefined && onAnswerChange !== undefined;
+  const answers = isControlled ? controlledAnswers : uncontrolled;
 
   const setAnswer = (key: AnswerKey, value: string) => {
-    setAnswers((prev) => ({ ...prev, [key]: value }));
+    if (isControlled) {
+      onAnswerChange(key, value);
+    } else {
+      setUncontrolled((prev) => ({ ...prev, [key]: value }));
+    }
   };
 
   return (
-    <section className="bg-white">
+    <section id={sectionId} className="bg-white">
       <div className="mx-auto max-w-[90vw] px-4 pt-16 md:px-4 md:pt-20">
         {/* Header */}
         <div className="grid gap-8 md:grid-cols-[1fr,1.1fr] md:items-end md:gap-12">

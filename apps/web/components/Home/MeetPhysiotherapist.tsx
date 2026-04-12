@@ -65,9 +65,7 @@ export function MeetPhysiotherapist({
 
                 <FadeIn direction="up" duration={800} distance={28} delay={600}>
                   <PrimaryCTAButton
-                    href={`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(
-                      whatsappMessage
-                    )}`}
+                    href={`/patient-interaction`}
                     label={ctaLabel}
                     size="sm"
                     className="mt-8"  

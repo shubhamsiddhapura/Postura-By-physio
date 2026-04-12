@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, type MouseEvent } from "react";
 import { FadeIn } from "../ui/FadeIn";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
@@ -49,6 +49,10 @@ type HeroSectionProps = {
   showBookSessionButton?: boolean;
   /** Controls where the Book Session button appears when enabled. */
   bookSessionButtonPlacement?: "below" | "right";
+  /**
+   * When set (e.g. patient-interaction flow), the Book Session CTA opens this handler instead of linking to WhatsApp.
+   */
+  bookSessionOnClick?: () => void;
 };
 
 const defaultSlides: HeroSlide[] = [
@@ -97,7 +101,15 @@ export function HeroSection({
   sub,
   showBookSessionButton = false,
   bookSessionButtonPlacement = "below",
+  bookSessionOnClick,
 }: HeroSectionProps) {
+  const bookHref = bookSessionOnClick ? "#" : "https://wa.me/916354011290";
+  const bookClick = bookSessionOnClick
+    ? (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        bookSessionOnClick();
+      }
+    : undefined;
   const resolvedSlides: HeroSlide[] =
     slides && slides.length > 0
       ? slides
@@ -169,10 +181,11 @@ export function HeroSection({
           {showBookSessionButton && bookSessionButtonPlacement === "right" && (
             <div className="hidden md:block absolute md:bottom-auto md:left-auto md:top-1/2 md:right-28">
               <PrimaryCTAButton
-                href="https://wa.me/916354011290"
+                href={bookHref}
                 label="Book Session"
                 size="sm"
                 className="md:mt-2"
+                onClick={bookClick}
               />
             </div>
           )}
@@ -230,10 +243,11 @@ export function HeroSection({
                 className="flex md:hidden justify-center"
               >
                 <PrimaryCTAButton
-                  href="https://wa.me/916354011290"
+                  href={bookHref}
                   label="Book Session"
                   size="sm"
                   className="mt-10"
+                  onClick={bookClick}
                 />
               </FadeIn>
             )}
@@ -247,10 +261,11 @@ export function HeroSection({
                 className="flex justify-center md:justify-start"
               >
                 <PrimaryCTAButton
-                  href="https://wa.me/916354011290"
+                  href={bookHref}
                   label="Book Session"
                   size="sm"
                   className="mt-10"
+                  onClick={bookClick}
                 />
               </FadeIn>
             )}

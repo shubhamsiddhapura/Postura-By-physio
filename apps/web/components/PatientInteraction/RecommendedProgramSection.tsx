@@ -10,7 +10,12 @@ const PROGRAM_TAGS = [
   "Neurological rehabilitation",
 ] as const;
 
-export function RecommendedProgramSection() {
+type RecommendedProgramSectionProps = {
+  /** Patient-interaction page: open health summary modal instead of navigating. */
+  onBookSessionClick?: () => void;
+};
+
+export function RecommendedProgramSection({ onBookSessionClick }: RecommendedProgramSectionProps) {
   return (
     <section className="bg-white pb-10 md:pb-20">
       <div className="mx-auto max-w-[90vw] md:px-4 border-t border-gray-200 py-10">
@@ -39,11 +44,19 @@ export function RecommendedProgramSection() {
         <FadeIn direction="up" distance={20} duration={700} delay={120}>
           <div className="mt-8 flex justify-center md:mt-10">
             <PrimaryCTAButton
-              href="/book-a-session"
+              href={onBookSessionClick ? "#" : "/book-a-session"}
               label="Book Your Session"
               size="md"
               arrowVariant="dark"
               className="pr-8"
+              onClick={
+                onBookSessionClick
+                  ? (e) => {
+                      e.preventDefault();
+                      onBookSessionClick();
+                    }
+                  : undefined
+              }
             />
           </div>
         </FadeIn>

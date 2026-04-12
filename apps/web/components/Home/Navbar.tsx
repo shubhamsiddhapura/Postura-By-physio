@@ -107,7 +107,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <PrimaryCTAButton
-              href="https://wa.me/916354011290"
+              href="/book-a-session"
               label="Book Session"
               size="md"
               className="hidden pr-8 md:block"
@@ -155,7 +155,7 @@ export function Navbar() {
             ))}
             <div className="pt-2">
               <PrimaryCTAButton
-                href="https://wa.me/916354011290"
+                href="/book-a-session"
                 label="Book Session"
                 size="sm"
                 className="justify-center"

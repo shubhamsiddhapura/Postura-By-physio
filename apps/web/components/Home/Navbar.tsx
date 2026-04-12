@@ -11,7 +11,7 @@ import { scrollToHash, useSmoothHashScroll } from "../../lib/scroll";
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Services", href: "#services" },
+  { label: "Services", href: "/services" },
   { label: "Who Can Join", href: "#who-can-join" },
   { label: "Gallery", href: "/gallery" },
   { label: "FAQs", href: "#faqs" },

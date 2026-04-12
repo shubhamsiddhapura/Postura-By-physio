@@ -21,13 +21,18 @@ export type WhyChooseUsItem = {
 export type WhyChooseUsProps = {
   id?: string;
   className?: string;
-  eyebrow?: string;
-  title?: string;
-  description?: string;
+  /** Small label beside the sparkle (e.g. section theme). */
+  eyebrow?: ReactNode;
+  /** Main heading (string or JSX, e.g. with <br />). */
+  title?: ReactNode;
+  /** Intro copy shown beside / below the title on larger screens. */
+  description?: ReactNode;
   /** Defaults to the home page five cards when omitted. */
   items?: WhyChooseUsItem[];
   /** Grid columns from `md` up (default `5` for home). */
   mdColumns?: 2 | 3 | 4 | 5;
+  /** Set false to hide the sparkle icon before the eyebrow. */
+  showSparkle?: boolean;
 };
 
 const defaultItems: WhyChooseUsItem[] = [
@@ -85,6 +90,7 @@ export function WhyChooseUs({
   description = "Expert care designed around your body, your goals, and your lifestyle.",
   items = defaultItems,
   mdColumns = 5,
+  showSparkle = true,
 }: WhyChooseUsProps) {
   const gridMd = mdColClass[mdColumns];
 
@@ -94,17 +100,19 @@ export function WhyChooseUs({
         <div className="grid gap-3 md:grid-cols-[1fr,1.2fr] md:items-end md:gap-10">
           <FadeIn direction="up" duration={800} distance={30} delay={0}>
             <div className="text-center md:text-left">
-              <div className="flex items-center justify-center gap-2 text-sm font-medium text-primary md:justify-start">
-                <Image
-                  src="/sparkle.svg"
-                  alt=""
-                  width={16}
-                  height={16}
-                  className="h-4 w-4"
-                />
+              <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-medium text-primary md:justify-start">
+                {showSparkle ? (
+                  <Image
+                    src="/sparkle.svg"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="h-4 w-4"
+                  />
+                ) : null}
                 <span>{eyebrow}</span>
               </div>
-              <h2 className="mt-4 md:text-5xl text-3xl font-bold tracking-tight text-gray-900">
+              <h2 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 md:text-5xl">
                 {title}
               </h2>
             </div>
@@ -117,9 +125,9 @@ export function WhyChooseUs({
             delay={120}
             className="md:justify-self-end"
           >
-            <p className="max-w-xl text-center text-sm leading-6 text-gray-500 md:text-left">
+            <div className="max-w-xl text-center text-sm leading-6 text-gray-500 md:text-left">
               {description}
-            </p>
+            </div>
           </FadeIn>
         </div>
 

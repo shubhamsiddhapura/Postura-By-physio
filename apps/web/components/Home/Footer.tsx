@@ -46,7 +46,7 @@ export function Footer({
     { label: "Patient Interaction", href: "/patient-interaction" },
     { label: "Testimonials", href: "/testimonials" },
     { label: "Blogs", href: "/blogs" },
-    { label: "Services", href: "#services" },
+    { label: "Services", href: "/services" },
     { label: "FAQs", href: "#faq" },
     { label: "Contact", href: "#contact" },
   ];

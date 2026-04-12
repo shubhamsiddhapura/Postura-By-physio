@@ -3,7 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 import { cn } from "../../lib/utils";
@@ -64,6 +64,9 @@ const defaultSlides: SpecializedProgramSlide[] = [
   },
 ];
 
+/** Horizontal space between mobile carousel cards (px). */
+const MOBILE_CAROUSEL_GAP_PX = 12;
+
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
@@ -107,6 +110,47 @@ function getSlotStyle(
     opacity: 0,
     pointerEvents: "none",
   };
+}
+
+function MobileProgramCard({
+  slide,
+  priority,
+}: {
+  slide: SpecializedProgramSlide;
+  priority?: boolean;
+}) {
+  return (
+    <Link href={slide.href} className="group block">
+      <div className="relative aspect-[3/4] w-full overflow-hidden rounded-bl-xl rounded-tl-[36px] rounded-br-[36px] rounded-tr-xl">
+        <Image
+          src={slide.imageSrc}
+          alt={slide.title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          sizes="(max-width: 768px) 340px, 100vw"
+          priority={priority}
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/35 to-primary/5" />
+
+        <div
+          className="pointer-events-none absolute inset-3 rounded-bl-md rounded-tl-[28px] rounded-br-[28px] rounded-tr-md border border-[#FEF9E0]/90"
+          aria-hidden
+        />
+
+        <div className="absolute right-3 top-3 z-10">
+          <span className="grid h-9 w-9 place-items-center rounded-full bg-secondary text-white shadow-md">
+            <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+          </span>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+          <h3 className="text-base font-bold leading-tight">{slide.title}</h3>
+          <p className="mt-1.5 text-sm text-white/90">{slide.subtitle}</p>
+        </div>
+      </div>
+    </Link>
+  );
 }
 
 function CarouselCard({
@@ -188,14 +232,36 @@ export function SpecializedProgramsCarousel({
 }: SpecializedProgramsCarouselProps) {
   const len = slides.length;
   const [index, setIndex] = useState(0);
+  /** Skip CSS transition on mobile track when wrapping last↔first (avoids animating through all slides). */
+  const [mobileSkipTransition, setMobileSkipTransition] = useState(false);
 
   const goPrev = useCallback(() => {
-    setIndex((i) => mod(i - 1, len));
+    setIndex((i) => {
+      const next = mod(i - 1, len);
+      if (len > 1 && i === 0 && next === len - 1) {
+        setMobileSkipTransition(true);
+      }
+      return next;
+    });
   }, [len]);
 
   const goNext = useCallback(() => {
-    setIndex((i) => mod(i + 1, len));
+    setIndex((i) => {
+      const next = mod(i + 1, len);
+      if (len > 1 && i === len - 1 && next === 0) {
+        setMobileSkipTransition(true);
+      }
+      return next;
+    });
   }, [len]);
+
+  useLayoutEffect(() => {
+    if (!mobileSkipTransition) return;
+    const id = requestAnimationFrame(() => {
+      setMobileSkipTransition(false);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [mobileSkipTransition, index]);
 
   const progress = len <= 1 ? 0.5 : index / (len - 1);
   const RX = 240;
@@ -237,8 +303,70 @@ export function SpecializedProgramsCarousel({
           </FadeIn>
         </div>
 
-        {/* Carousel viewport */}
-        <div className="mt-12 overflow-hidden md:mt-16" style={{ perspective: "1200px" }}>
+        {/* Mobile: horizontal slide track + centered arrows */}
+        <div className="mt-12 md:hidden" aria-live="polite">
+          <div className="mx-auto w-full max-w-[min(100%,340px)] overflow-hidden">
+            <div
+              className={cn(
+                "flex",
+                !mobileSkipTransition &&
+                  "transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
+              )}
+              style={{
+                gap: len <= 1 ? undefined : `${MOBILE_CAROUSEL_GAP_PX}px`,
+                width:
+                  len <= 1
+                    ? "100%"
+                    : `calc(${len} * 100% + ${(len - 1) * MOBILE_CAROUSEL_GAP_PX}px)`,
+                transform:
+                  len <= 1
+                    ? undefined
+                    : `translateX(calc(-${index} * ((100% - ${(len - 1) * MOBILE_CAROUSEL_GAP_PX}px) / ${len} + ${MOBILE_CAROUSEL_GAP_PX}px)))`,
+              }}
+            >
+              {slides.map((slide, i) => (
+                <div
+                  key={slide.href + slide.title}
+                  className="min-w-0 shrink-0 grow-0"
+                  style={
+                    len <= 1
+                      ? { width: "100%" }
+                      : {
+                          flex: `0 0 calc((100% - ${(len - 1) * MOBILE_CAROUSEL_GAP_PX}px) / ${len})`,
+                        }
+                  }
+                >
+                  <MobileProgramCard slide={slide} priority={i === 0} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center justify-center gap-10">
+            <button
+              type="button"
+              onClick={goPrev}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-secondary bg-white text-secondary shadow-sm transition hover:bg-secondary/5"
+              aria-label="Previous slide"
+            >
+              <ArrowLeft className="h-5 w-5" strokeWidth={2.25} />
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary text-white shadow-sm transition hover:brightness-90"
+              aria-label="Next slide"
+            >
+              <ArrowRight className="h-5 w-5" strokeWidth={2.25} />
+            </button>
+          </div>
+        </div>
+
+        {/* Desktop: 3-up 3D carousel + ellipse indicator */}
+        <div
+          className="mt-12 hidden overflow-hidden md:mt-16 md:block"
+          style={{ perspective: "1200px" }}
+        >
           <div
             className="relative mx-auto h-[240px] max-w-5xl md:h-[310px] lg:h-[370px]"
             style={{ transformStyle: "preserve-3d" }}
@@ -254,8 +382,8 @@ export function SpecializedProgramsCarousel({
           </div>
         </div>
 
-        {/* Controls */}
-        <div className="mt-10 flex items-center justify-between gap-4 md:mt-12">
+        {/* Desktop controls: arrows + 3D ellipse */}
+        <div className="mt-10 hidden items-center justify-between gap-4 md:mt-12 md:flex">
           <button
             type="button"
             onClick={goPrev}
@@ -265,46 +393,44 @@ export function SpecializedProgramsCarousel({
             <ArrowLeft className="h-5 w-5" strokeWidth={2.25} />
           </button>
 
-          <svg
-            viewBox="0 0 500 48"
-            className="mx-auto w-full max-w-sm md:max-w-md lg:max-w-lg"
-            role="presentation"
-            aria-hidden="true"
-          >
-            {/* Back half of the ellipse (behind the dot) with white fill for 3D depth */}
-            <path
-              d={`M ${CX - RX} ${CY} A ${RX} ${RY} 0 0 0 ${CX + RX} ${CY}`}
-              fill="none"
-              stroke="var(--color-primary, #2A7A7A)"
-              strokeWidth={1.3}
-              opacity={0.18}
-            />
-            {/* White opacity wash on the back arc for 3D effect */}
-            <ellipse
-              cx={CX}
-              cy={CY + 2}
-              rx={RX - 10}
-              ry={RY - 4}
-              fill="white"
-              opacity={0.5}
-            />
-            {/* Front half of the ellipse (in front of the dot) */}
-            <path
-              d={`M ${CX - RX} ${CY} A ${RX} ${RY} 0 0 1 ${CX + RX} ${CY}`}
-              fill="none"
-              stroke="var(--color-primary, #2A7A7A)"
-              strokeWidth={1.5}
-              opacity={0.4}
-            />
-            {/* Animated dot */}
-            <circle
-              cx={dotCx}
-              cy={dotCy}
-              r={7.5}
-              fill="var(--color-primary, #2A7A7A)"
-              style={{ transition: "cx 0.7s cubic-bezier(0.4,0,0.2,1), cy 0.7s cubic-bezier(0.4,0,0.2,1)" }}
-            />
-          </svg>
+          <div className="flex min-w-0 flex-1 justify-center px-2">
+            <svg
+              viewBox="0 0 500 48"
+              className="w-full max-w-sm md:max-w-md lg:max-w-lg"
+              role="presentation"
+              aria-hidden="true"
+            >
+              <path
+                d={`M ${CX - RX} ${CY} A ${RX} ${RY} 0 0 0 ${CX + RX} ${CY}`}
+                fill="none"
+                stroke="var(--color-primary, #2A7A7A)"
+                strokeWidth={1.3}
+                opacity={0.18}
+              />
+              <ellipse
+                cx={CX}
+                cy={CY + 2}
+                rx={RX - 10}
+                ry={RY - 4}
+                fill="white"
+                opacity={0.5}
+              />
+              <path
+                d={`M ${CX - RX} ${CY} A ${RX} ${RY} 0 0 1 ${CX + RX} ${CY}`}
+                fill="none"
+                stroke="var(--color-primary, #2A7A7A)"
+                strokeWidth={1.5}
+                opacity={0.4}
+              />
+              <circle
+                cx={dotCx}
+                cy={dotCy}
+                r={7.5}
+                fill="var(--color-primary, #2A7A7A)"
+                style={{ transition: "cx 0.7s cubic-bezier(0.4,0,0.2,1), cy 0.7s cubic-bezier(0.4,0,0.2,1)" }}
+              />
+            </svg>
+          </div>
 
           <button
             type="button"

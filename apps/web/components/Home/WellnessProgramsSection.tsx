@@ -95,7 +95,7 @@ export function WellnessProgramsSection({
               delay={120 + index * 60}
             >
               <article className="group cursor-pointer">
-                <div className="relative aspect-[1/1.2] w-full overflow-hidden rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl bg-gray-100 shadow-[0_12px_40px_rgba(15,23,42,0.06)] ring-1 ring-black/[0.04]">
+                <div className="relative md:aspect-[1/1.2] aspect-square w-full overflow-hidden rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl bg-gray-100 shadow-[0_12px_40px_rgba(15,23,42,0.06)] ring-1 ring-black/[0.04]">
                   <Image
                     src={item.imageSrc}
                     alt={item.alt}

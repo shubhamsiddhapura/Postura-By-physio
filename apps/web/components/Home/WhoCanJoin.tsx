@@ -1,16 +1,17 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 
-type Card = {
+export type WhoCanJoinCard = {
   title: string;
   subtitle: string;
   imageSrc: string;
   href?: string;
 };
 
-const cards: Card[] = [
+const defaultCards: WhoCanJoinCard[] = [
   {
     title: "Corporate / IT Employees",
     subtitle: "Better posture. Better performance.",
@@ -49,28 +50,53 @@ const cards: Card[] = [
   },
 ];
 
-export function WhoCanJoin() {
+export type WhoCanJoinProps = {
+  /** Section id for in-page navigation. */
+  id?: string;
+  /** Small label next to the sparkle icon. */
+  eyebrow?: string;
+  /** Main heading. */
+  title?: ReactNode;
+  /** Supporting paragraph. */
+  description?: ReactNode;
+  /** Cards grid content. */
+  cards?: WhoCanJoinCard[];
+};
+
+const defaultTitle = <>Who Can Join Us?</>;
+const defaultDescription = (
+  <>
+    Whether you&apos;re dealing with pain, recovering from injury, or simply looking to stay active, our programs are
+    designed for individuals at every stage of life.
+  </>
+);
+
+export function WhoCanJoin({
+  id = "who-can-join",
+  eyebrow = "Care for all.",
+  title = defaultTitle,
+  description = defaultDescription,
+  cards = defaultCards,
+}: WhoCanJoinProps) {
   return (
-    <section id="who-can-join" className="bg-white">
+    <section id={id} className="bg-white">
       <div className="mx-auto max-w-[90vw] md:px-4 py-16 md:py-20">
         <div className="grid gap-10 md:grid-cols-[1fr,1.15fr] md:items-end">
           <FadeIn direction="up" distance={32} duration={800} delay={0}>
             <div>
               <div className="flex items-center gap-2 text-sm font-medium text-gray-500">
                 <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
-                <span className="text-primary">Care for all.</span>
+                <span className="text-primary">{eyebrow}</span>
               </div>
               <h2 className="mt-3 text-5xl font-bold tracking-tight text-gray-900">
-                Who Can Join Us?
+                {title}
               </h2>
             </div>
           </FadeIn>
 
           <FadeIn direction="up" delay={120} className="md:justify-self-end">
             <p className="max-w-2xl text-sm leading-6 text-gray-500 md:mt-2">
-              Whether you&apos;re dealing with pain, recovering from injury, or
-              simply looking to stay active, our programs are designed for
-              individuals at every stage of life.
+              {description}
             </p>
           </FadeIn>
         </div>

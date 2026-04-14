@@ -1,9 +1,22 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { Fragment } from "react";
 import Image from "next/image";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { cn } from "@/lib/utils";
+
+function renderWithBr(value: ReactNode) {
+  if (typeof value !== "string") return value;
+  const parts = value.split(/<br\s*\/?>/gi);
+  if (parts.length === 1) return value;
+  return parts.map((part, idx) => (
+    <Fragment key={idx}>
+      {part}
+      {idx < parts.length - 1 ? <br /> : null}
+    </Fragment>
+  ));
+}
 
 export type ApproachStep = {
   key: string;
@@ -15,6 +28,7 @@ export type ApproachStep = {
 export type OurApproachTimelineProps = {
   id?: string;
   className?: string;
+  backgroundClassName?: string;
   eyebrow?: ReactNode;
   title?: ReactNode;
   description?: ReactNode;
@@ -24,6 +38,7 @@ export type OurApproachTimelineProps = {
 export function OurApproachTimeline({
   id = "our-approach",
   className,
+  backgroundClassName = "bg-white",
   eyebrow = "How it Works",
   title = (
     <>
@@ -41,7 +56,7 @@ export function OurApproachTimeline({
   steps,
 }: OurApproachTimelineProps) {
   return (
-    <section id={id} className={cn("bg-white", className)}>
+    <section id={id} className={cn(backgroundClassName, className)}>
       <div className="mx-auto max-w-[90vw] px-4 pt-16 md:pt-28">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-12">
           <FadeIn direction="up" distance={28} duration={800} delay={0}>
@@ -57,8 +72,8 @@ export function OurApproachTimeline({
           </FadeIn>
 
           <FadeIn direction="up" distance={28} duration={800} delay={100}>
-            <div className="space-y-4 text-center text-sm leading-7 text-gray-500 md:text-right">
-              <p>{description}</p>
+            <div className="space-y-4 text-center text-sm leading-7 text-gray-500 md:text-left">
+              <p>{renderWithBr(description)}</p>
             </div>
           </FadeIn>
         </div>

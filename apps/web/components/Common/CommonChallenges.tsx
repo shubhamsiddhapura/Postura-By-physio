@@ -1,6 +1,20 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
+import { Fragment } from "react";
 import { FadeIn } from "../ui/FadeIn";
 import { CheckCheckIcon } from "lucide-react";
+
+function renderWithBr(value: ReactNode) {
+  if (typeof value !== "string") return value;
+  const parts = value.split(/<br\s*\/?>/gi);
+  if (parts.length === 1) return value;
+  return parts.map((part, idx) => (
+    <Fragment key={idx}>
+      {part}
+      {idx < parts.length - 1 ? <br /> : null}
+    </Fragment>
+  ));
+}
 
 export type CommonChallengesImage = {
   src: string;
@@ -9,10 +23,10 @@ export type CommonChallengesImage = {
 
 export type CommonChallengesProps = {
   eyebrow?: string;
-  title?: string;
-  description?: string;
+  title?: ReactNode;
+  description?: ReactNode;
   /** Second paragraph below `description`, with extra spacing. */
-  description2?: string;
+  description2?: ReactNode;
   /** If omitted or empty, the bullet list is hidden. */
   bullets?: string[];
   image?: CommonChallengesImage;
@@ -81,17 +95,17 @@ export function CommonChallenges({
 
             <FadeIn direction="up" duration={800} distance={30} delay={220}>
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 md:text-5xl">
-                {title}
+                {renderWithBr(title)}
               </h2>
             </FadeIn>
 
             <FadeIn direction="up" duration={800} distance={30} delay={320}>
               <p className="mt-4 text-sm leading-6 text-gray-500">
-                {description}
+                {renderWithBr(description)}
               </p>
               {description2 ? (
                 <p className="mt-5 text-sm leading-6 text-gray-500 md:mt-6">
-                  {description2}
+                  {renderWithBr(description2)}
                 </p>
               ) : null}
             </FadeIn>

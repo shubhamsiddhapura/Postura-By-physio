@@ -53,7 +53,7 @@ export default function ServicesPage() {
   return (
     <div className="md:overflow-x-visible">
       <HeroSection slides={servicesSlides} id="services-page-hero" showBookSessionButton />
-       <div className="py-10 md:py-20">
+      <div className="py-10 md:py-20">
         <CommonChallenges
           eyebrow="Service Intro"
           title="Comprehensive Care for Every Stage of Life"
@@ -61,31 +61,31 @@ export default function ServicesPage() {
           description2="Our services are designed for individuals across all age groups from corporate professionals and athletes to seniors and mothers ensuring safe, effective, and personalized care for every need."
           image={{ src: "/blog-symptoms.jpg", alt: "common symptoms" }}
         />
-        </div>
-        
-<div className="pb-10">
-<ServicesSection
-        id="services-programs"
-        overlapFooter={false}
-        eyebrow="Core offerings"
-        title={
-          <>
-            Explore Our Core
-            <br />  
-            Wellness Programs
-          </>
-        }
-        description="From physiotherapy to guided fitness, pick the path that fits your goals — delivered at home, in your society, or online. Every program is structured for safe progress and lasting results."
-      />
-</div>
-      
+      </div>
+
+      <div className="pb-10">
+        <ServicesSection
+          id="services-programs"
+          overlapFooter={false}
+          eyebrow="Core offerings"
+          title={
+            <>
+              Explore Our Core
+              <br />
+              Wellness Programs
+            </>
+          }
+          description="From physiotherapy to guided fitness, pick the path that fits your goals — delivered at home, in your society, or online. Every program is structured for safe progress and lasting results."
+        />
+      </div>
+
 
       <WellnessProgramsSection />
 
       <SpecializedProgramsCarousel />
 
-        
-        <div className="pb-10 md:pb-20 pt-10 bg-white">
+
+      <div className="pb-10 md:pb-20 pt-10 bg-white">
         <WhyChooseUs
           id="why-choose-postura-services"
           eyebrow="Why Choose"
@@ -94,7 +94,7 @@ export default function ServicesPage() {
           items={whyChoosePosturaItems}
           mdColumns={5}
         />
-        </div>
+      </div>
       <Footer ctaDescription="Whether you are recovering from pain or looking to improve your fitness, our expert team is here to guide you." />
     </div>
   );

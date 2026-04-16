@@ -28,21 +28,25 @@ const defaultItems: WellnessProgramItem[] = [
     title: "Swiss Ball Training",
     alt: "Swiss ball core training",
     imageSrc: "/athlete-pilates.jpg",
+    href: "/swiss-ball-training",
   },
   {
     title: "Couple Exercise",
     alt: "Couple stretching and exercise together",
     imageSrc: "/society-yoga.jpg",
+    href: "/couple-exercise-program",
   },
   {
     title: "Theraband Training",
     alt: "Resistance band training",
     imageSrc: "/physio-2.jpg",
+    href: "/theraband-training",
   },
   {
     title: "Flexibar Training",
     alt: "Flexibility and bar-assisted training",
     imageSrc: "/pn-yoga.jpg",
+    href: "/flexibar-training",
   },
 ];
 
@@ -94,26 +98,28 @@ export function WellnessProgramsSection({
               distance={32}
               delay={120 + index * 60}
             >
-              <article className="group cursor-pointer">
-                <div className="relative md:aspect-[1/1.2] aspect-square w-full overflow-hidden rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl bg-gray-100 shadow-[0_12px_40px_rgba(15,23,42,0.06)] ring-1 ring-black/[0.04]">
-                  <Image
-                    src={item.imageSrc}
-                    alt={item.alt}
-                    fill
-                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                    sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
-                  />
-                </div>
-                <div className="mt-5 flex items-center justify-between gap-3">
-                  <h3 className="text-base font-bold text-gray-900 md:text-lg">{item.title}</h3>
-                  <Link
-                    href={item.href ?? "/book-a-session"}
-                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-secondary text-white shadow-sm transition hover:brightness-90"
-                    aria-label={`Learn more about ${item.title}`}
-                  >
-                    <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
-                  </Link>
-                </div>
+              <article className="group">
+                <Link
+                  href={item.href ?? "/book-a-session"}
+                  className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  aria-label={`Learn more about ${item.title}`}
+                >
+                  <div className="relative md:aspect-[1/1.2] aspect-square w-full overflow-hidden rounded-tl-[60px] rounded-br-[60px] rounded-tr-xl rounded-bl-xl bg-gray-100 shadow-[0_12px_40px_rgba(15,23,42,0.06)] ring-1 ring-black/[0.04]">
+                    <Image
+                      src={item.imageSrc}
+                      alt={item.alt}
+                      fill
+                      className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+                    />
+                  </div>
+                  <div className="mt-5 flex items-center justify-between gap-3">
+                    <h3 className="text-base font-bold text-gray-900 md:text-lg">{item.title}</h3>
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-secondary text-white shadow-sm transition group-hover:brightness-90">
+                      <ArrowUpRight className="h-4 w-4" strokeWidth={2.25} />
+                    </span>
+                  </div>
+                </Link>
               </article>
             </FadeIn>
           ))}

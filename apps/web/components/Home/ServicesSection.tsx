@@ -41,6 +41,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageWrapperClass:
       "-bottom-12 left-1/2 -translate-x-1/2 scale-[1.25] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-36 md:right-0 md:w-full md:h-full md:max-w-full",
     iconSrc: "/aerobics-icon.svg",
+    href: "/aerobics-program",
   },
   {
     title: "Pilates",
@@ -51,6 +52,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageWrapperClass:
       "bottom-0 left-1/2 -translate-x-1/2 scale-[1.5] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-20 md:right-10 md:w-full md:h-full md:max-w-full",
     iconSrc: "/plates-icon.svg",
+    href: "/pilates-program",
   },
   {
     title: "Yoga",
@@ -61,6 +63,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageWrapperClass:
       "-bottom-16 left-1/2 -translate-x-1/2 scale-[1.5] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-40 md:right-0 md:w-full md:h-full md:max-w-full",
     iconSrc: "/yoga-icon.svg",
+    href: "/yoga-program",
   },
   {
     title: "Physiotherapy",

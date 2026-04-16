@@ -22,6 +22,8 @@ export type CommonChallengesImage = {
 };
 
 export type CommonChallengesProps = {
+  id?: string;
+  backgroundClassName?: string;
   eyebrow?: string;
   title?: ReactNode;
   description?: ReactNode;
@@ -34,6 +36,8 @@ export type CommonChallengesProps = {
 };
 
 export function CommonChallenges({
+  id = "common-challenges",
+  backgroundClassName = "bg-white",
   eyebrow = "Common Challenges",
   title = "Workplace Health Challenges for IT Professionals",
   description = "Sedentary work routines and repetitive tasks often cause pain, stiffness, and fatigue. Our clinically guided wellness programs help reduce discomfort, improve mobility, and enhance daily performance.",
@@ -46,7 +50,7 @@ export function CommonChallenges({
     bullets && bullets.length > 0 ? bullets : null;
 
   return (
-    <section id="common-challenges" className="bg-white">
+    <section id={id} className={backgroundClassName}>
       <div className="mx-auto max-w-[90vw] py-12 md:px-4 md:py-10">
         <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
           {/* Left image */}

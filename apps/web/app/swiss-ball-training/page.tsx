@@ -87,7 +87,7 @@ export default function SwissBallTrainingPage() {
         />
       </div>
 
-      <div>
+      <div className="md:-mt-10">
         <OurApproachTimeline
           id="how-swiss-ball-works"
           eyebrow="How it Works"

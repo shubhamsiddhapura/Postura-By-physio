@@ -98,7 +98,7 @@ export default function SwissBallTrainingPage() {
               Improves Your Body
             </>
           }
-          description="Swiss ball exercises engage stabilizing muscles, strengthen the core, and<br improve coordination through controlled movement."
+          description="Swiss ball exercises engage stabilizing muscles, strengthen the core, and<br/> improve coordination through controlled movement."
           steps={swissBallHowItWorksSteps}
         />
       </div>

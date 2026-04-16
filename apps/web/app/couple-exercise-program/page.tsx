@@ -96,7 +96,7 @@ export default function CoupleExerciseProgramPage() {
               Improves Fitness
             </>
           }
-          description="Working out together builds motivation, improves consistency, and enhances strength, flexibility, and overall fitness through shared effort."
+          description="Working out together builds motivation, improves consistency, and enhances strength,<br/> flexibility, and overall fitness through shared effort."
           steps={coupleHowItWorksSteps}
         />
       </div>

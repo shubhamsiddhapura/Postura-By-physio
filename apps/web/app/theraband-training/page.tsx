@@ -96,7 +96,7 @@ export default function TherabandTrainingPage() {
               Improves Your Body
             </>
           }
-          description="Theraband exercises enhance muscle control, increase strength, and support safe movement with low-impact resistance training."
+          description="Theraband exercises enhance muscle control, increase strength, and<br/> support safe movement with low-impact resistance training."
           steps={therabandHowItWorksSteps}
         />
       </div>

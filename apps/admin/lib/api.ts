@@ -1,15 +1,23 @@
 import type {
   ApiResponse,
+  AvailabilitySlotDto,
+  BlockedDateDto,
   BlogDto,
+  BookingDto,
+  CreateAvailabilitySlotDto,
+  CreateBlockedDateDto,
   CreateBlogDto,
+  CreateBookingDto,
   CreateGalleryImageDto,
   CreateTestimonialDto,
   GalleryImageDto,
   ListBlogsQuery,
+  ListBookingsQuery,
   ListGalleryQuery,
   ListTestimonialsQuery,
   TestimonialDto,
   UpdateBlogDto,
+  UpdateBookingDto,
   UpdateGalleryImageDto,
   UpdateTestimonialDto,
   UploadResultDto,
@@ -121,6 +129,32 @@ export const blogsApi = {
     ),
 };
 
+// ---------- Bookings ----------
+export const bookingsApi = {
+  list: (query: ListBookingsQuery = {}) =>
+    request<BookingDto[]>(
+      `/api/bookings${qs(query as Record<string, unknown>)}`
+    ),
+
+  get: (id: string) =>
+    request<BookingDto>(`/api/bookings/${encodeURIComponent(id)}`),
+
+  create: (data: CreateBookingDto) =>
+    request<BookingDto>("/api/bookings", { method: "POST", json: data }),
+
+  update: (id: string, data: UpdateBookingDto) =>
+    request<BookingDto>(`/api/bookings/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      json: data,
+    }),
+
+  remove: (id: string) =>
+    request<{ id: string; deleted: true }>(
+      `/api/bookings/${encodeURIComponent(id)}`,
+      { method: "DELETE" }
+    ),
+};
+
 // ---------- Testimonials ----------
 export const testimonialsApi = {
   list: (query: ListTestimonialsQuery = {}) =>
@@ -175,6 +209,37 @@ export const galleryApi = {
   remove: (id: string) =>
     request<{ id: string; deleted: true }>(
       `/api/gallery/${encodeURIComponent(id)}`,
+      { method: "DELETE" }
+    ),
+};
+
+// ---------- Availability ----------
+export const availabilityApi = {
+  listSlots: () => request<AvailabilitySlotDto[]>("/api/availability/slots"),
+
+  createSlot: (data: CreateAvailabilitySlotDto) =>
+    request<AvailabilitySlotDto>("/api/availability/slots", {
+      method: "POST",
+      json: data,
+    }),
+
+  removeSlot: (id: string) =>
+    request<{ id: string; deleted: true }>(
+      `/api/availability/slots/${encodeURIComponent(id)}`,
+      { method: "DELETE" }
+    ),
+
+  listBlockedDates: () => request<BlockedDateDto[]>("/api/availability/blocked-dates"),
+
+  createBlockedDate: (data: CreateBlockedDateDto) =>
+    request<BlockedDateDto>("/api/availability/blocked-dates", {
+      method: "POST",
+      json: data,
+    }),
+
+  removeBlockedDate: (id: string) =>
+    request<{ id: string; deleted: true }>(
+      `/api/availability/blocked-dates/${encodeURIComponent(id)}`,
       { method: "DELETE" }
     ),
 };

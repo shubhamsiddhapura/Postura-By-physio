@@ -1,6 +1,19 @@
-import type { Blog, GalleryImage, Testimonial } from "@repo/db";
 import type {
+  AvailabilitySlot,
+  BlockedDate,
+  Blog,
+  Booking,
+  GalleryImage,
+  Testimonial,
+} from "@repo/db";
+import type {
+  AvailabilitySlotDto,
+  BlockedDateDto,
   BlogDto,
+  BookingDto,
+  BookingProgram,
+  BookingStatus,
+  DayOfWeek,
   GalleryCategory,
   GalleryImageDto,
   SectionItem,
@@ -83,6 +96,28 @@ export function serializeBlog(blog: Blog): BlogDto {
   };
 }
 
+export function serializeBooking(b: Booking): BookingDto {
+  return {
+    id: b.id,
+    program: b.program as BookingProgram,
+    fullName: b.fullName,
+    phone: b.phone,
+    email: b.email,
+    preferredDateTime: b.preferredDateTime,
+    consultationType: b.consultationType,
+    address: b.address,
+    message: b.message,
+    profileAbout: b.profileAbout,
+    activityLevel: b.activityLevel,
+    discomfortArea: b.discomfortArea,
+    possibleCause: b.possibleCause,
+    status: b.status as BookingStatus,
+    notes: b.notes,
+    createdAt: b.createdAt.toISOString(),
+    updatedAt: b.updatedAt.toISOString(),
+  };
+}
+
 export function serializeTestimonial(t: Testimonial): TestimonialDto {
   return {
     id: t.id,
@@ -95,6 +130,36 @@ export function serializeTestimonial(t: Testimonial): TestimonialDto {
     published: t.published,
     createdAt: t.createdAt.toISOString(),
     updatedAt: t.updatedAt.toISOString(),
+  };
+}
+
+export function serializeAvailabilitySlot(s: AvailabilitySlot): AvailabilitySlotDto {
+  return {
+    id: s.id,
+    dayOfWeek: s.dayOfWeek as DayOfWeek,
+    time: s.time,
+    sortKey: s.sortKey,
+    createdAt: s.createdAt.toISOString(),
+    updatedAt: s.updatedAt.toISOString(),
+  };
+}
+
+/**
+ * `BlockedDate.date` is stored as a date-only (@db.Date) column. Prisma still
+ * returns a Date object but in UTC — we format as YYYY-MM-DD directly from
+ * its UTC components so the string round-trips to the same calendar day
+ * regardless of server timezone.
+ */
+export function serializeBlockedDate(b: BlockedDate): BlockedDateDto {
+  const y = b.date.getUTCFullYear();
+  const m = String(b.date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(b.date.getUTCDate()).padStart(2, "0");
+  return {
+    id: b.id,
+    date: `${y}-${m}-${d}`,
+    reason: b.reason,
+    createdAt: b.createdAt.toISOString(),
+    updatedAt: b.updatedAt.toISOString(),
   };
 }
 

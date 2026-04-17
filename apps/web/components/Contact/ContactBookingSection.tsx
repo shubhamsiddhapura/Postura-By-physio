@@ -1,11 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronDown, ArrowUpRight } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 import { cn } from "../../lib/utils";
 import { BookingDateTimeField } from "./BookingDateTimeField";
+import {
+  clearInteractionAnswers,
+  readInteractionAnswers,
+} from "../../lib/booking/session";
 
 type ContactBookingSectionProps = {
   className?: string;
@@ -35,6 +39,12 @@ const programs: Array<{
   },
 ];
 
+type SubmissionState =
+  | { kind: "idle" }
+  | { kind: "submitting" }
+  | { kind: "success"; id: string }
+  | { kind: "error"; message: string; fieldErrors?: Record<string, string[]> };
+
 export function ContactBookingSection({ className }: ContactBookingSectionProps) {
   const [selectedProgram, setSelectedProgram] = useState<ProgramId>("physiotherapy");
   const [fullName, setFullName] = useState("");
@@ -44,6 +54,14 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
   const [consultationType, setConsultationType] = useState("");
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
+  const [submission, setSubmission] = useState<SubmissionState>({ kind: "idle" });
+
+  // Questionnaire answers stashed by /patient-interaction. Captured once on
+  // mount so the user can still edit the booking form without losing context.
+  const interactionRef = useRef<ReturnType<typeof readInteractionAnswers>>(null);
+  useEffect(() => {
+    interactionRef.current = readInteractionAnswers();
+  }, []);
 
   const whatsappHref = useMemo(() => {
     const programLabel =
@@ -75,6 +93,94 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
     preferredDateTime,
     selectedProgram,
   ]);
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (submission.kind === "submitting") return;
+
+      setSubmission({ kind: "submitting" });
+
+      const interaction = interactionRef.current;
+      const payload: Record<string, unknown> = {
+        program: selectedProgram,
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        email: email.trim(),
+        preferredDateTime: preferredDateTime.trim(),
+        consultationType:
+          consultationType.trim() === "" ? null : consultationType,
+        address: address.trim() === "" ? null : address.trim(),
+        message: message.trim() === "" ? null : message.trim(),
+        profileAbout: interaction?.about ?? null,
+        activityLevel: interaction?.activity ?? null,
+        discomfortArea: interaction?.discomfort ?? null,
+        possibleCause: interaction?.cause ?? null,
+      };
+
+      try {
+        const res = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok || !data?.success) {
+          const fieldErrors: Record<string, string[]> | undefined =
+            data?.issues?.fieldErrors;
+          setSubmission({
+            kind: "error",
+            message:
+              data?.error ??
+              "Something went wrong while submitting your booking. Please try again.",
+            fieldErrors,
+          });
+          return;
+        }
+
+        clearInteractionAnswers();
+        interactionRef.current = null;
+        setSubmission({ kind: "success", id: data.data.id });
+
+        // Reset the form so a second booking on the same visit starts clean.
+        setFullName("");
+        setPhone("");
+        setEmail("");
+        setPreferredDateTime("");
+        setConsultationType("");
+        setAddress("");
+        setMessage("");
+      } catch (err) {
+        setSubmission({
+          kind: "error",
+          message:
+            err instanceof Error
+              ? err.message
+              : "Network error. Please try again.",
+        });
+      }
+    },
+    [
+      address,
+      consultationType,
+      email,
+      fullName,
+      message,
+      phone,
+      preferredDateTime,
+      selectedProgram,
+      submission.kind,
+    ]
+  );
+
+  const fieldError = (field: string): string | undefined =>
+    submission.kind === "error"
+      ? submission.fieldErrors?.[field]?.[0]
+      : undefined;
+
+  const isSubmitting = submission.kind === "submitting";
+  const isSuccess = submission.kind === "success";
 
   const fieldClass =
     "h-11 w-full rounded-2xl border border-gray-200 bg-[#fafafa] px-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-primary";
@@ -180,13 +286,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                 </FadeIn>
 
                 <FadeIn direction="up" duration={800} distance={22} delay={380}>
-                  <form
-                    className="mt-6"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      window.open(whatsappHref, "_blank", "noopener,noreferrer");
-                    }}
-                  >
+                  <form className="mt-6" onSubmit={handleSubmit} noValidate>
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="md:col-span-1">
                         <label className="text-sm font-semibold text-gray-800">Full Name</label>
@@ -194,8 +294,16 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           placeholder="Enter full name"
-                          className={cn(fieldClass, "mt-2")}
+                          className={cn(
+                            fieldClass,
+                            "mt-2",
+                            fieldError("fullName") && "border-red-400 focus:border-red-500",
+                          )}
+                          required
                         />
+                        {fieldError("fullName") ? (
+                          <p className="mt-1 text-xs text-red-600">{fieldError("fullName")}</p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-1">
@@ -205,8 +313,16 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           onChange={(e) => setPhone(e.target.value)}
                           inputMode="tel"
                           placeholder="Enter phone no."
-                          className={cn(fieldClass, "mt-2")}
+                          className={cn(
+                            fieldClass,
+                            "mt-2",
+                            fieldError("phone") && "border-red-400 focus:border-red-500",
+                          )}
+                          required
                         />
+                        {fieldError("phone") ? (
+                          <p className="mt-1 text-xs text-red-600">{fieldError("phone")}</p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-1">
@@ -215,9 +331,18 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           inputMode="email"
+                          type="email"
                           placeholder="Enter email"
-                          className={cn(fieldClass, "mt-2")}
+                          className={cn(
+                            fieldClass,
+                            "mt-2",
+                            fieldError("email") && "border-red-400 focus:border-red-500",
+                          )}
+                          required
                         />
+                        {fieldError("email") ? (
+                          <p className="mt-1 text-xs text-red-600">{fieldError("email")}</p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-1">
@@ -231,6 +356,9 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                             onChange={setPreferredDateTime}
                           />
                         </div>
+                        {fieldError("preferredDateTime") ? (
+                          <p className="mt-1 text-xs text-red-600">{fieldError("preferredDateTime")}</p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-2">
@@ -265,7 +393,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         <input
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
-                          placeholder="Select pain area"
+                          placeholder="Your address (optional)"
                           className={cn(fieldClass, "mt-2")}
                         />
                       </div>
@@ -282,17 +410,55 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                       </div>
                     </div>
 
-                    <div className="mt-10 flex justify-end">
-                      <div className="group relative inline-flex transform items-center transition-transform duration-300 hover:scale-105">
-                        <button
-                          type="submit"
-                          className="inline-flex items-center gap-3 rounded-full bg-secondary px-5 py-3 pr-10 text-xs font-semibold text-white shadow-sm transition hover:brightness-90 md:text-sm"
-                        >
-                          Book Appointment
-                        </button>
-                        <span className="absolute -right-3 top-3 grid h-6 w-6 place-items-center rounded-full bg-[#FEF9E0]">
-                          <ArrowUpRight className="h-4 w-4 text-primary transition-transform duration-300 group-hover:rotate-45" />
-                        </span>
+                    {submission.kind === "error" ? (
+                      <div
+                        role="alert"
+                        className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                      >
+                        {submission.message}
+                      </div>
+                    ) : null}
+
+                    {isSuccess ? (
+                      <div
+                        role="status"
+                        className="mt-6 rounded-2xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-primary"
+                      >
+                        <p className="font-semibold">Booking received.</p>
+                        <p className="mt-0.5 text-primary/80">
+                          We&rsquo;ve emailed a copy to you and our team will reach out shortly to
+                          confirm your session.
+                        </p>
+                      </div>
+                    ) : null}
+
+                    <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <a
+                        href={whatsappHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-center text-sm font-medium text-primary underline-offset-4 hover:underline sm:text-left"
+                      >
+                        Prefer WhatsApp? Chat with us instead
+                      </a>
+
+                      <div className="flex justify-end">
+                        <div className="group relative inline-flex transform items-center transition-transform duration-300 hover:scale-105">
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="inline-flex items-center gap-3 rounded-full bg-secondary px-5 py-3 pr-10 text-xs font-semibold text-white shadow-sm transition hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-60 md:text-sm"
+                          >
+                            {isSubmitting
+                              ? "Booking..."
+                              : isSuccess
+                                ? "Book Another"
+                                : "Book Appointment"}
+                          </button>
+                          <span className="absolute -right-3 top-3 grid h-6 w-6 place-items-center rounded-full bg-[#FEF9E0]">
+                            <ArrowUpRight className="h-4 w-4 text-primary transition-transform duration-300 group-hover:rotate-45" />
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </form>

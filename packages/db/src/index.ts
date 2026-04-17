@@ -22,6 +22,7 @@ export type {
   GalleryImage,
   Service,
   AdminUser,
+  Booking,
 } from "@prisma/client";
 
 export { Prisma } from "@prisma/client";

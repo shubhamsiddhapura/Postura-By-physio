@@ -270,3 +270,198 @@ export interface ListGalleryQuery {
   page?: number;
   limit?: number;
 }
+
+// ---------- Booking ----------
+/**
+ * Values map to the two program cards on `/book-a-session`. Kept as a
+ * readonly tuple so the admin UI can iterate without hardcoding strings.
+ */
+export const BOOKING_PROGRAMS = ["physiotherapy", "fitness"] as const;
+export type BookingProgram = (typeof BOOKING_PROGRAMS)[number];
+
+export const BOOKING_PROGRAM_LABELS: Record<BookingProgram, string> = {
+  physiotherapy: "Physiotherapy Program",
+  fitness: "Fitness Program",
+};
+
+/** Workflow states available in the admin table's status filter / dropdown. */
+export const BOOKING_STATUSES = [
+  "pending",
+  "confirmed",
+  "completed",
+  "cancelled",
+] as const;
+export type BookingStatus = (typeof BOOKING_STATUSES)[number];
+
+export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  pending: "Pending",
+  confirmed: "Confirmed",
+  completed: "Completed",
+  cancelled: "Cancelled",
+};
+
+/**
+ * Consultation types offered on the public form. Empty string in the form
+ * maps to `null` in the DB.
+ */
+export const CONSULTATION_TYPES = [
+  "Home visit",
+  "Online",
+  "Phone",
+  "Society / group",
+] as const;
+export type ConsultationType = (typeof CONSULTATION_TYPES)[number];
+
+export interface BookingDto {
+  id: string;
+  program: BookingProgram;
+  fullName: string;
+  phone: string;
+  email: string;
+  preferredDateTime: string;
+  consultationType: string | null;
+  address: string | null;
+  message: string | null;
+
+  // Questionnaire — populated only when booking came from /patient-interaction
+  profileAbout: string | null;
+  activityLevel: string | null;
+  discomfortArea: string | null;
+  possibleCause: string | null;
+
+  status: BookingStatus;
+  notes: string | null;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateBookingDto {
+  program: BookingProgram;
+  fullName: string;
+  phone: string;
+  email: string;
+  preferredDateTime: string;
+  consultationType?: string | null;
+  address?: string | null;
+  message?: string | null;
+
+  profileAbout?: string | null;
+  activityLevel?: string | null;
+  discomfortArea?: string | null;
+  possibleCause?: string | null;
+}
+
+/**
+ * Admin-mutable fields on a booking.
+ *
+ * - `status` + `notes` drive the workflow / internal comms.
+ * - `preferredDateTime` can be adjusted when the admin calls the patient
+ *   and agrees on a different slot (e.g. two customers requested the
+ *   same 10 AM and admin reshuffles one to 11:30 AM).
+ *
+ * Customer-submitted identity / contact / questionnaire fields remain
+ * immutable — the source of truth is what the customer sent.
+ */
+export interface UpdateBookingDto {
+  status?: BookingStatus;
+  notes?: string | null;
+  preferredDateTime?: string;
+}
+
+export interface ListBookingsQuery {
+  page?: number;
+  limit?: number;
+  status?: BookingStatus;
+  program?: BookingProgram;
+  search?: string; // matches name / phone / email
+}
+
+// ---------- Availability ----------
+/**
+ * Day-of-week indices match `Date.getDay()` — 0 = Sunday ... 6 = Saturday.
+ * The tuple order is used by the admin UI to render the weekly grid
+ * left-to-right starting Sunday.
+ */
+export const DAYS_OF_WEEK = [0, 1, 2, 3, 4, 5, 6] as const;
+export type DayOfWeek = (typeof DAYS_OF_WEEK)[number];
+
+export const DAY_OF_WEEK_LABELS: Record<DayOfWeek, string> = {
+  0: "Sunday",
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+  6: "Saturday",
+};
+
+export const DAY_OF_WEEK_SHORT_LABELS: Record<DayOfWeek, string> = {
+  0: "Sun",
+  1: "Mon",
+  2: "Tue",
+  3: "Wed",
+  4: "Thu",
+  5: "Fri",
+  6: "Sat",
+};
+
+/**
+ * A single entry in the weekly availability template. `time` is the
+ * human-readable string rendered on the public page ("10:00 AM");
+ * `sortKey` is the minutes-of-day value used to order slots chronologically
+ * without re-parsing the string on every query.
+ */
+export interface AvailabilitySlotDto {
+  id: string;
+  dayOfWeek: DayOfWeek;
+  time: string;
+  sortKey: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateAvailabilitySlotDto {
+  dayOfWeek: DayOfWeek;
+  time: string;
+}
+
+/**
+ * A single date blocked in full (holiday / leave). Dates are serialized as
+ * `YYYY-MM-DD` (date-only, no timezone).
+ */
+export interface BlockedDateDto {
+  id: string;
+  date: string;
+  reason: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateBlockedDateDto {
+  date: string; // YYYY-MM-DD
+  reason?: string | null;
+}
+
+/** Why a given slot is unavailable. `null` = slot is bookable. */
+export type SlotUnavailableReason = "past" | "taken";
+
+/** Slot status for a specific date returned by GET /api/availability. */
+export interface DateSlotDto {
+  time: string;
+  sortKey: number;
+  available: boolean;
+  reason: SlotUnavailableReason | null;
+}
+
+/**
+ * Response shape for `GET /api/availability?date=YYYY-MM-DD`. Used by the
+ * public BookingDateTimeField to decide which slots to enable.
+ */
+export interface AvailabilityForDateDto {
+  date: string; // YYYY-MM-DD (echoed back)
+  dayOfWeek: DayOfWeek;
+  blocked: boolean;
+  blockedReason: string | null;
+  slots: DateSlotDto[];
+}

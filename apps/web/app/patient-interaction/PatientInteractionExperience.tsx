@@ -12,6 +12,7 @@ import {
 } from "../../components/PatientInteraction/PatientInteractionQuestionnaire";
 import { RecommendedProgramSection } from "../../components/PatientInteraction/RecommendedProgramSection";
 import { HealthSummaryModal } from "../../components/PatientInteraction/HealthSummaryModal";
+import { saveInteractionAnswers } from "../../lib/booking/session";
 
 const patientInteractionSlides = [
   {
@@ -47,9 +48,12 @@ export function PatientInteractionExperience() {
   }, []);
 
   const handleConfirmBook = useCallback(() => {
+    // Stash the current questionnaire answers so the booking form on
+    // /book-a-session can include them in the POST payload.
+    saveInteractionAnswers(answers);
     setModalOpen(false);
     router.push("/book-a-session");
-  }, [router]);
+  }, [answers, router]);
 
   return (
     <>

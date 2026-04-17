@@ -422,9 +422,46 @@ async function seedGallery() {
   console.log(`upserted gallery images: ${galleryImages.length}`);
 }
 
+/**
+ * Availability seed. Mirrors the hard-coded TIME_SLOTS that used to live
+ * in `apps/web/components/Contact/BookingDateTimeField.tsx`. We seed
+ * Mon-Sat (1-6) with these times; Sunday is left empty = clinic closed.
+ * Admin can edit everything from the `/bookings` > Availability tab.
+ */
+const DEFAULT_WEEKLY_SLOTS = [
+  { time: "7:00 AM", minutes: 7 * 60 },
+  { time: "8:30 AM", minutes: 8 * 60 + 30 },
+  { time: "10:00 AM", minutes: 10 * 60 },
+  { time: "11:30 AM", minutes: 11 * 60 + 30 },
+  { time: "2:00 PM", minutes: 14 * 60 },
+  { time: "4:00 PM", minutes: 16 * 60 },
+  { time: "5:30 PM", minutes: 17 * 60 + 30 },
+];
+
+async function seedAvailability() {
+  // Only seed if the template is empty — never clobber admin edits on re-seed.
+  const existing = await prisma.availabilitySlot.count();
+  if (existing > 0) {
+    console.log(
+      `availability already populated (${existing} slots) — skipping seed`
+    );
+    return;
+  }
+
+  const rows = [];
+  for (let dow = 1; dow <= 6; dow++) {
+    for (const { time, minutes } of DEFAULT_WEEKLY_SLOTS) {
+      rows.push({ dayOfWeek: dow, time, sortKey: minutes });
+    }
+  }
+  await prisma.availabilitySlot.createMany({ data: rows });
+  console.log(`seeded availability slots: ${rows.length}`);
+}
+
 main()
   .then(() => seedGallery())
   .then(() => seedTestimonials())
+  .then(() => seedAvailability())
   .catch((err) => {
     console.error(err);
     process.exit(1);

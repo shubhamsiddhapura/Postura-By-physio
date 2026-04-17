@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  CalendarCheck,
   FileText,
   Image as ImageIcon,
   LayoutDashboard,
@@ -21,11 +22,10 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Bookings", href: "/bookings", icon: CalendarCheck },
   { label: "Blogs", href: "/blogs", icon: FileText },
   { label: "Testimonials", href: "/testimonials", icon: MessageSquareQuote },
-  { label: "Services", href: "/services", icon: Stethoscope, disabled: true },
   { label: "Gallery", href: "/gallery", icon: ImageIcon },
-  { label: "Settings", href: "/settings", icon: Settings, disabled: true },
 ];
 
 export function Sidebar() {

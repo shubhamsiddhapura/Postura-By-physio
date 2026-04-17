@@ -3,11 +3,15 @@ import type {
   BlogDto,
   CreateBlogDto,
   CreateGalleryImageDto,
+  CreateTestimonialDto,
   GalleryImageDto,
   ListBlogsQuery,
   ListGalleryQuery,
+  ListTestimonialsQuery,
+  TestimonialDto,
   UpdateBlogDto,
   UpdateGalleryImageDto,
+  UpdateTestimonialDto,
   UploadResultDto,
 } from "@repo/types";
 
@@ -113,6 +117,35 @@ export const blogsApi = {
   remove: (idOrSlug: string) =>
     request<{ id: string; deleted: true }>(
       `/api/blogs/${encodeURIComponent(idOrSlug)}`,
+      { method: "DELETE" }
+    ),
+};
+
+// ---------- Testimonials ----------
+export const testimonialsApi = {
+  list: (query: ListTestimonialsQuery = {}) =>
+    request<TestimonialDto[]>(
+      `/api/testimonials${qs(query as Record<string, unknown>)}`
+    ),
+
+  get: (id: string) =>
+    request<TestimonialDto>(`/api/testimonials/${encodeURIComponent(id)}`),
+
+  create: (data: CreateTestimonialDto) =>
+    request<TestimonialDto>("/api/testimonials", {
+      method: "POST",
+      json: data,
+    }),
+
+  update: (id: string, data: UpdateTestimonialDto) =>
+    request<TestimonialDto>(`/api/testimonials/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      json: data,
+    }),
+
+  remove: (id: string) =>
+    request<{ id: string; deleted: true }>(
+      `/api/testimonials/${encodeURIComponent(id)}`,
       { method: "DELETE" }
     ),
 };

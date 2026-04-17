@@ -1,9 +1,10 @@
-import type { Blog, GalleryImage } from "@repo/db";
+import type { Blog, GalleryImage, Testimonial } from "@repo/db";
 import type {
   BlogDto,
   GalleryCategory,
   GalleryImageDto,
   SectionItem,
+  TestimonialDto,
 } from "@repo/types";
 
 function formatDate(d: Date | null): string {
@@ -79,6 +80,21 @@ export function serializeBlog(blog: Blog): BlogDto {
     // Conclusion
     conclusionTitle: blog.conclusionTitle ?? null,
     conclusionParagraphs: blog.conclusionParagraphs,
+  };
+}
+
+export function serializeTestimonial(t: Testimonial): TestimonialDto {
+  return {
+    id: t.id,
+    tag: t.tag,
+    quote: t.quote,
+    name: t.name,
+    age: t.age,
+    avatar: t.avatar,
+    order: t.order,
+    published: t.published,
+    createdAt: t.createdAt.toISOString(),
+    updatedAt: t.updatedAt.toISOString(),
   };
 }
 

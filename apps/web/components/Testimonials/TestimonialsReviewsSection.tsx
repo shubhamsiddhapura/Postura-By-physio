@@ -6,160 +6,17 @@ import { Star } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
-type Testimonial = {
+/**
+ * Rendered shape for a single card. Matches the public DTO but limited to
+ * the fields actually shown so the component can be reused anywhere.
+ */
+export type TestimonialCard = {
   tag: string;
   quote: string;
   name: string;
   age: number;
   avatar: string;
 };
-
-const TESTIMONIALS: Testimonial[] = [
-  {
-    tag: "IT Professional",
-    quote:
-      "Long sitting hours caused severe neck pain. After treatment, I feel much more comfortable and productive at work.",
-    name: "Rahul Shah",
-    age: 30,
-    avatar: "/cp-1.jpg",
-  },
-  {
-    tag: "Homemaker",
-    quote:
-      "The aerobics and yoga sessions improved my energy and flexibility. I feel more active throughout the day.",
-    name: "Neha Patel",
-    age: 42,
-    avatar: "/pn-yoga.jpg",
-  },
-  {
-    tag: "Corporate / Desk Job",
-    quote:
-      "My lower back pain from long meetings eased within weeks. The posture guidance alone changed how I sit and move.",
-    name: "Amit Desai",
-    age: 38,
-    avatar: "/it-physiotherapy.jpg",
-  },
-  {
-    tag: "Teacher / Standing Job",
-    quote:
-      "Standing all day hurt my knees and feet. The structured exercises fit my schedule and the pain is finally manageable.",
-    name: "Pooja Mehta",
-    age: 45,
-    avatar: "/society-1.jpg",
-  },
-  {
-    tag: "Healthcare Worker",
-    quote:
-      "Shift work and lifting left me with shoulder strain. Professional, patient-focused care got me back to full duty.",
-    name: "Dr. Sanjay Rao",
-    age: 36,
-    avatar: "/gr-physio.jpg",
-  },
-  {
-    tag: "Senior Citizen",
-    quote:
-      "Balance and walking confidence improved after geriatric rehab. I feel safer at home and enjoy short walks again.",
-    name: "Kamlesh Shah",
-    age: 72,
-    avatar: "/gr-1.jpg",
-  },
-  {
-    tag: "Athlete",
-    quote:
-      "The rehab program helped me recover from injury and return to sports stronger than before.",
-    name: "Kunal Joshi",
-    age: 27,
-    avatar: "/athlete-physio.jpg",
-  },
-  {
-    tag: "Student",
-    quote:
-      "Screen time and study posture gave me headaches. Simple corrections and stretches made a big difference in weeks.",
-    name: "Isha Verma",
-    age: 21,
-    avatar: "/bi-1.jpg",
-  },
-  {
-    tag: "Pre & Post Natal",
-    quote:
-      "Supportive, gentle sessions after delivery helped me rebuild core strength without feeling rushed or overwhelmed.",
-    name: "Ananya Krishnan",
-    age: 31,
-    avatar: "/pn-1.jpg",
-  },
-  {
-    tag: "Fitness Enthusiast",
-    quote:
-      "Prehab sessions reduced niggles before they became injuries. I train harder with better body awareness now.",
-    name: "Vikram Singh",
-    age: 29,
-    avatar: "/athlete-1.jpg",
-  },
-  {
-    tag: "Society Member",
-    quote:
-      "Group sessions in our society are fun and consistent. My stamina and flexibility improved more than I expected.",
-    name: "Meera Iyer",
-    age: 55,
-    avatar: "/society-yoga.jpg",
-  },
-  {
-    tag: "Physiotherapy Patient",
-    quote:
-      "Clear explanations and a step-by-step plan helped me trust the process. I’m pain-free and moving freely again.",
-    name: "Harsh Trivedi",
-    age: 34,
-    avatar: "/physio-1.jpg",
-  },
-  {
-    tag: "IT Professional",
-    quote:
-      "Doorstep sessions saved my commute time and recovery stayed on track. Highly recommend for busy professionals.",
-    name: "Priya Nair",
-    age: 33,
-    avatar: "/cp-2.jpg",
-  },
-  {
-    tag: "Homemaker",
-    quote:
-      "Knee stiffness from daily chores reduced noticeably. The home exercises were easy to follow between visits.",
-    name: "Sunita Dave",
-    age: 48,
-    avatar: "/bi-2.jpg",
-  },
-  {
-    tag: "Corporate / Desk Job",
-    quote:
-      "Wrist and forearm pain from typing improved with ergonomic tips plus therapy. I finally sleep without discomfort.",
-    name: "Rohan Kapadia",
-    age: 41,
-    avatar: "/it-common-challenges.jpg",
-  },
-  {
-    tag: "Senior Citizen",
-    quote:
-      "My family noticed I climb stairs more confidently. Gentle progress each week kept me motivated.",
-    name: "Jayantibhai Modi",
-    age: 68,
-    avatar: "/gr-2.jpg",
-  },
-  {
-    tag: "Athlete",
-    quote:
-      "Return-to-play was structured and safe. I trust the team to push me without risking re-injury.",
-    name: "Dev Patel",
-    age: 24,
-    avatar: "/athlete-2.jpg",
-  },
-  {
-    tag: "Student",
-    quote:
-      "Online consults between exams fit my routine. Practical advice I could do in my hostel room.",
-    name: "Arjun Malhotra",
-    age: 20,
-    avatar: "/blog-intro.jpg",
-  },
-];
 
 const INITIAL_COUNT = 12;
 const LOAD_MORE_COUNT = 6;
@@ -174,14 +31,18 @@ function StarRating() {
   );
 }
 
-export function TestimonialsReviewsSection() {
+export function TestimonialsReviewsSection({
+  items,
+}: {
+  items: TestimonialCard[];
+}) {
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
-  const visible = useMemo(() => TESTIMONIALS.slice(0, visibleCount), [visibleCount]);
-  const canShowMore = visibleCount < TESTIMONIALS.length;
+  const visible = useMemo(() => items.slice(0, visibleCount), [items, visibleCount]);
+  const canShowMore = visibleCount < items.length;
 
   const handleViewMore = () => {
-    setVisibleCount((c) => Math.min(c + LOAD_MORE_COUNT, TESTIMONIALS.length));
+    setVisibleCount((c) => Math.min(c + LOAD_MORE_COUNT, items.length));
   };
 
   return (

@@ -181,16 +181,46 @@ export interface UploadResultDto {
 }
 
 // ---------- Testimonial ----------
-export interface CreateTestimonialDto {
+/**
+ * Fields map 1:1 to the reviews section on `apps/web/app/testimonials`:
+ *   - `tag`: small pill shown top-right ("IT Professional", "Student"...)
+ *   - `quote`: review body in quotes
+ *   - `name` + `age`: byline, rendered as "Rahul Shah (30)"
+ *   - `avatar`: round profile image (URL or /public path)
+ *   - `order`: explicit sort (lower shows first)
+ *   - `published`: false hides from the public page
+ */
+export interface TestimonialDto {
+  id: string;
+  tag: string;
+  quote: string;
   name: string;
-  role?: string;
-  content: string;
-  rating: number;
-  avatar?: string;
-  featured?: boolean;
+  age: number;
+  avatar: string;
+  order: number;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
-export interface UpdateTestimonialDto extends Partial<CreateTestimonialDto> {
-  approved?: boolean;
+
+export interface CreateTestimonialDto {
+  tag: string;
+  quote: string;
+  name: string;
+  age: number;
+  avatar: string;
+  order?: number;
+  published?: boolean;
+}
+
+export type UpdateTestimonialDto = Partial<CreateTestimonialDto>;
+
+export interface ListTestimonialsQuery {
+  page?: number;
+  limit?: number;
+  published?: boolean;
+  search?: string;
+  tag?: string;
 }
 
 // ---------- Gallery ----------

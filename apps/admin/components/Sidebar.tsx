@@ -22,7 +22,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
   { label: "Blogs", href: "/blogs", icon: FileText },
-  { label: "Testimonials", href: "/testimonials", icon: MessageSquareQuote, disabled: true },
+  { label: "Testimonials", href: "/testimonials", icon: MessageSquareQuote },
   { label: "Services", href: "/services", icon: Stethoscope, disabled: true },
   { label: "Gallery", href: "/gallery", icon: ImageIcon },
   { label: "Settings", href: "/settings", icon: Settings, disabled: true },

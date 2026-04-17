@@ -67,16 +67,17 @@ model Blog {
 
 model Testimonial {
   id        String   @id @default(cuid())
+  tag       String
+  quote     String
   name      String
-  role      String?
-  content   String
-  rating    Int      @default(5)
-  avatar    String?
-  featured  Boolean  @default(false)
-  approved  Boolean  @default(false)
+  age       Int
+  avatar    String
+  order     Int      @default(0)
+  published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([published, order])
   @@map("testimonials")
 }
 

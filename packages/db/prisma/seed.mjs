@@ -365,6 +365,44 @@ const galleryImages = [
   { url: "/blog4.jpg", alt: "Team wellness activities", category: "corporate" },
 ];
 
+/**
+ * Testimonial seed. Mirrors the 18-entry list that used to live in
+ * `apps/web/components/Testimonials/TestimonialsReviewsSection.tsx`.
+ * `order` is assigned by index so the public page renders in the same
+ * sequence it always has.
+ */
+const testimonials = [
+  { tag: "IT Professional", quote: "Long sitting hours caused severe neck pain. After treatment, I feel much more comfortable and productive at work.", name: "Rahul Shah", age: 30, avatar: "/cp-1.jpg" },
+  { tag: "Homemaker", quote: "The aerobics and yoga sessions improved my energy and flexibility. I feel more active throughout the day.", name: "Neha Patel", age: 42, avatar: "/pn-yoga.jpg" },
+  { tag: "Corporate / Desk Job", quote: "My lower back pain from long meetings eased within weeks. The posture guidance alone changed how I sit and move.", name: "Amit Desai", age: 38, avatar: "/it-physiotherapy.jpg" },
+  { tag: "Teacher / Standing Job", quote: "Standing all day hurt my knees and feet. The structured exercises fit my schedule and the pain is finally manageable.", name: "Pooja Mehta", age: 45, avatar: "/society-1.jpg" },
+  { tag: "Healthcare Worker", quote: "Shift work and lifting left me with shoulder strain. Professional, patient-focused care got me back to full duty.", name: "Dr. Sanjay Rao", age: 36, avatar: "/gr-physio.jpg" },
+  { tag: "Senior Citizen", quote: "Balance and walking confidence improved after geriatric rehab. I feel safer at home and enjoy short walks again.", name: "Kamlesh Shah", age: 72, avatar: "/gr-1.jpg" },
+  { tag: "Athlete", quote: "The rehab program helped me recover from injury and return to sports stronger than before.", name: "Kunal Joshi", age: 27, avatar: "/athlete-physio.jpg" },
+  { tag: "Student", quote: "Screen time and study posture gave me headaches. Simple corrections and stretches made a big difference in weeks.", name: "Isha Verma", age: 21, avatar: "/bi-1.jpg" },
+  { tag: "Pre & Post Natal", quote: "Supportive, gentle sessions after delivery helped me rebuild core strength without feeling rushed or overwhelmed.", name: "Ananya Krishnan", age: 31, avatar: "/pn-1.jpg" },
+  { tag: "Fitness Enthusiast", quote: "Prehab sessions reduced niggles before they became injuries. I train harder with better body awareness now.", name: "Vikram Singh", age: 29, avatar: "/athlete-1.jpg" },
+  { tag: "Society Member", quote: "Group sessions in our society are fun and consistent. My stamina and flexibility improved more than I expected.", name: "Meera Iyer", age: 55, avatar: "/society-yoga.jpg" },
+  { tag: "Physiotherapy Patient", quote: "Clear explanations and a step-by-step plan helped me trust the process. I'm pain-free and moving freely again.", name: "Harsh Trivedi", age: 34, avatar: "/physio-1.jpg" },
+  { tag: "IT Professional", quote: "Doorstep sessions saved my commute time and recovery stayed on track. Highly recommend for busy professionals.", name: "Priya Nair", age: 33, avatar: "/cp-2.jpg" },
+  { tag: "Homemaker", quote: "Knee stiffness from daily chores reduced noticeably. The home exercises were easy to follow between visits.", name: "Sunita Dave", age: 48, avatar: "/bi-2.jpg" },
+  { tag: "Corporate / Desk Job", quote: "Wrist and forearm pain from typing improved with ergonomic tips plus therapy. I finally sleep without discomfort.", name: "Rohan Kapadia", age: 41, avatar: "/it-common-challenges.jpg" },
+  { tag: "Senior Citizen", quote: "My family noticed I climb stairs more confidently. Gentle progress each week kept me motivated.", name: "Jayantibhai Modi", age: 68, avatar: "/gr-2.jpg" },
+  { tag: "Athlete", quote: "Return-to-play was structured and safe. I trust the team to push me without risking re-injury.", name: "Dev Patel", age: 24, avatar: "/athlete-2.jpg" },
+  { tag: "Student", quote: "Online consults between exams fit my routine. Practical advice I could do in my hostel room.", name: "Arjun Malhotra", age: 20, avatar: "/blog-intro.jpg" },
+];
+
+async function seedTestimonials() {
+  // Reset so re-seeding is deterministic and order stays stable.
+  await prisma.testimonial.deleteMany({});
+  for (let i = 0; i < testimonials.length; i++) {
+    await prisma.testimonial.create({
+      data: { ...testimonials[i], order: i, published: true },
+    });
+  }
+  console.log(`upserted testimonials: ${testimonials.length}`);
+}
+
 async function seedGallery() {
   // Reset the category so re-seeding always yields the exact layout we want,
   // and the order stays deterministic.
@@ -386,6 +424,7 @@ async function seedGallery() {
 
 main()
   .then(() => seedGallery())
+  .then(() => seedTestimonials())
   .catch((err) => {
     console.error(err);
     process.exit(1);

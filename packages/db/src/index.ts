@@ -23,6 +23,8 @@ export type {
   Service,
   AdminUser,
   Booking,
+  AvailabilitySlot,
+  BlockedDate,
 } from "@prisma/client";
 
 export { Prisma } from "@prisma/client";

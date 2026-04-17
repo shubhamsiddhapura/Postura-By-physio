@@ -1,6 +1,7 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 
 // Load the single monorepo-root `.env` so both Prisma and Next use the
 // same secrets. App-local `.env.local` / `.env` still win over it. On
@@ -19,20 +20,24 @@ const nextConfig = {
   },
   transpilePackages: ["@repo/db", "@repo/types"],
 
-  // Prisma ships a native query-engine binary (libquery_engine-*.so.node)
-  // that Next.js can't webpack into the function bundle. Mark the package
-  // as external so it stays a runtime `require` against node_modules,
-  // which keeps the engine file next to it on disk.
+  // Keep Prisma out of the webpack bundle so it's loaded at runtime via
+  // a plain `require("@prisma/client")` against node_modules. Needed for
+  // the engine binary to resolve on Vercel serverless.
   experimental: {
     serverComponentsExternalPackages: ["@prisma/client", "prisma"],
   },
 
-  // pnpm monorepo: Vercel's file-tracer starts from this app's folder by
-  // default, which misses `@prisma/client` since it lives up the tree in
-  // `<repo>/node_modules/.pnpm/…`. Point the tracer at the workspace root
-  // so the hoisted store (and the engine binary) gets copied into the
-  // serverless function bundle.
-  outputFileTracingRoot: path.join(__dirname, "../../"),
+  // Prisma's own plugin for Next.js + pnpm monorepos. It copies the
+  // native query-engine binary (libquery_engine-*.so.node) into the
+  // serverless function output so the runtime can find it. Without this,
+  // `@repo/db` re-exporting `@prisma/client` through `transpilePackages`
+  // leaves the engine behind and every API route 500s.
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.plugins = [...(config.plugins ?? []), new PrismaPlugin()];
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -24,7 +24,8 @@ export type {
   AdminUser,
   Booking,
   AvailabilitySlot,
-  BlockedDate,
 } from "@prisma/client";
 
 export { Prisma } from "@prisma/client";
+
+export type BlockedDate = Prisma.BlockedDateGetPayload<{}>;

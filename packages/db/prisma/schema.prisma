@@ -1,5 +1,9 @@
 generator client {
   provider = "prisma-client-js"
+  // "native" builds the engine for your local OS (Windows here); the RHEL
+  // target is required for Vercel/AWS Lambda serverless runtimes. Without
+  // it, Prisma crashes on cold start in production with no helpful body.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {

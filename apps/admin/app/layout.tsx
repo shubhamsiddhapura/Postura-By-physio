@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Sidebar } from "@/components/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Admin — Dr Priyanshi Pandya(PT)",
-  description: "Admin dashboard for Dr Priyanshi Pandya(PT)",
+  title: "Admin — Postura by Physio",
+  description: "Admin dashboard for Postura by Physio",
 };
 
 export default function RootLayout({
@@ -16,7 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div className="flex min-h-screen bg-gray-50">
+          <Sidebar />
+          <main className="flex-1 overflow-x-hidden">{children}</main>
+        </div>
+      </body>
     </html>
   );
 }

@@ -4,7 +4,9 @@ import { Footer } from "../../components/Home/Footer";
 import Image from "next/image";
 import { FadeIn } from "../../components/ui/FadeIn";
 import { ArrowUpRight } from "lucide-react";
-import { blogPosts } from "./posts-static";
+import { getPublishedBlogs } from "@/lib/blogs";
+
+export const dynamic = "force-dynamic";
 
 const blogSlides = [
   {
@@ -18,7 +20,9 @@ const blogSlides = [
   },
 ];
 
-export default function BlogsPage() {
+export default async function BlogsPage() {
+  const blogPosts = await getPublishedBlogs();
+
   return (
     <div className="md:overflow-x-visible">
       <HeroSection slides={blogSlides} id="blogs-hero" showBookSessionButton />
@@ -73,7 +77,7 @@ export default function BlogsPage() {
                 distance={30}
                 delay={0}
               >
-                <Link href={`/blogs/${post.id}`} className="block h-full">
+                <Link href={`/blogs/${post.slug}`} className="block h-full">
                   <article className="group relative h-full overflow-hidden rounded-[28px] bg-gray-100 shadow-sm">
                     <div className="relative h-[320px] w-full md:h-[420px]">
                       <Image

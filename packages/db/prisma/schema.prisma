@@ -10,18 +10,58 @@ datasource db {
 
 model Blog {
   id          String    @id @default(cuid())
-  title       String
   slug        String    @unique
-  excerpt     String
-  content     String    @db.Text
-  coverImage  String?
-  published   Boolean   @default(false)
-  publishedAt DateTime?
-  tags        String[]
-  author      String    @default("Dr. Name")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
+  // --- Hero (required) ---
+  title     String
+  eyebrow   String
+  excerpt   String
+  imageSrc  String
+  author    String    @default("Dr. Priyanshi Pandya")
+  tags      String[]  @default([])
+  published Boolean   @default(false)
+  publishedAt DateTime?
+
+  // --- Introduction section (required) ---
+  introEyebrow      String
+  introTitle        String
+  introDescription  String
+  introDescription2 String?
+  introImageSrc     String
+  introImageAlt     String?
+
+  // --- Causes section (optional) ---
+  // `causesItems` is a JSON array of { title, description, icon }
+  causesEyebrow     String?
+  causesTitle       String?
+  causesDescription String?
+  causesColumns     Int?
+  causesItems       Json?
+
+  // --- Symptoms section (required) ---
+  symptomsEyebrow     String
+  symptomsTitle       String
+  symptomsDescription String
+  symptomsBullets     String[] @default([])
+  symptomsImageSrc    String
+  symptomsImageAlt    String?
+  symptomsFlipImage   Boolean  @default(false)
+
+  // --- Solutions section (optional) ---
+  // `solutionsItems` is a JSON array of { title, description, icon }
+  solutionsEyebrow     String?
+  solutionsTitle       String?
+  solutionsDescription String?
+  solutionsItems       Json?
+
+  // --- Conclusion section (optional) ---
+  conclusionTitle      String?
+  conclusionParagraphs String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, publishedAt])
   @@map("blogs")
 }
 

@@ -2,8 +2,12 @@ import type {
   ApiResponse,
   BlogDto,
   CreateBlogDto,
+  CreateGalleryImageDto,
+  GalleryImageDto,
   ListBlogsQuery,
+  ListGalleryQuery,
   UpdateBlogDto,
+  UpdateGalleryImageDto,
   UploadResultDto,
 } from "@repo/types";
 
@@ -109,6 +113,35 @@ export const blogsApi = {
   remove: (idOrSlug: string) =>
     request<{ id: string; deleted: true }>(
       `/api/blogs/${encodeURIComponent(idOrSlug)}`,
+      { method: "DELETE" }
+    ),
+};
+
+// ---------- Gallery ----------
+export const galleryApi = {
+  list: (query: ListGalleryQuery = {}) =>
+    request<GalleryImageDto[]>(
+      `/api/gallery${qs(query as Record<string, unknown>)}`
+    ),
+
+  get: (id: string) =>
+    request<GalleryImageDto>(`/api/gallery/${encodeURIComponent(id)}`),
+
+  create: (data: CreateGalleryImageDto) =>
+    request<GalleryImageDto>("/api/gallery", {
+      method: "POST",
+      json: data,
+    }),
+
+  update: (id: string, data: UpdateGalleryImageDto) =>
+    request<GalleryImageDto>(`/api/gallery/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      json: data,
+    }),
+
+  remove: (id: string) =>
+    request<{ id: string; deleted: true }>(
+      `/api/gallery/${encodeURIComponent(id)}`,
       { method: "DELETE" }
     ),
 };

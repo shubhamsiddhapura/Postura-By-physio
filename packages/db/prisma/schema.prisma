@@ -81,15 +81,26 @@ model Testimonial {
 }
 
 model GalleryImage {
-  id        String   @id @default(cuid())
+  id        String          @id @default(cuid())
   url       String
-  publicId  String
-  caption   String?
-  category  String?
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
+  alt       String
+  category  GalleryCategory
+  order     Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 
+  @@index([category, order])
   @@map("gallery_images")
+}
+
+enum GalleryCategory {
+  physiotherapy
+  aerobics
+  yoga
+  pilates
+  corporate
+
+  @@map("gallery_category")
 }
 
 model Service {

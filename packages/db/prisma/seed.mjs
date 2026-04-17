@@ -321,7 +321,71 @@ async function main() {
   }
 }
 
+/**
+ * Gallery seed. Mirrors the image sets that used to be hardcoded in
+ * `apps/web/components/Gallery/*`. Each category gets the number of images
+ * its web section expects (5–6) so the layouts fill correctly.
+ */
+const galleryImages = [
+  // Physiotherapy — masonry section (5 images)
+  { url: "/physio-1.jpg", alt: "Physiotherapy session on treatment table", category: "physiotherapy" },
+  { url: "/physio-2.jpg", alt: "Therapeutic taping and back care", category: "physiotherapy" },
+  { url: "/physio-3.jpg", alt: "Physiotherapy on exercise mat", category: "physiotherapy" },
+  { url: "/physio-physio.jpg", alt: "Shoulder and mobility physiotherapy", category: "physiotherapy" },
+  { url: "/physio-4.jpg", alt: "Lower limb stretching and rehab", category: "physiotherapy" },
+
+  // Aerobics — split-feature section (6 images)
+  { url: "/physio-aerobics.jpg", alt: "Aerobics and mobility on the floor", category: "aerobics" },
+  { url: "/pn-aerobics.jpg", alt: "Group leg lifts on exercise mats", category: "aerobics" },
+  { url: "/gr-aerobics.jpg", alt: "Step aerobics class", category: "aerobics" },
+  { url: "/athlete-3.jpg", alt: "Step platform aerobics session", category: "aerobics" },
+  { url: "/athlete-2.jpg", alt: "Squats with light weights in the gym", category: "aerobics" },
+  { url: "/society-aerobics.jpg", alt: "Group aerobics with dumbbells", category: "aerobics" },
+
+  // Yoga — yoga therapy section (6 images)
+  { url: "/society-yoga.jpg", alt: "Group yoga practice", category: "yoga" },
+  { url: "/pn-yoga.jpg", alt: "Prenatal and wellness yoga", category: "yoga" },
+  { url: "/gr-yoga.jpg", alt: "Gentle yoga for mobility", category: "yoga" },
+  { url: "/it-yoga.jpg", alt: "Yoga for strength and balance", category: "yoga" },
+  { url: "/physio-yoga.jpg", alt: "Yoga and flexibility session", category: "yoga" },
+  { url: "/society-aerobics.jpg", alt: "Group yoga class with mats", category: "yoga" },
+
+  // Pilates — pilates therapy section (5 images)
+  { url: "/physio-pilates.jpg", alt: "Pilates core training", category: "pilates" },
+  { url: "/society-pilates.jpg", alt: "Group pilates session", category: "pilates" },
+  { url: "/pn-pilates.jpg", alt: "Pilates for stability", category: "pilates" },
+  { url: "/gr-pilates.jpg", alt: "Rehab-focused pilates", category: "pilates" },
+  { url: "/it-pilates.jpg", alt: "Pilates movement patterns", category: "pilates" },
+
+  // Corporate — corporate wellness section (5 images)
+  { url: "/cp-1.jpg", alt: "Corporate wellness and desk ergonomics", category: "corporate" },
+  { url: "/cp-2.jpg", alt: "Workplace movement and stretching", category: "corporate" },
+  { url: "/corporate-hero.png", alt: "Corporate wellness programs", category: "corporate" },
+  { url: "/it-common-challenges.jpg", alt: "Office posture and wellbeing", category: "corporate" },
+  { url: "/blog4.jpg", alt: "Team wellness activities", category: "corporate" },
+];
+
+async function seedGallery() {
+  // Reset the category so re-seeding always yields the exact layout we want,
+  // and the order stays deterministic.
+  const categories = [...new Set(galleryImages.map((g) => g.category))];
+  for (const cat of categories) {
+    await prisma.galleryImage.deleteMany({ where: { category: cat } });
+  }
+
+  const byCat = new Map();
+  for (const img of galleryImages) {
+    const next = (byCat.get(img.category) ?? -1) + 1;
+    byCat.set(img.category, next);
+    await prisma.galleryImage.create({
+      data: { ...img, order: next },
+    });
+  }
+  console.log(`upserted gallery images: ${galleryImages.length}`);
+}
+
 main()
+  .then(() => seedGallery())
   .catch((err) => {
     console.error(err);
     process.exit(1);

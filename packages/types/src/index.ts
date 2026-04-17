@@ -194,10 +194,49 @@ export interface UpdateTestimonialDto extends Partial<CreateTestimonialDto> {
 }
 
 // ---------- Gallery ----------
+/**
+ * Category ids for gallery images. Each corresponds 1:1 to a section on the
+ * public gallery page (masonry, split-feature, yoga, pilates, corporate).
+ */
+export const GALLERY_CATEGORIES = [
+  "physiotherapy",
+  "aerobics",
+  "yoga",
+  "pilates",
+  "corporate",
+] as const;
+export type GalleryCategory = (typeof GALLERY_CATEGORIES)[number];
+
+/** Human-readable labels for the admin UI. */
+export const GALLERY_CATEGORY_LABELS: Record<GalleryCategory, string> = {
+  physiotherapy: "Physiotherapy",
+  aerobics: "Aerobics",
+  yoga: "Yoga",
+  pilates: "Pilates",
+  corporate: "Corporate Wellness",
+};
+
+export interface GalleryImageDto {
+  id: string;
+  url: string;
+  alt: string;
+  category: GalleryCategory;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CreateGalleryImageDto {
   url: string;
-  publicId: string;
-  caption?: string;
-  category?: string;
+  alt: string;
+  category: GalleryCategory;
   order?: number;
+}
+
+export type UpdateGalleryImageDto = Partial<CreateGalleryImageDto>;
+
+export interface ListGalleryQuery {
+  category?: GalleryCategory;
+  page?: number;
+  limit?: number;
 }

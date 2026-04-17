@@ -24,7 +24,7 @@ const navItems: NavItem[] = [
   { label: "Blogs", href: "/blogs", icon: FileText },
   { label: "Testimonials", href: "/testimonials", icon: MessageSquareQuote, disabled: true },
   { label: "Services", href: "/services", icon: Stethoscope, disabled: true },
-  { label: "Gallery", href: "/gallery", icon: ImageIcon, disabled: true },
+  { label: "Gallery", href: "/gallery", icon: ImageIcon },
   { label: "Settings", href: "/settings", icon: Settings, disabled: true },
 ];
 

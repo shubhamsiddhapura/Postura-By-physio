@@ -1,5 +1,10 @@
-import type { Blog } from "@repo/db";
-import type { BlogDto, SectionItem } from "@repo/types";
+import type { Blog, GalleryImage } from "@repo/db";
+import type {
+  BlogDto,
+  GalleryCategory,
+  GalleryImageDto,
+  SectionItem,
+} from "@repo/types";
 
 function formatDate(d: Date | null): string {
   if (!d) return "";
@@ -74,5 +79,17 @@ export function serializeBlog(blog: Blog): BlogDto {
     // Conclusion
     conclusionTitle: blog.conclusionTitle ?? null,
     conclusionParagraphs: blog.conclusionParagraphs,
+  };
+}
+
+export function serializeGalleryImage(image: GalleryImage): GalleryImageDto {
+  return {
+    id: image.id,
+    url: image.url,
+    alt: image.alt,
+    category: image.category as GalleryCategory,
+    order: image.order,
+    createdAt: image.createdAt.toISOString(),
+    updatedAt: image.updatedAt.toISOString(),
   };
 }

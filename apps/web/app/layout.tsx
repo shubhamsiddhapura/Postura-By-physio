@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import NextTopLoader from "nextjs-toploader";
 import { Navbar } from "../components/Home/Navbar";
 
 const switzer = localFont({
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body
         className={`${switzer.variable} ${cabinetGrotesk.variable} font-switzer`}
       >
+        <NextTopLoader color="#008080" showSpinner={false} />
         <Navbar />
         <main>{children}</main>
       </body>

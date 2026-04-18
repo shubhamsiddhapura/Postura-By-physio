@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export type ScrollToHashOptions = {
   /** CSS selector for the fixed header element used to compute offset */
@@ -111,6 +112,7 @@ export type UseSmoothHashScrollOptions = Omit<
 
 export function useSmoothHashScroll(options: UseSmoothHashScrollOptions = {}) {
   const { enabled = true, ...rest } = options;
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!enabled) return;
@@ -133,6 +135,6 @@ export function useSmoothHashScroll(options: UseSmoothHashScrollOptions = {}) {
     handle();
     window.addEventListener("hashchange", handle);
     return () => window.removeEventListener("hashchange", handle);
-  }, [enabled, rest.headerSelector, rest.extraOffsetPx]);
+  }, [enabled, pathname, rest.headerSelector, rest.extraOffsetPx]);
 }
 

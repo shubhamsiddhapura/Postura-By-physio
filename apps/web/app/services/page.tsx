@@ -59,7 +59,7 @@ export default function ServicesPage() {
           title="Comprehensive Care for Every Stage of Life"
           description="At Postura by Physio, we offer a combination of clinical physiotherapy and guided fitness programs to support recovery, strength building, and overall wellness."
           description2="Our services are designed for individuals across all age groups from corporate professionals and athletes to seniors and mothers ensuring safe, effective, and personalized care for every need."
-          image={{ src: "/blog-symptoms.jpg", alt: "common symptoms" }}
+          image={{ src: "/services-0.jpg", alt: "common symptoms" }}
         />
       </div>
 

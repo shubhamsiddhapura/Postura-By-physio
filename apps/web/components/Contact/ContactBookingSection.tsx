@@ -66,8 +66,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
   const whatsappHref = useMemo(() => {
     const programLabel =
       selectedProgram === "physiotherapy" ? "Physiotherapy Program" : "Fitness Program";
-    const consultation =
-      consultationType.trim() === "" ? "None" : consultationType;
+    const consultation = consultationType.trim();
     const lines = [
       "Hi! I’d like to book an appointment.",
       "",
@@ -76,7 +75,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
       phone ? `Phone: ${phone}` : null,
       email ? `Email: ${email}` : null,
       preferredDateTime ? `Preferred date & time: ${preferredDateTime}` : null,
-      `Consultation type: ${consultation}`,
+      consultation ? `Consultation type: ${consultation}` : null,
       address ? `Address: ${address}` : null,
       message ? `Message: ${message}` : null,
     ].filter(Boolean) as string[];
@@ -174,10 +173,44 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
     ]
   );
 
-  const fieldError = (field: string): string | undefined =>
-    submission.kind === "error"
-      ? submission.fieldErrors?.[field]?.[0]
-      : undefined;
+  const normalizeFieldError = (field: string, raw: string): string => {
+    const msg = raw.trim();
+    const lower = msg.toLowerCase();
+
+    if (field === "fullName") {
+      if (lower.includes("required") || lower.includes("must be at least")) {
+        return "Please enter your full name (at least 2 characters).";
+      }
+      return "Please enter a valid full name.";
+    }
+
+    if (field === "phone") {
+      if (lower.includes("required") || lower.includes("at least") || lower.includes("digits")) {
+        return "Please enter a valid phone number (at least 7 digits).";
+      }
+      return "Please enter a valid phone number.";
+    }
+
+    if (field === "email") {
+      if (lower.includes("required")) return "Please enter your email address.";
+      if (lower.includes("valid email")) return "Please enter a valid email address (e.g. name@example.com).";
+      return "Please enter a valid email address.";
+    }
+
+    if (field === "preferredDateTime") {
+      if (lower.includes("required")) return "Please choose a preferred date and time.";
+      if (lower.includes("at least")) return "Please choose a preferred date and time.";
+      return "Please choose a valid preferred date and time.";
+    }
+
+    return msg;
+  };
+
+  const fieldError = (field: string): string | undefined => {
+    if (submission.kind !== "error") return undefined;
+    const raw = submission.fieldErrors?.[field]?.[0];
+    return raw ? normalizeFieldError(field, raw) : undefined;
+  };
 
   const isSubmitting = submission.kind === "submitting";
   const isSuccess = submission.kind === "success";

@@ -27,28 +27,33 @@ const aerobicsProgramSlides = [
 
 const aerobicsPrograms = [
     {
+        title: "Corporate Aerobics",
+        imageSrc: "/apat-1.jpg",
+        imageAlt: "Corporate Aerobics",
+    },
+    {
         title: "HIIT Aerobics",
-        imageSrc: "/aerobics-program-hero.png",
+        imageSrc: "/apat-2.jpg",
         imageAlt: "HIIT Aerobics",
     },
     {
         title: "Floor Aerobics",
-        imageSrc: "/aerobics-program-1.jpg",
+        imageSrc: "/apat-3.jpg",
         imageAlt: "Floor Aerobics",
     },
     {
         title: "Step Aerobics",
-        imageSrc: "/aerobics-program-hero.png",
-        imageAlt: "Step Aerobics",
+        imageSrc: "/apat-4.jpg",
+        imageAlt: "Obesity Aerobics",
     },
     {
         title: "Obesity Aerobics",
-        imageSrc: "/aerobics-program-1.jpg",
+        imageSrc: "/apat-5.jpg",
         imageAlt: "Obesity Aerobics",
     },
     {
         title: "Geriatric Aerobics",
-        imageSrc: "/aerobics-program-hero.png",
+        imageSrc: "/apat-6.jpg",
         imageAlt: "Geriatric Aerobics",
     },
 ];

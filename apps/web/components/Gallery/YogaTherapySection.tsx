@@ -1,6 +1,28 @@
+"use client";
+
 import Image from "next/image";
+import { useCallback, useState } from "react";
+import { useInView } from "../../hooks/useInView";
 
 type GalleryTile = { src: string; alt: string };
+
+const BLUR_DATA_URL =
+  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k=";
+
+const getInitialTransform = (direction: "up" | "down" | "left" | "right" | "none", distance: number): string => {
+  switch (direction) {
+    case "up":
+      return `translateY(${distance}px)`;
+    case "down":
+      return `translateY(-${distance}px)`;
+    case "left":
+      return `translateX(${distance}px)`;
+    case "right":
+      return `translateX(-${distance}px)`;
+    default:
+      return "none";
+  }
+};
 
 /**
  * Yoga grid. The left column is a tall feature image and the remaining 5
@@ -18,11 +40,26 @@ export function YogaTherapySection({
   const [feature, r1r, r2m, r2r, r3m, r3r] = images;
   const tile =
     "relative w-full overflow-hidden bg-gray-100 max-md:min-h-0 md:min-h-0 md:h-full";
+  const [loaded, setLoaded] = useState<Record<string, boolean>>({});
+  const markLoaded = useCallback((src: string) => {
+    setLoaded((prev) => (prev[src] ? prev : { ...prev, [src]: true }));
+  }, []);
+  const dividerInView = useInView({ threshold: 0.12 });
 
   return (
     <section className="bg-white px-4 pb-5">
       <div className="mx-auto w-full max-w-[min(90vw,1200px)]">
-        <div className="relative my-10 flex items-center justify-center md:my-12">
+        <div
+          ref={dividerInView.ref}
+          className="relative my-10 flex items-center justify-center md:my-12"
+          style={{
+            opacity: dividerInView.isInView ? 1 : 0,
+            transform: dividerInView.isInView ? "translate(0,0)" : getInitialTransform("up", 22),
+            transition:
+              "opacity 800ms cubic-bezier(0.22,1,0.36,1), transform 800ms cubic-bezier(0.22,1,0.36,1)",
+            transitionDelay: "120ms",
+          }}
+        >
           <div
             className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-primary"
             aria-hidden
@@ -46,6 +83,9 @@ export function YogaTherapySection({
             tile={feature}
             className="relative w-full overflow-hidden bg-gray-100 max-md:col-span-2 max-md:aspect-[4/5] max-md:min-h-0 max-md:rounded-3xl max-md:rounded-tl-[48px] max-md:rounded-tr-[18px] max-md:rounded-bl-[18px] max-md:rounded-br-[48px] md:col-span-1 md:col-start-1 md:row-span-3 md:row-start-1 md:aspect-auto md:h-full md:rounded-none md:rounded-tl-[72px] md:rounded-br-[72px] md:rounded-tr-[24px] md:rounded-bl-[24px]"
             sizes="(min-width: 768px) 44vw, 100vw"
+            loaded={feature?.src ? !!loaded[feature.src] : true}
+            onLoaded={markLoaded}
+            fadeDelayMs={140}
           />
           <div
             className="hidden min-h-0 md:col-start-2 md:row-start-1 md:block"
@@ -55,26 +95,41 @@ export function YogaTherapySection({
             tile={r1r}
             className={`${tile} max-md:aspect-square max-md:rounded-3xl max-md:rounded-tl-[18px] max-md:rounded-tr-[48px] max-md:rounded-bl-[48px] max-md:rounded-br-[18px] md:aspect-auto md:col-start-3 md:row-start-1 md:rounded-none md:rounded-tr-[72px] md:rounded-bl-[72px] md:rounded-tl-[24px] md:rounded-br-[24px]`}
             sizes="(min-width: 768px) 18vw, 45vw"
+            loaded={r1r?.src ? !!loaded[r1r.src] : true}
+            onLoaded={markLoaded}
+            fadeDelayMs={180}
           />
           <FillTile
             tile={r2m}
             className={`${tile} max-md:aspect-square max-md:rounded-3xl max-md:rounded-tl-[18px] max-md:rounded-tr-[48px] max-md:rounded-bl-[48px] max-md:rounded-br-[18px] md:aspect-auto md:col-start-2 md:row-start-2 md:rounded-none md:rounded-tr-[72px] md:rounded-bl-[72px] md:rounded-tl-[24px] md:rounded-br-[24px]`}
             sizes="(min-width: 768px) 18vw, 45vw"
+            loaded={r2m?.src ? !!loaded[r2m.src] : true}
+            onLoaded={markLoaded}
+            fadeDelayMs={220}
           />
           <FillTile
             tile={r2r}
             className={`${tile} max-md:aspect-square max-md:rounded-3xl max-md:rounded-tl-[48px] max-md:rounded-tr-[18px] max-md:rounded-bl-[18px] max-md:rounded-br-[48px] md:aspect-auto md:col-start-3 md:row-start-2 md:rounded-none md:rounded-tr-[72px] md:rounded-bl-[72px] md:rounded-tl-[24px] md:rounded-br-[24px]`}
             sizes="(min-width: 768px) 18vw, 45vw"
+            loaded={r2r?.src ? !!loaded[r2r.src] : true}
+            onLoaded={markLoaded}
+            fadeDelayMs={260}
           />
           <FillTile
             tile={r3m}
             className={`${tile} max-md:aspect-square max-md:rounded-3xl max-md:rounded-tl-[48px] max-md:rounded-tr-[18px] max-md:rounded-bl-[18px] max-md:rounded-br-[48px] md:aspect-auto md:col-start-2 md:row-start-3 md:rounded-none md:rounded-tl-[72px] md:rounded-br-[72px] md:rounded-tr-[24px] md:rounded-bl-[24px]`}
             sizes="(min-width: 768px) 18vw, 45vw"
+            loaded={r3m?.src ? !!loaded[r3m.src] : true}
+            onLoaded={markLoaded}
+            fadeDelayMs={300}
           />
           <FillTile
             tile={r3r}
             className={`${tile} max-md:col-span-2 max-md:aspect-[3/2] max-md:rounded-3xl max-md:rounded-tl-[18px] max-md:rounded-tr-[48px] max-md:rounded-bl-[48px] max-md:rounded-br-[18px] md:col-span-1 md:aspect-auto md:col-start-3 md:row-start-3 md:rounded-none md:rounded-tr-[72px] md:rounded-bl-[72px] md:rounded-tl-[24px] md:rounded-br-[24px]`}
             sizes="(min-width: 768px) 18vw, 100vw"
+            loaded={r3r?.src ? !!loaded[r3r.src] : true}
+            onLoaded={markLoaded}
+            fadeDelayMs={340}
           />
         </div>
       </div>
@@ -86,10 +141,16 @@ function FillTile({
   tile,
   className,
   sizes,
+  loaded,
+  onLoaded,
+  fadeDelayMs,
 }: {
   tile: GalleryTile | undefined;
   className: string;
   sizes: string;
+  loaded: boolean;
+  onLoaded: (src: string) => void;
+  fadeDelayMs: number;
 }) {
   if (!tile) {
     return (
@@ -98,12 +159,37 @@ function FillTile({
       </div>
     );
   }
+  const tileInView = useInView({ threshold: 0.12 });
   return (
-    <div className={className}>
+    <div
+      ref={tileInView.ref}
+      className={className}
+      style={{
+        opacity: tileInView.isInView ? 1 : 0,
+        transform: tileInView.isInView ? "translate(0,0)" : getInitialTransform("up", 22),
+        transition:
+          "opacity 800ms cubic-bezier(0.22,1,0.36,1), transform 800ms cubic-bezier(0.22,1,0.36,1)",
+        transitionDelay: `${fadeDelayMs}ms`,
+      }}
+    >
+      <div
+        aria-hidden="true"
+        className={[
+          "absolute inset-0 z-[1]",
+          "bg-gray-100",
+          "transition-opacity duration-500",
+          loaded ? "opacity-0 pointer-events-none" : "opacity-100",
+        ].join(" ")}
+      >
+        <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-black/5 via-black/0 to-black/10" />
+      </div>
       <Image
         src={tile.src}
         alt={tile.alt}
         fill
+        placeholder="blur"
+        blurDataURL={BLUR_DATA_URL}
+        onLoadingComplete={() => onLoaded(tile.src)}
         className="object-cover"
         sizes={sizes}
       />

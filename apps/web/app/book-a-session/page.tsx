@@ -15,7 +15,7 @@ const bookSessionSlides = [
     mobileSrc: "/booking-hero.png",
     alt: "Booking Session",
     tag: "Booking Session",
-    headline: "Book Your Session",
+    headline: "Book Your <br/> Session",
     body: "Start your journey towards better movement, pain relief, and overall wellness with our expert-guided physiotherapy and fitness programs.",
     sub: "",
   },

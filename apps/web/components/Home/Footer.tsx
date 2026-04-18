@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { Instagram, Linkedin } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
 import { scrollToHash } from "../../lib/scroll";
@@ -47,15 +47,16 @@ export function Footer({
     { label: "Testimonials", href: "/testimonials" },
     { label: "Blogs", href: "/blogs" },
     { label: "Services", href: "/services" },
-    { label: "FAQs", href: "#faq" },
-    { label: "Contact", href: "#contact" },
+    // { label: "FAQs", href: "#faq" },
+    { label: "Contact", href: "/contact-us" },
   ];
 
+  /** Use `/#services` so from any page we navigate to Home’s services block (`#services` alone only affects the current URL). */
   const serviceLinks: Array<{ label: string; href: string }> = [
-    { label: "Aerobics", href: "#services" },
-    { label: "Yoga", href: "#services" },
-    { label: "Physiotherapy", href: "#services" },
-    { label: "Pilates", href: "#services" },
+    { label: "Aerobics", href: "/aerobics-program" },
+    { label: "Yoga", href: "/yoga-program" },
+    { label: "Physiotherapy", href: "/physiotherapy" },
+    { label: "Pilates", href: "/pilates-program" },
   ];
 
   return (
@@ -127,7 +128,7 @@ export function Footer({
                   Follow for More Health Tips
                 </h4>
                 <div className="mt-3 flex items-center gap-3">
-                  <a
+                  <Link
                     href="https://www.instagram.com/postura_by_physio?igsh=MTk0NGNyZ3htY3U1Zg=="
                     className="grid h-9 w-9 place-items-center rounded-full border-[1px] border-secondary text-secondary transition hover:bg-secondary hover:text-white"
                     aria-label="Instagram"
@@ -135,8 +136,8 @@ export function Footer({
                     rel="noopener noreferrer"
                   >
                     <Instagram className="h-4 w-4" />
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     href="https://www.linkedin.com/in/dr-priyanshi-pandya-pt-b91133217?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
                     className="grid h-9 w-9 place-items-center rounded-full border-[1px] border-secondary text-secondary transition hover:bg-secondary hover:text-white"
                     aria-label="LinkedIn"
@@ -144,7 +145,7 @@ export function Footer({
                     rel="noopener noreferrer"
                   >
                     <Linkedin className="h-4 w-4" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -187,12 +188,7 @@ export function Footer({
                       <li key={service.label}>
                         <Link
                           href={service.href}
-                          onClick={(e) => {
-                            if (!isHome) return;
-                            if (!service.href.startsWith("#")) return;
-                            e.preventDefault();
-                            scrollToHash(service.href, { extraOffsetPx: 12 });
-                          }}
+                          prefetch
                           className="text-sm text-gray-600 transition hover:text-primary"
                         >
                           {service.label}
@@ -253,9 +249,14 @@ export function Footer({
             
             <p>
                 Design and Develop by{" "}
-                <a href="https://codenixlabs.com" className="font-semibold text-secondary underline">
+                <Link
+                  href="https://codenixlabs.com"
+                  className="font-semibold text-secondary underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Codenix Labs
-                </a>
+                </Link>
               </p>
               <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
               <p>

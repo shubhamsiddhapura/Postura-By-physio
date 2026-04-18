@@ -27,25 +27,25 @@ const defaultItems: WellnessProgramItem[] = [
   {
     title: "Swiss Ball Training",
     alt: "Swiss ball core training",
-    imageSrc: "/athlete-pilates.jpg",
+    imageSrc: "/services-1.jpg",
     href: "/swiss-ball-training",
   },
   {
     title: "Couple Exercise",
     alt: "Couple stretching and exercise together",
-    imageSrc: "/society-yoga.jpg",
+    imageSrc: "/services-2.jpg",
     href: "/couple-exercise-program",
   },
   {
     title: "Theraband Training",
     alt: "Resistance band training",
-    imageSrc: "/physio-2.jpg",
+    imageSrc: "/services-3.jpg",
     href: "/theraband-training",
   },
   {
     title: "Flexibar Training",
     alt: "Flexibility and bar-assisted training",
-    imageSrc: "/pn-yoga.jpg",
+    imageSrc: "/services-4.jpg",
     href: "/flexibar-training",
   },
 ];

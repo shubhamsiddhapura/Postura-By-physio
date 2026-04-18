@@ -57,32 +57,32 @@ export default function PhysiotherapyServicePage() {
           {
             title: "Orthopedic Rehabilitation",
             subtitle: "Treatment for joint pain, fractures, ligament injuries, and post-surgical recovery",
-            imageSrc: "/physio-1.jpg",
+            imageSrc: "/physio-service-1.jpg",
           },
           {
             title: "Neurological Rehabilitation",
             subtitle: "Improves mobility, coordination, and functional independence for neurological conditions",
-            imageSrc: "/physio-2.jpg",
-          },
+            imageSrc: "/physio-service-2.jpg",
+          },  
           {
             title: "Cardio Rehabilitation",
             subtitle: "Enhances lung capacity, breathing efficiency, and endurance",
-            imageSrc: "/physio-3.jpg",
+            imageSrc: "/physio-service-3.jpg",
           },
           {
             title: "Women’s Physiotherapy",
             subtitle: "Supports pre- and post-natal recovery, pelvic floor strengthening, and overall maternal health",
-            imageSrc: "/physio-4.jpg",
+            imageSrc: "/physio-service-4.jpg",
           },
           {
             title: "Geriatric Rehabilitation",
             subtitle: "Focuses on balance, mobility, and fall prevention for seniors",
-            imageSrc: "/physio-hero.png",
+            imageSrc: "/physio-service-5.jpg",
           },
           {
             title: "Postural Correction",
             subtitle: "Designed for corporate and desk-based professionals to reduce pain and improve posture",
-            imageSrc: "/physio-yoga.jpg",
+            imageSrc: "/physio-service-6.jpg",
           },
         ]}
       />
@@ -93,44 +93,44 @@ export default function PhysiotherapyServicePage() {
           id="advanced-treatment-techniques"
           items={[
             {
+              title: "Corrective Exercises",
+              imageSrc: "/at-7.jpg",
+              imageAlt: "Corrective Exercises",
+            },
+            {
+              title: "Theraband Strength",
+              imageSrc: "/at-1.jpg",
+              imageAlt: "Theraband Strength",
+            },
+            {
               title: "Cupping Therapy",
-              imageSrc: "/physio-1.jpg",
+              imageSrc: "/at-2.jpg",
               imageAlt: "Cupping Therapy",
             },
             {
               title: "Manual Therapy",
-              imageSrc: "/physio-2.jpg",
+              imageSrc: "/at-3.jpg",
               imageAlt: "Manual Therapy",
             },
             {
               title: "Dry Needling",
-              imageSrc: "/physio-3.jpg",
+              imageSrc: "/at-4.jpg",
               imageAlt: "Dry Needling",
             },
             {
               title: "Functional Training",
-              imageSrc: "/physio-4.jpg",
+              imageSrc: "/at-5.jpg",
               imageAlt: "Functional Training",
             },
             {
               title: "Flexibar Therapy",
-              imageSrc: "/physio-yoga.jpg",
+              imageSrc: "/at-6.jpg",
               imageAlt: "Flexibar Therapy",
             },
             {
-              title: "Dry Needling",
-              imageSrc: "/physio-3.jpg",
-              imageAlt: "Dry Needling",
-            },
-            {
-              title: "Functional Training",
-              imageSrc: "/physio-4.jpg",
-              imageAlt: "Functional Training",
-            },
-            {
-              title: "Flexibar Therapy",
-              imageSrc: "/physio-yoga.jpg",
-              imageAlt: "Flexibar Therapy",
+              title: "Swiss Ball Training",
+              imageSrc: "/at-8.jpg",
+              imageAlt: "Swiss Ball Training",
             },
           ]}
         />
@@ -149,7 +149,7 @@ export default function PhysiotherapyServicePage() {
             "Reduced risk of recurring injuries",
             "Improved quality of life",
           ]}
-          image={{ src: "/physio-1.jpg", alt: "Physiotherapy session" }}
+          image={{ src: "/physio-service-0.jpg", alt: "Physiotherapy session" }}
         />
       </div>
 

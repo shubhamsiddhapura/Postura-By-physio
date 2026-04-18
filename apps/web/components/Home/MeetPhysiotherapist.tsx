@@ -82,7 +82,7 @@ export function MeetPhysiotherapist({
                     href={`/patient-interaction`}
                     label={ctaLabel}
                     size="sm"
-                    className="mt-8"  
+                    className="mt-8 text-[#FEF9E0]"  
                   />
                 </FadeIn>
               </div>

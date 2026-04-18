@@ -26,12 +26,12 @@ export function PrimaryCTAButton({
   type = "button",
 }: PrimaryCTAButtonProps) {
   const baseButtonClasses =
-    "inline-flex items-center gap-3 rounded-full bg-secondary text-white shadow-sm transition hover:brightness-80";
+    "inline-flex items-center gap-3 rounded-full bg-secondary text-[#FEF9E0] shadow-sm transition hover:brightness-80";
 
   const sizeClasses =
     size === "md"
       ? "px-6 py-3 text-sm"
-      : "px-5 py-3 text-xs font-semibold md:text-sm";
+      : "px-5 py-3 text-xs font-normal md:text-sm";
 
   const badgeSizeClasses =
     size === "md"

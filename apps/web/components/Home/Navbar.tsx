@@ -12,9 +12,9 @@ const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
-  { label: "Who Can Join", href: "#who-can-join" },
+  { label: "Testimonials", href: "/testimonials" },
   { label: "Gallery", href: "/gallery" },
-  { label: "FAQs", href: "#faqs" },
+  { label: "Blog", href: "/blogs" },
   { label: "Contact", href: "/contact-us" },
 ];
 
@@ -98,7 +98,7 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 onClick={handleNavClick(item.href)}
-                className="text-sm font-medium transition-colors text-white hover:text-secondary"
+                className="text-sm font-normal transition-colors text-white hover:text-secondary"
               >
                 {item.label}
               </Link>

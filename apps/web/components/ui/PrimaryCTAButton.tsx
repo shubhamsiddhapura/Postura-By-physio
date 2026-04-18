@@ -30,7 +30,7 @@ export function PrimaryCTAButton({
 
   const sizeClasses =
     size === "md"
-      ? "px-6 py-4 text-sm"
+      ? "px-6 py-3 text-sm"
       : "px-5 py-3 text-xs font-semibold md:text-sm";
 
   const badgeSizeClasses =

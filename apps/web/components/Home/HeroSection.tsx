@@ -132,6 +132,7 @@ export function HeroSection({
         : defaultSlides;
 
   const [current, setCurrent] = useState(0);
+  const [loadedSlides, setLoadedSlides] = useState<Record<number, boolean>>({});
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % resolvedSlides.length);
@@ -149,7 +150,7 @@ export function HeroSection({
   return (
     <section
       id={id}
-      className={`relative w-full ${heightClassName} overflow-hidden rounded-br-[100px] ${className}`}
+      className={`relative w-full bg-primary ${heightClassName} overflow-hidden rounded-br-[100px] ${className}`}
     >
       {/* Slides */}
       {resolvedSlides.map((slide, index) => (
@@ -158,12 +159,31 @@ export function HeroSection({
           className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === current ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
         >
+          {/* Skeleton / shimmer overlay (fades out when image loads) */}
+          <div
+            aria-hidden="true"
+            className={[
+              "absolute inset-0 z-[1]",
+              "bg-primary",
+              "transition-opacity duration-500",
+              loadedSlides[index] ? "opacity-0 pointer-events-none" : "opacity-100",
+            ].join(" ")}
+          >
+            <div className="absolute inset-0 animate-pulse bg-gradient-to-b from-white/5 via-white/0 to-white/10" />
+          </div>
+
           {/* Mobile background image (below md) */}
           <Image
             src={slide.mobileSrc}
             alt={slide.alt}
             fill
-            priority={index === 0}
+            priority={index === 0 || index === 1}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
+            {...(index === 0 ? { loading: "eager" as const } : {})}
+            onLoadingComplete={() =>
+              setLoadedSlides((prev) => (prev[index] ? prev : { ...prev, [index]: true }))
+            }
             className="object-cover object-top md:hidden"
             sizes="100vw"
           />
@@ -173,7 +193,13 @@ export function HeroSection({
             src={slide.src}
             alt={slide.alt}
             fill
-            priority={index === 0}
+            priority={index === 0 || index === 1}
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
+            {...(index === 0 ? { loading: "eager" as const } : {})}
+            onLoadingComplete={() =>
+              setLoadedSlides((prev) => (prev[index] ? prev : { ...prev, [index]: true }))
+            }
             className="object-cover object-center hidden md:block"
             sizes="100vw"
           />

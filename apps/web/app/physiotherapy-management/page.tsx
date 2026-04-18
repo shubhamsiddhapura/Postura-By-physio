@@ -11,7 +11,7 @@ const physiotherapySlides = [
     mobileSrc: "/physio-hero.png",
     alt: "Physiotherapy Management",
     tag: "Physiotherapy Management",
-    headline: "Structured<br/> Physiotherapy Care<br/> for Complete<br/> Recovery",
+    headline: "Structured Physiotherapy for Complete Recovery",
     body:
       "Our physiotherapy management programs focus on pain relief, mobility restoration, and strength rebuilding through scientifically guided rehabilitation plans designed for long-term functional recovery.",
     sub: "",

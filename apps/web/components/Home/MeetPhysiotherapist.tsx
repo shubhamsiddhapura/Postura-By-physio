@@ -25,6 +25,12 @@ export function MeetPhysiotherapist({
   whatsappPhone = "916354011290",
   whatsappMessage = "Hi! I’d like to start my recovery journey and book a session.",
 }: MeetPhysiotherapistProps) {
+  /** Matches home copy `Dr. Priyanshi Pandya (PT)` and about copy `Dr. Priyanshi Pandya(PT)`. */
+  const doctorNameSplit = /(Dr\.\s*Priyanshi\s+Pandya\s*\(PT\))/g;
+  const isDoctorNameChunk = (s: string) =>
+    /^Dr\.\s*Priyanshi\s+Pandya\s*\(PT\)$/.test(s);
+  const paragraph1Parts = paragraph1.split(doctorNameSplit);
+
   return (
     <section id="about" className="bg-white">
       <div className="py-10 md:py-16">
@@ -47,7 +53,15 @@ export function MeetPhysiotherapist({
 
                 <FadeIn direction="up" duration={800} distance={28} delay={370}>
                   <p className="mt-4 text-sm leading-5 text-white/85 md:text-sm md:leading-6">
-                    {paragraph1}
+                    {paragraph1Parts.map((part, i) =>
+                      isDoctorNameChunk(part) ? (
+                        <strong key={i} className="font-bold text-[#FEF9E0]">
+                          {part}
+                        </strong>
+                      ) : (
+                        <span key={i}>{part}</span>
+                      ),
+                    )}
                   </p>
                 </FadeIn>
 

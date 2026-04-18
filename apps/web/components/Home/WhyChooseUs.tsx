@@ -42,27 +42,27 @@ const defaultItems: WhyChooseUsItem[] = [
     title: "Assessment-\nBased Care",
     description:
       "No generic exercises.\nEvery plan starts with\nclinical evaluation.",
-    icon: Activity,
+    iconElement: <Image src="/landing-1.svg" alt="Assessment-Based Care" width={30} height={30} />,
   },
   {
     title: "Doorstep\nPhysiotherapy",
     description: "Zero travel. Better\nconsistency. Faster\nrecovery.",
-    icon: DoorOpen,
+    iconElement: <Image src="/landing-5.svg" alt="Doorstep Physiotherapy" width={30} height={30} />,
   },
   {
     title: "Physio-Led\nFitness",
     description: "Every session supervised\nby certified\nphysiotherapists.",
-    icon: HeartHandshake,
+    iconElement: <Image src="/landing-2.svg" alt="Physio-Led Fitness" width={30} height={30} />,
   },
   {
     title: "Prehab + Rehab\nModel",
     description: "We prevent injuries not\njust treat them.",
-    icon: Dumbbell,
+    iconElement: <Image src="/landing-3.svg" alt="Prehab + Rehab Model" width={30} height={30} />,
   },
   {
     title: "Online & Offline\nsession",
     description: "Flexible care options for\nevery schedule.",
-    icon: Monitor,
+    iconElement: <Image src="/landing-4.svg" alt="Online & Offline session" width={30} height={30} />,
   },
 ];
 
@@ -143,7 +143,7 @@ export function WhyChooseUs({
               delay={200 + index * 100}
               className="h-full"
             >
-              <div className="flex h-full md:min-h-[200px] cursor-pointer flex-col items-center rounded-bl-xl rounded-br-[36px] rounded-tl-[36px] rounded-tr-xl bg-gray-50 px-7 py-8 shadow-[0_0_0_1px_rgba(0,0,0,0.02)] transition-transform duration-300 hover:scale-105 md:items-start">
+              <div className="flex h-full md:min-h-[200px] cursor-pointer flex-col items-center rounded-bl-xl rounded-br-[36px] rounded-tl-[36px] rounded-tr-xl bg-gray-50 px-4 py-4 shadow-[0_0_0_1px_rgba(0,0,0,0.02)] transition-transform duration-300 hover:scale-105 md:items-start">
                 <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-primary text-white [&_svg]:shrink-0">
                   <ItemIcon item={item} />
                 </div>

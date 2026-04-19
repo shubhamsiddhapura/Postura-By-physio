@@ -87,7 +87,7 @@ export function Footer({
                 href="https://wa.me/916354011290"
                 label="Book Your Session"
                 size="md"
-                className="pr-8 cursor-pointer"
+                className="cursor-pointer"
                 arrowVariant="dark"
               />
             </FadeIn>

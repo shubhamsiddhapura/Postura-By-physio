@@ -141,7 +141,7 @@ export function FaqSection() {
               href="#contact"
               label="Still have question?"
               size="sm"
-              className="md:hidden flex justify-center items-center w-40"
+              className="md:hidden"
               arrowVariant="dark"
               onClick={(e) => {
                 e.preventDefault();

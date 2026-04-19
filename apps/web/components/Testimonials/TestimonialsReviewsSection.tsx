@@ -103,7 +103,7 @@ export function TestimonialsReviewsSection({
                 href="#customer-reviews"
                 label="View More"
                 size="md"
-                className="pr-8"
+                className=""
                 onClick={(e) => {
                   e.preventDefault();
                   handleViewMore();

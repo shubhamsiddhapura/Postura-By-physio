@@ -110,7 +110,7 @@ export function Navbar() {
               href="/book-a-session"
               label="Book Session"
               size="md"
-              className="hidden pr-8 md:block"
+              className="hidden md:block mr-6"
             />
 
             <button

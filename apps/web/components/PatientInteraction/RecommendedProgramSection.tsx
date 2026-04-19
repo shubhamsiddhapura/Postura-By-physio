@@ -48,7 +48,7 @@ export function RecommendedProgramSection({ onBookSessionClick }: RecommendedPro
               label="Book Your Session"
               size="md"
               arrowVariant="dark"
-              className="pr-8"
+              className=""
               onClick={
                 onBookSessionClick
                   ? (e) => {

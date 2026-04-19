@@ -45,6 +45,7 @@ export default function GeriatricRehabilitationPage() {
                 ]}
                 image={{ src: "/gr-3.jpg", alt: "Physiotherapy session" }}
                 watermarkSrc="/logo-svg.png"
+                flipImageX
             />
              <StructuredFitnessSolutions
                 eyebrow="How Our Corporate Fitness Program Helps"
@@ -90,7 +91,7 @@ export default function GeriatricRehabilitationPage() {
                     "Enhanced energy levels and overall well-being",
                 ]}
                 image={{ src: "/gr-4.jpg", alt: "Senior wellness session" }}
-                flipImageX={false}
+                flipImageX
             />
             <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Support Healthy Aging with Guided<br/> Rehabilitation" ctaDescription="Help your loved ones stay active, confident, and independent with our specialized geriatric wellness programs." />
         </div>

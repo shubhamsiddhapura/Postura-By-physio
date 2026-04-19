@@ -33,6 +33,8 @@ export type CommonChallengesProps = {
   bullets?: string[];
   image?: CommonChallengesImage;
   watermarkSrc?: string;
+  /** Flip the left image horizontally (scaleX(-1)). Same as KeyBenefits `flipImageX` for mirrored layouts. */
+  flipImageX?: boolean;
 };
 
 export function CommonChallenges({
@@ -45,6 +47,7 @@ export function CommonChallenges({
   bullets,
   image = { src: "/it-common-challenges.jpg", alt: "Physiotherapy session" },
   watermarkSrc = "/logo-svg.png",
+  flipImageX = false,
 }: CommonChallengesProps) {
   const bulletList =
     bullets && bullets.length > 0 ? bullets : null;
@@ -62,7 +65,7 @@ export function CommonChallenges({
                     src={image.src}
                     alt={image.alt}
                     fill
-                    className="object-cover"
+                    className={flipImageX ? "object-cover scale-x-[-1]" : "object-cover"}
                     sizes="(min-width: 768px) 40vw, 90vw"
                     priority={false}
                   />

@@ -58,8 +58,11 @@ export default function BlogsGrid({
                   <ArrowUpRight className="h-4 w-4 text-white transition-transform duration-300 group-hover:rotate-45" />
                 </div>
 
-                <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-white/95 p-4 shadow-sm backdrop-blur">
-                  <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">
+                <div className="absolute bottom-4 left-4 right-4 min-w-0 rounded-2xl bg-white/95 p-4 shadow-sm backdrop-blur">
+                  <h3
+                    className="truncate text-sm font-semibold text-gray-900"
+                    title={post.title}
+                  >
                     {post.title}
                   </h3>
                   <p className="mt-2 text-xs text-gray-500">{post.date}</p>

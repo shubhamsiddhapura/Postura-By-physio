@@ -45,6 +45,7 @@ export default function AthleteRehabPage() {
         ]}
         image={{ src: "/athlete-3.jpg", alt: "Athlete rehabilitation session" }}
         watermarkSrc="/logo-svg.png"
+        flipImageX
       />
       <StructuredFitnessSolutions
         eyebrow="How Our Corporate Fitness Program Helps"
@@ -84,7 +85,7 @@ export default function AthleteRehabPage() {
           "Greater confidence and mental readiness",
         ]}
         image={{ src: "/athlete-4.jpg", alt: "Athlete recovery and strength training" }}
-        flipImageX={false}
+        flipImageX
       />
       <Footer ctaEyebrow="Take Control of Your Health" ctaTitle="Train Smarter. Recover Stronger. Perform<br/> Better." ctaDescription="Join our structured sports rehabilitation programs to regain strength, improve performance, and return to your<br/> sport with confidence." />
     </div>

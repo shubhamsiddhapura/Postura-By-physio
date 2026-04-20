@@ -64,7 +64,10 @@ export function PatientInteractionExperience() {
           answers={answers}
           onAnswerChange={handleAnswerChange}
         />
-        <RecommendedProgramSection onBookSessionClick={openModal} />
+        <RecommendedProgramSection
+          onBookSessionClick={openModal}
+          answers={answers}
+        />
         <Footer
           ctaTitle="Get Your Personalized Treatment Plan"
           ctaDescription="Book a detailed assessment with our experts to receive a customized physiotherapy and wellness plan tailored to your needs."

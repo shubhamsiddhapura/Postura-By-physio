@@ -55,7 +55,7 @@ export function GalleryMasonrySection({
 
   return (
     <section className="bg-white px-4 py-5">
-      <div className="mx-auto w-full max-w-[min(90vw,1200px)]">
+      <div className="mx-auto w-full max-w-[90vw] px-4">
         <div
           className="flex flex-wrap mt-10 items-center justify-center gap-3 md:gap-4"
           aria-label="Service categories"

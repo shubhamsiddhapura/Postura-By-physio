@@ -63,7 +63,7 @@ export function Footer({
     <footer className="relative h-0 -z-20 bg-[#E5F7F6] -mt-44">
       {/* CTA Banner */}
       <div className="bg-[#E5F7F6] py-8 md:pt-72 pt-60">
-        <div className="mx-auto max-w-[90vw]">
+        <div className="mx-auto max-w-[90vw] px-4">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row md:items-center">
             <FadeIn direction="up" duration={800} distance={30} delay={0} className="flex-1">
               <div className="text-center md:text-left">
@@ -243,7 +243,7 @@ export function Footer({
 
       {/* Copyright Bar */}
       <div className="py-4 bg-[#E5F7F6]">
-        <div className="mx-auto max-w-[90vw]">
+        <div className="mx-auto max-w-[90vw] px-4">
           <FadeIn direction="up" duration={700} distance={20} delay={0}>
           <div className="flex flex-col items-center justify-between gap-4 text-xs text-[#6B6B6B] md:flex-row">
             

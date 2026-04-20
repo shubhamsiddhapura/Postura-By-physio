@@ -49,7 +49,7 @@ export function GallerySplitFeatureSection({
 
   return (
     <section className="bg-white px-4 pb-5 md:pt-0">
-      <div className="mx-auto w-full max-w-[min(90vw,1200px)]">
+      <div className="mx-auto w-full max-w-[90vw] px-4">
         <div
           ref={dividerInView.ref}
           className="relative my-10 flex items-center justify-center md:my-12"

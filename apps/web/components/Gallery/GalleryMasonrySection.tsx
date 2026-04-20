@@ -31,13 +31,10 @@ const getInitialTransform = (direction: "up" | "down" | "left" | "right" | "none
  * entries fall back to a soft gray tile so the grid still renders cleanly.
  */
 export function GalleryMasonrySection({
-  categories,
   category,
   sectionTitle,
   images,
 }: {
-  /** All category ids to render as pills above the grid. */
-  categories: GalleryCategory[];
   /** The category currently displayed in the grid. */
   category: GalleryCategory;
   /** Text shown in the horizontal divider. */
@@ -56,20 +53,6 @@ export function GalleryMasonrySection({
   return (
     <section className="bg-white px-4 py-5">
       <div className="mx-auto w-full max-w-[90vw] px-4">
-        <div
-          className="flex flex-wrap mt-10 items-center justify-center gap-3 md:gap-4"
-          aria-label="Service categories"
-        >
-          {categories.map((cat) => (
-            <span
-              key={cat}
-              className="rounded-full border border-primary bg-transparent px-4 py-2 text-sm font-medium text-primary md:px-5 md:py-2.5"
-            >
-              {GALLERY_CATEGORY_LABELS[cat]}
-            </span>
-          ))}
-        </div>
-
         <div
           ref={dividerInView.ref}
           className="relative my-10 flex items-center justify-center md:my-12"

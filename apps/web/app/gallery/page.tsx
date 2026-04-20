@@ -1,10 +1,5 @@
 import { HeroSection } from "../../components/Home/HeroSection";
-import { Footer } from "../../components/Home/Footer";
-import { GalleryMasonrySection } from "../../components/Gallery/GalleryMasonrySection";
-import { GallerySplitFeatureSection } from "../../components/Gallery/GallerySplitFeatureSection";
-import { YogaTherapySection } from "@/components/Gallery/YogaTherapySection";
-import { PilatesTherapySection } from "@/components/Gallery/PilatesTherapySection";
-import { CorporateWelnessProgramSection } from "@/components/Gallery/CorporateWelnessProgramSection";
+import { GalleryCategoryBrowser } from "@/components/Gallery/GalleryCategoryBrowser";
 import { prisma } from "@repo/db";
 import { GALLERY_CATEGORIES, type GalleryCategory } from "@repo/types";
 
@@ -66,29 +61,7 @@ export default async function GalleryPage() {
   return (
     <div className="md:overflow-x-visible">
       <HeroSection slides={gallerySlides} id="gallery-hero" showBookSessionButton />
-      <GalleryMasonrySection
-        categories={[...GALLERY_CATEGORIES]}
-        category="physiotherapy"
-        sectionTitle="Physiotherapy Sessions Section"
-        images={images.physiotherapy}
-      />
-      <GallerySplitFeatureSection
-        sectionTitle="Aerobics Classes Section"
-        images={images.aerobics}
-      />
-      <YogaTherapySection
-        sectionTitle="Yoga Therapy Section"
-        images={images.yoga}
-      />
-      <PilatesTherapySection
-        sectionTitle="Pilates Therapy Section"
-        images={images.pilates}
-      />
-      <CorporateWelnessProgramSection
-        sectionTitle="Corporate Wellness Program Section"
-        images={images.corporate}
-      />
-      <Footer />
+      <GalleryCategoryBrowser imagesByCategory={images} />
     </div>
   );
 }

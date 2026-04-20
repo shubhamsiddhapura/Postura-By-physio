@@ -1,13 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, X } from "lucide-react";
+import { X } from "lucide-react";
 import type { PatientInteractionAnswers } from "./PatientInteractionQuestionnaire";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { BookingDateTimeField, type BookingSelection } from "../Contact/BookingDateTimeField";
 import { clearInteractionAnswers } from "../../lib/booking/session";
 import { cn } from "../../lib/utils";
+import { ModernSelect } from "../ui/ModernSelect";
 
 type HealthSummaryModalProps = {
   open: boolean;
@@ -56,6 +57,18 @@ export function HealthSummaryModal({
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [submission, setSubmission] = useState<SubmissionState>({ kind: "idle" });
+
+  const consultationOptions = useMemo(
+    () =>
+      [
+        { value: "", label: "None" },
+        { value: "Home visit", label: "Home visit" },
+        { value: "Online", label: "Online" },
+        { value: "Phone", label: "Phone" },
+        { value: "Society / group", label: "Society / group" },
+      ] satisfies Array<{ value: string; label: string }>,
+    [],
+  );
 
   // Reset to form step whenever modal reopens
   useEffect(() => {
@@ -426,19 +439,15 @@ export function HealthSummaryModal({
                 {/* Consultation Type */}
                 <div className="md:col-span-2">
                   <label className="text-sm font-semibold text-gray-800">Consultation Type</label>
-                  <div className="relative mt-2">
-                    <select
+                  <div className="mt-2">
+                    <ModernSelect
+                      name="consultationType"
                       value={consultationType}
-                      onChange={(e) => setConsultationType(e.target.value)}
-                      className={cn(fieldBaseClass, "appearance-none pr-11", consultationType === "" && "text-gray-400")}
-                    >
-                      <option value="">None</option>
-                      <option value="Home visit">Home visit</option>
-                      <option value="Online">Online</option>
-                      <option value="Phone">Phone</option>
-                      <option value="Society / group">Society / group</option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" aria-hidden />
+                      onChange={setConsultationType}
+                      options={consultationOptions}
+                      placeholder="None"
+                      buttonClassName={fieldBaseClass}
+                    />
                   </div>
                 </div>
 

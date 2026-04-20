@@ -9,6 +9,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
+import { ModernSelect } from "../ui/ModernSelect";
 import { cn } from "../../lib/utils";
 
 const WHATSAPP_PHONE_DISPLAY = "+91 6354011290";
@@ -45,6 +46,18 @@ export function ContactUsSection({ className }: { className?: string }) {
 
   const fieldClass =
     "h-11 w-full rounded-2xl border border-gray-200 bg-[#fafafa] px-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-primary";
+
+  const serviceOptions = useMemo(
+    () =>
+      [
+        { value: "", label: "Select Service", disabled: true },
+        { value: "Physiotherapy", label: "Physiotherapy" },
+        { value: "Fitness", label: "Fitness" },
+        { value: "Online Consultation", label: "Online Consultation" },
+        { value: "Home Visit", label: "Home Visit" },
+      ] satisfies Array<{ value: ServiceId; label: string; disabled?: boolean }>,
+    [],
+  );
 
   return (
     <section className={cn("relative bg-white py-10 md:py-20", className)}>
@@ -106,24 +119,16 @@ export function ContactUsSection({ className }: { className?: string }) {
 
                   <div>
                     <label className="text-sm font-semibold text-gray-800">Service</label>
-                    <div className="relative mt-2">
-                      <select
+                    <div className="mt-2">
+                      <ModernSelect<ServiceId>
+                        name="service"
                         value={service}
-                        onChange={(e) => setService(e.target.value as ServiceId)}
-                        className={cn(fieldClass, "appearance-none pr-10", service === "" && "text-gray-400")}
+                        onChange={setService}
+                        options={serviceOptions}
+                        placeholder="Select Service"
                         required
-                      >
-                        <option value="" disabled>
-                          Select Service
-                        </option>
-                        <option value="Physiotherapy">Physiotherapy</option>
-                        <option value="Fitness">Fitness</option>
-                        <option value="Online Consultation">Online Consultation</option>
-                        <option value="Home Visit">Home Visit</option>
-                      </select>
-                      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
-                        ▾
-                      </span>
+                        buttonClassName={fieldClass}
+                      />
                     </div>
                   </div>
 

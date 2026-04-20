@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 import { cn } from "../../lib/utils";
 import { BookingDateTimeField, type BookingSelection } from "./BookingDateTimeField";
+import { ModernSelect } from "../ui/ModernSelect";
 import {
   clearInteractionAnswers,
   readInteractionAnswers,
@@ -242,6 +243,18 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
   const fieldClass =
     "h-11 w-full rounded-2xl border border-gray-200 bg-[#fafafa] px-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-primary";
 
+  const consultationOptions = useMemo(
+    () =>
+      [
+        { value: "", label: "None" },
+        { value: "Home visit", label: "Home visit" },
+        { value: "Online", label: "Online" },
+        { value: "Phone", label: "Phone" },
+        { value: "Society / group", label: "Society / group" },
+      ] satisfies Array<{ value: string; label: string }>,
+    [],
+  );
+
   return (
     <section className={`relative bg-white md:py-20 py-10 ${className ?? ""}`}>
       <div className="mx-auto md:w-[90vw] max-w-7xl">
@@ -427,25 +440,14 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         <label className="text-sm font-semibold text-gray-800">
                           Consultation Type
                         </label>
-                        <div className="relative mt-2">
-                          <select
+                        <div className="mt-2">
+                          <ModernSelect
+                            name="consultationType"
                             value={consultationType}
-                            onChange={(e) => setConsultationType(e.target.value)}
-                            className={cn(
-                              fieldClass,
-                              "appearance-none pr-11",
-                              consultationType === "" && "text-gray-400",
-                            )}
-                          >
-                            <option value="">None</option>
-                            <option value="Home visit">Home visit</option>
-                            <option value="Online">Online</option>
-                            <option value="Phone">Phone</option>
-                            <option value="Society / group">Society / group</option>
-                          </select>
-                          <ChevronDown
-                            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
-                            aria-hidden
+                            onChange={setConsultationType}
+                            options={consultationOptions}
+                            placeholder="None"
+                            buttonClassName={fieldClass}
                           />
                         </div>
                       </div>

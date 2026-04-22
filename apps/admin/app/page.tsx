@@ -184,7 +184,7 @@ export default async function DashboardPage() {
                 >
                   <Card className="h-full transition-shadow hover:shadow-md">
                     <CardContent className="flex items-start gap-4">
-                      <div className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-lg bg-gray-900 text-white">
+                      <div className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-lg bg-primary text-white">
                         <Icon className="h-5 w-5" />
                       </div>
                       <div className="min-w-0 flex-1">
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
                           {tile.description}
                         </p>
                       </div>
-                      <ArrowRight className="mt-1.5 h-4 w-4 flex-shrink-0 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-gray-700" />
+                      <ArrowRight className="mt-1.5 h-4 w-4 flex-shrink-0 text-gray-400 transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
                     </CardContent>
                   </Card>
                 </Link>
@@ -285,7 +285,7 @@ function RecentBookings({ bookings }: { bookings: BookingDto[] }) {
         </h2>
         <Link
           href="/bookings"
-          className="text-xs font-medium text-gray-700 hover:text-gray-900"
+          className="text-xs font-medium text-primary hover:text-primary/80"
         >
           View all →
         </Link>

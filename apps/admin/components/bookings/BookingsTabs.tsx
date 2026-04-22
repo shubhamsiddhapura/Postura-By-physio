@@ -32,8 +32,8 @@ export function BookingsTabs() {
               className={cn(
                 "border-b-2 px-1 py-3 text-sm font-medium transition-colors",
                 active
-                  ? "border-gray-900 text-gray-900"
-                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-900"
+                  ? "border-primary text-primary"
+                  : "border-transparent text-gray-500 hover:border-primary/40 hover:text-primary"
               )}
             >
               {tab.label}

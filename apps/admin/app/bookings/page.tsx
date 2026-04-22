@@ -66,9 +66,9 @@ export default async function BookingsListPage({
       />
       <BookingsTabs />
 
-      <div className="space-y-4 px-8 py-6">
+      <div className="space-y-4 px-4 py-6 sm:px-6 lg:px-8">
         <form className="flex flex-wrap items-center gap-3" action="/bookings">
-          <div className="relative min-w-[240px] max-w-sm flex-1">
+          <div className="relative min-w-[200px] max-w-sm flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="search"
@@ -145,44 +145,61 @@ export default async function BookingsListPage({
               </div>
             ) : null}
 
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-              <table className="w-full text-sm">
+            {/* overflow-x-auto lets the table scroll horizontally on zoom / narrow viewports */}
+            <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+              <table className="min-w-full text-sm">
                 <thead className="bg-gray-50 text-xs font-medium uppercase tracking-wider text-gray-500">
                   <tr>
-                    <th className="px-5 py-3 text-left">Customer</th>
-                    <th className="px-5 py-3 text-left">Program</th>
-                    <th className="px-5 py-3 text-left">Preferred</th>
-                    <th className="px-5 py-3 text-left">Consultation</th>
-                    <th className="px-5 py-3 text-left">Submitted</th>
-                    <th className="px-5 py-3 text-left">Status</th>
-                    <th className="px-5 py-3 text-right">Actions</th>
+                    <th className="px-4 py-3 text-left sm:px-5">Customer</th>
+                    {/* Program — hide on xs */}
+                    <th className="hidden px-4 py-3 text-left sm:table-cell sm:px-5">
+                      Program
+                    </th>
+                    {/* Preferred time — hide below md */}
+                    <th className="hidden px-4 py-3 text-left md:table-cell sm:px-5">
+                      Preferred
+                    </th>
+                    {/* Consultation type — hide below lg */}
+                    <th className="hidden px-4 py-3 text-left lg:table-cell sm:px-5">
+                      Consultation
+                    </th>
+                    {/* Submitted date — hide below lg */}
+                    <th className="hidden px-4 py-3 text-left lg:table-cell sm:px-5">
+                      Submitted
+                    </th>
+                    <th className="px-4 py-3 text-left sm:px-5">Status</th>
+                    <th className="px-4 py-3 text-right sm:px-5">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {items.map((b) => (
                     <tr key={b.id} className="hover:bg-gray-50/50">
-                      <td className="px-5 py-3">
+                      <td className="px-4 py-3 sm:px-5">
                         <div className="flex flex-col">
                           <span className="font-medium text-gray-900">
                             {b.fullName}
                           </span>
-                          <span className="text-xs text-gray-500">
-                            {b.phone} · {b.email}
+                          <span className="mt-0.5 text-xs text-gray-500">
+                            {b.phone}
+                          </span>
+                          {/* Email visible only on sm+ to save space */}
+                          <span className="hidden text-xs text-gray-400 sm:block">
+                            {b.email}
                           </span>
                         </div>
                       </td>
-                      <td className="whitespace-nowrap px-5 py-3 text-gray-700">
+                      <td className="hidden whitespace-nowrap px-4 py-3 text-gray-700 sm:table-cell sm:px-5">
                         {BOOKING_PROGRAM_LABELS[b.program]}
                       </td>
-                      <td className="whitespace-nowrap px-5 py-3 text-gray-700">
+                      <td className="hidden whitespace-nowrap px-4 py-3 text-gray-700 md:table-cell sm:px-5">
                         <BookingTime booking={b} compact />
                       </td>
-                      <td className="whitespace-nowrap px-5 py-3 text-gray-600">
+                      <td className="hidden whitespace-nowrap px-4 py-3 text-gray-600 lg:table-cell sm:px-5">
                         {b.consultationType ?? (
                           <span className="text-gray-400">—</span>
                         )}
                       </td>
-                      <td className="whitespace-nowrap px-5 py-3 text-gray-500">
+                      <td className="hidden whitespace-nowrap px-4 py-3 text-gray-500 lg:table-cell sm:px-5">
                         {new Date(b.createdAt).toLocaleString("en-IN", {
                           day: "2-digit",
                           month: "short",
@@ -190,17 +207,17 @@ export default async function BookingsListPage({
                           minute: "2-digit",
                         })}
                       </td>
-                      <td className="px-5 py-3">
+                      <td className="px-4 py-3 sm:px-5">
                         <Badge tone={BOOKING_STATUS_TONE[b.status]}>
                           {BOOKING_STATUS_LABELS[b.status]}
                         </Badge>
                       </td>
-                      <td className="px-5 py-3">
+                      <td className="px-4 py-3 sm:px-5">
                         <div className="flex items-center justify-end gap-2">
                           <Link href={`/bookings/${b.id}`}>
                             <Button variant="outline" size="sm">
                               <Eye className="h-3.5 w-3.5" />
-                              View
+                              <span className="hidden sm:inline">View</span>
                             </Button>
                           </Link>
                         </div>

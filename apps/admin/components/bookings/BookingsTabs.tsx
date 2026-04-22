@@ -18,7 +18,7 @@ export function BookingsTabs() {
   const pathname = usePathname();
 
   return (
-    <div className="border-b border-gray-200 bg-white px-8">
+    <div className="border-b border-gray-200 bg-white px-4 sm:px-6 lg:px-8">
       <nav className="-mb-px flex gap-6" aria-label="Bookings sections">
         {tabs.map((tab) => {
           const active =

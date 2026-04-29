@@ -45,7 +45,7 @@ type SubmissionState =
   | { kind: "idle" }
   | { kind: "submitting" }
   | { kind: "success"; id: string }
-  | { kind: "error"; message: string; fieldErrors?: Record<string, string[]> };
+  | { kind: "error"; message: string };
 
 export function ContactBookingSection({ className }: ContactBookingSectionProps) {
   const [selectedProgram, setSelectedProgram] = useState<ProgramId>("physiotherapy");
@@ -67,6 +67,23 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
   const [submission, setSubmission] = useState<SubmissionState>({ kind: "idle" });
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+  const [touched, setTouched] = useState<
+    Partial<
+      Record<
+        | "fullName"
+        | "phone"
+        | "email"
+        | "preferredDateTime"
+        | "consultationType"
+        | "service"
+        | "painArea"
+        | "address"
+        | "message",
+        boolean
+      >
+    >
+  >({});
 
   // Questionnaire answers stashed by /patient-interaction. Captured once on
   // mount so the user can still edit the booking form without losing context.
@@ -111,26 +128,84 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
     service,
   ]);
 
+  const clientErrors = useMemo(() => {
+    const e: Partial<
+      Record<
+        | "fullName"
+        | "phone"
+        | "email"
+        | "preferredDateTime"
+        | "consultationType"
+        | "service"
+        | "painArea"
+        | "address",
+        string
+      >
+    > = {};
+    const name = fullName.trim();
+    const digits = phone.replace(/\D/g, "");
+    const mail = email.trim();
+    const consult = consultationType.trim();
+    const svc = service.trim();
+    const pain = painArea.trim();
+    const addr = address.trim();
+
+    if (!name) e.fullName = "Please enter your full name.";
+    if (!digits) e.phone = "Please enter your phone number.";
+    else if (digits.length < 10) e.phone = "Please enter a valid phone number.";
+    if (!mail) e.email = "Please enter your email address.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail))
+      e.email = "Please enter a valid email address.";
+    if (!preferredDateTimeUtc || !patientTimezone)
+      e.preferredDateTime = "Please choose a date and time.";
+    if (!consult) e.consultationType = "Please select a consultation type.";
+    if (!svc) e.service = "Please select a service.";
+    if (!pain) e.painArea = "Please select a pain area.";
+    if (!addr) e.address = "Please enter your address.";
+
+    return e;
+  }, [
+    address,
+    consultationType,
+    email,
+    fullName,
+    painArea,
+    patientTimezone,
+    phone,
+    preferredDateTimeUtc,
+    service,
+  ]);
+
+  const showClientError = useCallback(
+    (key: keyof typeof clientErrors) =>
+      submission.kind !== "success" && (attemptedSubmit || Boolean(touched[key])),
+    [attemptedSubmit, touched],
+  );
+
+  const clientFieldError = useCallback(
+    (key: keyof typeof clientErrors) =>
+      clientErrors[key] && showClientError(key) ? clientErrors[key] : undefined,
+    [clientErrors, showClientError],
+  );
+
+  const isClientValid = Object.keys(clientErrors).length === 0;
+
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (submission.kind === "submitting") return;
 
+      setAttemptedSubmit(true);
+      // Frontend validations — do not POST until valid
+      if (!isClientValid) {
+        setSubmission({ kind: "idle" });
+        return;
+      }
+
       setSubmission({ kind: "submitting" });
 
       const interaction = interactionRef.current;
-      if (!preferredDateTimeUtc || !patientTimezone) {
-        // Shouldn't happen in the normal flow (pick a slot -> both set),
-        // but guard so we never POST a half-complete booking.
-        setSubmission({
-          kind: "error",
-          message: "Please choose a date and time from the calendar.",
-          fieldErrors: {
-            preferredDateTime: ["Please choose a date and time from the calendar."],
-          },
-        });
-        return;
-      }
+      // preferredDateTimeUtc/patientTimezone validated above (clientErrors)
 
       const trimmedPainArea = painArea.trim();
       const trimmedService = service.trim();
@@ -167,14 +242,11 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
         const data = await res.json().catch(() => null);
 
         if (!res.ok || !data?.success) {
-          const fieldErrors: Record<string, string[]> | undefined =
-            data?.issues?.fieldErrors;
           setSubmission({
             kind: "error",
             message:
               data?.error ??
               "Something went wrong while submitting your booking. Please try again.",
-            fieldErrors,
           });
           return;
         }
@@ -184,6 +256,8 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
         setSubmission({ kind: "success", id: data.data.id });
 
         // Reset the form so a second booking on the same visit starts clean.
+        setAttemptedSubmit(false);
+        setTouched({});
         setFullName("");
         setPhone("");
         setEmail("");
@@ -210,6 +284,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
       consultationType,
       email,
       fullName,
+      isClientValid,
       message,
       painArea,
       patientTimezone,
@@ -221,45 +296,6 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
       submission.kind,
     ]
   );
-
-  const normalizeFieldError = (field: string, raw: string): string => {
-    const msg = raw.trim();
-    const lower = msg.toLowerCase();
-
-    if (field === "fullName") {
-      if (lower.includes("required") || lower.includes("must be at least")) {
-        return "Please enter your full name (at least 2 characters).";
-      }
-      return "Please enter a valid full name.";
-    }
-
-    if (field === "phone") {
-      if (lower.includes("required") || lower.includes("at least") || lower.includes("digits")) {
-        return "Please enter a valid phone number (at least 7 digits).";
-      }
-      return "Please enter a valid phone number.";
-    }
-
-    if (field === "email") {
-      if (lower.includes("required")) return "Please enter your email address.";
-      if (lower.includes("valid email")) return "Please enter a valid email address (e.g. name@example.com).";
-      return "Please enter a valid email address.";
-    }
-
-    if (field === "preferredDateTime") {
-      if (lower.includes("required")) return "Please choose a preferred date and time.";
-      if (lower.includes("at least")) return "Please choose a preferred date and time.";
-      return "Please choose a valid preferred date and time.";
-    }
-
-    return msg;
-  };
-
-  const fieldError = (field: string): string | undefined => {
-    if (submission.kind !== "error") return undefined;
-    const raw = submission.fieldErrors?.[field]?.[0];
-    return raw ? normalizeFieldError(field, raw) : undefined;
-  };
 
   const isSubmitting = submission.kind === "submitting";
   const isSuccess = submission.kind === "success";
@@ -402,17 +438,22 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         <label className="text-sm font-semibold text-gray-800">Full Name</label>
                         <input
                           value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
+                          onChange={(e) => {
+                            setFullName(e.target.value);
+                            setTouched((t) => ({ ...t, fullName: true }));
+                          }}
+                          onBlur={() => setTouched((t) => ({ ...t, fullName: true }))}
                           placeholder="Enter full name"
                           className={cn(
                             fieldClass,
                             "mt-2",
-                            fieldError("fullName") && "border-red-400 focus:border-red-500",
+                            clientFieldError("fullName") && "border-red-400 focus:border-red-500",
                           )}
                           required
+                          aria-invalid={Boolean(clientFieldError("fullName"))}
                         />
-                        {fieldError("fullName") ? (
-                          <p className="mt-1 text-xs text-red-600">{fieldError("fullName")}</p>
+                        {clientFieldError("fullName") ? (
+                          <p className="mt-1 text-xs text-red-600">{clientFieldError("fullName")}</p>
                         ) : null}
                       </div>
 
@@ -420,19 +461,24 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         <label className="text-sm font-semibold text-gray-800">Phone no.</label>
                         <input
                           value={phone}
-                          onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                          onChange={(e) => {
+                            setPhone(e.target.value.replace(/\D/g, ""));
+                            setTouched((t) => ({ ...t, phone: true }));
+                          }}
+                          onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
                           inputMode="tel"
                           pattern="[0-9]*"
                           placeholder="Enter phone no."
                           className={cn(
                             fieldClass,
                             "mt-2",
-                            fieldError("phone") && "border-red-400 focus:border-red-500",
+                            clientFieldError("phone") && "border-red-400 focus:border-red-500",
                           )}
                           required
+                          aria-invalid={Boolean(clientFieldError("phone"))}
                         />
-                        {fieldError("phone") ? (
-                          <p className="mt-1 text-xs text-red-600">{fieldError("phone")}</p>
+                        {clientFieldError("phone") ? (
+                          <p className="mt-1 text-xs text-red-600">{clientFieldError("phone")}</p>
                         ) : null}
                       </div>
 
@@ -440,19 +486,24 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         <label className="text-sm font-semibold text-gray-800">Email</label>
                         <input
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                            setTouched((t) => ({ ...t, email: true }));
+                          }}
+                          onBlur={() => setTouched((t) => ({ ...t, email: true }))}
                           inputMode="email"
                           type="email"
                           placeholder="Enter email"
                           className={cn(
                             fieldClass,
                             "mt-2",
-                            fieldError("email") && "border-red-400 focus:border-red-500",
+                            clientFieldError("email") && "border-red-400 focus:border-red-500",
                           )}
                           required
+                          aria-invalid={Boolean(clientFieldError("email"))}
                         />
-                        {fieldError("email") ? (
-                          <p className="mt-1 text-xs text-red-600">{fieldError("email")}</p>
+                        {clientFieldError("email") ? (
+                          <p className="mt-1 text-xs text-red-600">{clientFieldError("email")}</p>
                         ) : null}
                       </div>
 
@@ -468,11 +519,12 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                               setPreferredDateTime(selection.display);
                               setPreferredDateTimeUtc(selection.datetimeUtc);
                               setPatientTimezone(selection.timezone);
+                              setTouched((t) => ({ ...t, preferredDateTime: true }));
                             }}
                           />
                         </div>
-                        {fieldError("preferredDateTime") ? (
-                          <p className="mt-1 text-xs text-red-600">{fieldError("preferredDateTime")}</p>
+                        {clientFieldError("preferredDateTime") ? (
+                          <p className="mt-1 text-xs text-red-600">{clientFieldError("preferredDateTime")}</p>
                         ) : null}
                       </div>
 
@@ -484,12 +536,25 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           <ModernSelect
                             name="consultationType"
                             value={consultationType}
-                            onChange={setConsultationType}
+                            onChange={(v) => {
+                              setConsultationType(v);
+                              setTouched((t) => ({ ...t, consultationType: true }));
+                            }}
                             options={consultationOptions}
                             placeholder="None"
-                            buttonClassName={fieldClass}
+                            required
+                            buttonClassName={cn(
+                              fieldClass,
+                              clientFieldError("consultationType") &&
+                                "border-red-400 focus:border-red-500",
+                            )}
                           />
                         </div>
+                        {clientFieldError("consultationType") ? (
+                          <p className="mt-1 text-xs text-red-600">
+                            {clientFieldError("consultationType")}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-1">
@@ -498,12 +563,25 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           <ModernSelect
                             name="service"
                             value={service}
-                            onChange={setService}
+                            onChange={(v) => {
+                              setService(v);
+                              setTouched((t) => ({ ...t, service: true }));
+                            }}
                             options={serviceOptions}
                             placeholder="Select service (optional)"
-                            buttonClassName={fieldClass}
+                            required
+                            buttonClassName={cn(
+                              fieldClass,
+                              clientFieldError("service") &&
+                                "border-red-400 focus:border-red-500",
+                            )}
                           />
                         </div>
+                        {clientFieldError("service") ? (
+                          <p className="mt-1 text-xs text-red-600">
+                            {clientFieldError("service")}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-1">
@@ -512,22 +590,51 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           <ModernSelect
                             name="painArea"
                             value={painArea}
-                            onChange={setPainArea}
+                            onChange={(v) => {
+                              setPainArea(v);
+                              setTouched((t) => ({ ...t, painArea: true }));
+                            }}
                             options={painAreaOptions}
                             placeholder="Select pain area (optional)"
-                            buttonClassName={fieldClass}
+                            required
+                            buttonClassName={cn(
+                              fieldClass,
+                              clientFieldError("painArea") &&
+                                "border-red-400 focus:border-red-500",
+                            )}
                           />
                         </div>
+                        {clientFieldError("painArea") ? (
+                          <p className="mt-1 text-xs text-red-600">
+                            {clientFieldError("painArea")}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-1">
                         <label className="text-sm font-semibold text-gray-800">Address</label>
                         <input
                           value={address}
-                          onChange={(e) => setAddress(e.target.value)}
-                          placeholder="Your address (optional)"
-                          className={cn(fieldClass, "mt-2")}
+                          onChange={(e) => {
+                            setAddress(e.target.value);
+                            setTouched((t) => ({ ...t, address: true }));
+                          }}
+                          onBlur={() => setTouched((t) => ({ ...t, address: true }))}
+                          placeholder="Enter your address"
+                          className={cn(
+                            fieldClass,
+                            "mt-2",
+                            clientFieldError("address") &&
+                              "border-red-400 focus:border-red-500",
+                          )}
+                          required
+                          aria-invalid={Boolean(clientFieldError("address"))}
                         />
+                        {clientFieldError("address") ? (
+                          <p className="mt-1 text-xs text-red-600">
+                            {clientFieldError("address")}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="md:col-span-2">
@@ -541,15 +648,6 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         />
                       </div>
                     </div>
-
-                    {submission.kind === "error" ? (
-                      <div
-                        role="alert"
-                        className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-                      >
-                        {submission.message}
-                      </div>
-                    ) : null}
 
                     {isSuccess ? (
                       <div

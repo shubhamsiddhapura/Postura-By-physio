@@ -27,6 +27,8 @@ export function ContactUsSection({ className }: { className?: string }) {
   const [service, setService] = useState<ServiceId>("");
   const [address, setAddress] = useState("");
   const [message, setMessage] = useState("");
+  const [touched, setTouched] = useState<Partial<Record<"fullName" | "phone" | "email" | "service" | "address" | "message", boolean>>>({});
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const whatsappHref = useMemo(() => {
     const lines = [
@@ -59,6 +61,33 @@ export function ContactUsSection({ className }: { className?: string }) {
     [],
   );
 
+  const errors = useMemo(() => {
+    const e: Partial<Record<"fullName" | "phone" | "email" | "service", string>> = {};
+    const name = fullName.trim();
+    const mail = email.trim();
+    const digits = phone.replace(/\D/g, "");
+
+    if (!name) e.fullName = "Full name is required.";
+    else if (name.length < 2) e.fullName = "Please enter your full name.";
+
+    if (!digits) e.phone = "Phone number is required.";
+    else if (digits.length < 10) e.phone = "Please enter a valid phone number (10 digits).";
+
+    if (!mail) e.email = "Email is required.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) e.email = "Please enter a valid email address.";
+
+    if (!service) e.service = "Please select a service.";
+
+    return e;
+  }, [email, fullName, phone, service]);
+
+  const isValid = Object.keys(errors).length === 0;
+
+  const showError = (key: keyof typeof errors) => attemptedSubmit || Boolean(touched[key]);
+
+  const inputClass = (key: keyof typeof errors) =>
+    cn(fieldClass, "mt-2", errors[key] && showError(key) ? "border-red-500 focus:border-red-500" : "");
+
   return (
     <section className={cn("relative bg-white py-10 md:py-20", className)}>
       <div className="mx-auto w-[92vw] max-w-7xl">
@@ -76,6 +105,8 @@ export function ContactUsSection({ className }: { className?: string }) {
                 className="mt-8"
                 onSubmit={(e) => {
                   e.preventDefault();
+                  setAttemptedSubmit(true);
+                  if (!isValid) return;
                   window.open(whatsappHref, "_blank", "noopener,noreferrer");
                 }}
               >
@@ -85,10 +116,15 @@ export function ContactUsSection({ className }: { className?: string }) {
                     <input
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
+                      onBlur={() => setTouched((t) => ({ ...t, fullName: true }))}
                       placeholder="Enter full name"
-                      className={cn(fieldClass, "mt-2")}
+                      className={inputClass("fullName")}
                       required
+                      aria-invalid={Boolean(errors.fullName) && showError("fullName")}
                     />
+                    {errors.fullName && showError("fullName") ? (
+                      <p className="mt-1 text-xs font-medium text-red-600">{errors.fullName}</p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -96,12 +132,17 @@ export function ContactUsSection({ className }: { className?: string }) {
                     <input
                       value={phone}
                       onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                      onBlur={() => setTouched((t) => ({ ...t, phone: true }))}
                       inputMode="tel"
                       pattern="[0-9]*"
                       placeholder="Enter phone no."
-                      className={cn(fieldClass, "mt-2")}
+                      className={inputClass("phone")}
                       required
+                      aria-invalid={Boolean(errors.phone) && showError("phone")}
                     />
+                    {errors.phone && showError("phone") ? (
+                      <p className="mt-1 text-xs font-medium text-red-600">{errors.phone}</p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -109,12 +150,17 @@ export function ContactUsSection({ className }: { className?: string }) {
                     <input
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      onBlur={() => setTouched((t) => ({ ...t, email: true }))}
                       inputMode="email"
                       type="email"
                       placeholder="Enter email"
-                      className={cn(fieldClass, "mt-2")}
+                      className={inputClass("email")}
                       required
+                      aria-invalid={Boolean(errors.email) && showError("email")}
                     />
+                    {errors.email && showError("email") ? (
+                      <p className="mt-1 text-xs font-medium text-red-600">{errors.email}</p>
+                    ) : null}
                   </div>
 
                   <div>
@@ -123,13 +169,24 @@ export function ContactUsSection({ className }: { className?: string }) {
                       <ModernSelect<ServiceId>
                         name="service"
                         value={service}
-                        onChange={setService}
+                        onChange={(v) => {
+                          setService(v);
+                          setTouched((t) => ({ ...t, service: true }));
+                        }}
                         options={serviceOptions}
                         placeholder="Select Service"
                         required
-                        buttonClassName={fieldClass}
+                        buttonClassName={cn(
+                          fieldClass,
+                          errors.service && showError("service")
+                            ? "border-red-500 focus:border-red-500"
+                            : "",
+                        )}
                       />
                     </div>
+                    {errors.service && showError("service") ? (
+                      <p className="mt-1 text-xs font-medium text-red-600">{errors.service}</p>
+                    ) : null}
                   </div>
 
                   <div className="md:col-span-2">
@@ -137,6 +194,7 @@ export function ContactUsSection({ className }: { className?: string }) {
                     <input
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
+                      onBlur={() => setTouched((t) => ({ ...t, address: true }))}
                       placeholder="Select pain area"
                       className={cn(fieldClass, "mt-2")}
                     />
@@ -147,6 +205,7 @@ export function ContactUsSection({ className }: { className?: string }) {
                     <textarea
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
+                      onBlur={() => setTouched((t) => ({ ...t, message: true }))}
                       placeholder="Enter your message.."
                       rows={4}
                       className="mt-2 w-full resize-none rounded-2xl border border-gray-200 bg-[#fafafa] px-4 py-3 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-primary"
@@ -158,6 +217,7 @@ export function ContactUsSection({ className }: { className?: string }) {
                   <div className="group relative inline-flex transform items-center transition-transform duration-300 hover:scale-105">
                     <button
                       type="submit"
+                      disabled={!isValid && attemptedSubmit}
                       className="inline-flex items-center gap-3 rounded-full bg-secondary px-6 py-3 pr-11 text-xs font-semibold text-white shadow-sm transition hover:brightness-90 md:text-sm"
                     >
                       Book Appointment

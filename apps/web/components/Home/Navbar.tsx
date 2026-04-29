@@ -67,7 +67,7 @@ export function Navbar() {
       {/* Ensures the top padding area (above the pill) doesn't show page content while scrolling */}
       <div
         aria-hidden
-        className={`pointer-events-none absolute inset-0 -z-10 backdrop-blur-md transition-colors duration-300`}
+        className={`pointer-events-none mx-auto max-w-[88vw] rounded-bl-3xl rounded-br-lg absolute inset-0 -z-10 backdrop-blur-sm transition-colors duration-300`}
       />
       <div className="mx-auto max-w-[90vw] md:px-4">
         <div

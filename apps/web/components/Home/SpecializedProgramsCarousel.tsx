@@ -131,7 +131,7 @@ function MobileProgramCard({
           priority={priority}
         />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/85 via-primary/35 to-primary/5" />
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/85 via-primary/35 to-primary/5 h-40" />
 
         <div
           className="pointer-events-none absolute inset-3 rounded-bl-md rounded-tl-[28px] rounded-br-[28px] rounded-tr-md border border-[#FEF9E0]/90"
@@ -184,7 +184,7 @@ function CarouselCard({
           className="group block"
           tabIndex={isCenter ? 0 : -1}
         >
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1.2rem] shadow-[0_20px_50px_rgba(15,23,42,0.18)] ring-1 ring-black/5 md:rounded-[1.5rem]">
+          <div className="relative rounded-bl-xl rounded-tl-[44px] rounded-br-[44px] rounded-tr-xl aspect-[4/3] w-full overflow-hidden ring-1 ring-black/5">
             <Image
               src={slide.imageSrc}
               alt={slide.title}
@@ -193,18 +193,18 @@ function CarouselCard({
               sizes="(max-width: 768px) 280px, 460px"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-primary/5" />
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/80 via-primary/30 to-primary/5 h-40" />
 
             {!isCenter ? (
               <div className="absolute inset-0 bg-white/30 transition-opacity duration-700" />
             ) : null}
 
             <div
-              className="pointer-events-none absolute inset-3 rounded-[0.9rem] border border-white/60 md:inset-4 md:rounded-[1.1rem]"
+              className="pointer-events-none absolute inset-3 rounded-bl-lg rounded-tl-[36px]  rounded-br-[36px]  rounded-tr-lg border border-white/60 md:inset-4"
               aria-hidden
             />
 
-            <div className="absolute right-3 top-3 z-10 md:right-4 md:top-4">
+            <div className="absolute right-3 top-3 z-10 md:right-7 md:top-7">
               <span className="grid h-8 w-8 place-items-center rounded-full bg-secondary text-white shadow-md md:h-10 md:w-10">
                 <ArrowUpRight className="h-3.5 w-3.5 md:h-4 md:w-4" strokeWidth={2.5} />
               </span>

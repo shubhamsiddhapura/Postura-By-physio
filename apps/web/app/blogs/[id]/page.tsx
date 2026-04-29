@@ -100,7 +100,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
         </div>
 
         <div className="relative z-10 mx-auto md:-mt-60 -mt-40 max-w-7xl px-4">
-          <div className="relative h-[300px] md:h-[580px] w-full overflow-hidden rounded-tl-3xl rounded-br-3xl rounded-tr-[84px] rounded-bl-[84px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)]">
+          <div className="relative mx-auto h-[300px] md:h-[580px] w-full min-[480px]:w-[92%] sm:w-[88%] md:w-[86%] lg:w-[90%] xl:w-full overflow-hidden rounded-tl-3xl rounded-br-3xl rounded-tr-[84px] rounded-bl-[84px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)]">
             <Image
               src={post.imageSrc}
               alt={post.title}

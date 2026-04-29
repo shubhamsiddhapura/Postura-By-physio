@@ -110,7 +110,6 @@ export function TestimonialsReviewsSection({
                   </div>
                   <p className="text-sm font-semibold text-gray-900">
                     {t.name}{" "}
-                    <span className="font-medium text-gray-600">({t.age})</span>
                   </p>
                 </div>
               </article>

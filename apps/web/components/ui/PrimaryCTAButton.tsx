@@ -34,8 +34,8 @@ export function PrimaryCTAButton({
   //  last ~12-16px of the pill from the inside edge).
   const sizeClasses =
     size === "md"
-      ? "py-3 pl-6 pr-6 text-sm font-semibold"
-      : "py-2.5 pl-5 pr-10 text-xs font-semibold md:text-sm";
+      ? "py-3 pl-6 pr-5 text-sm font-semibold"
+      : "py-2.5 pl-5 pr-5 text-xs font-semibold md:text-sm";
 
   // Badge always protrudes 12 px to the right of the pill for both sizes.
   const badgeSizeClasses =

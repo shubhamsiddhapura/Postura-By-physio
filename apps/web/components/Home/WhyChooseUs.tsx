@@ -143,7 +143,12 @@ export function WhyChooseUs({
               delay={200 + index * 100}
               className="h-full"
             >
-              <div className="flex h-full md:min-h-[200px] cursor-pointer flex-col items-center rounded-bl-xl rounded-br-[36px] rounded-tl-[36px] rounded-tr-xl bg-gray-50 px-4 py-4 shadow-[0_0_0_1px_rgba(0,0,0,0.02)] transition-transform duration-300 hover:scale-105 md:items-start">
+              <div
+                className={[
+                  "flex h-full cursor-pointer flex-col items-center rounded-bl-xl rounded-br-[36px] rounded-tl-[36px] rounded-tr-xl bg-gray-50 px-4 py-4 shadow-[0_0_0_1px_rgba(0,0,0,0.02)] transition-transform duration-300 hover:scale-105 md:items-start",
+                  item.description ? "md:min-h-[200px]" : "md:min-h-[140px] gap-5",
+                ].join(" ")}
+              >
                 <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-primary text-white [&_svg]:shrink-0">
                   <ItemIcon item={item} />
                 </div>
@@ -155,7 +160,7 @@ export function WhyChooseUs({
                       : "flex w-full flex-col justify-end pt-4"
                   }
                 >
-                  <h3 className="text-center text-lg font-semibold text-primary md:whitespace-pre-line md:text-left">
+                  <h3 className="text-center text-lg md:text-xl font-semibold text-primary md:whitespace-pre-line md:text-left">
                     {item.title}
                   </h3>
                   {item.description ? (

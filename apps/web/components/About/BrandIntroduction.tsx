@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type React from "react";
 import { FadeIn } from "../ui/FadeIn";
 
 export type BrandIntroductionImage = {
@@ -9,7 +10,7 @@ export type BrandIntroductionImage = {
 export type BrandIntroductionProps = {
     eyebrow?: string;
     title?: string;
-    description?: string;
+    description?: React.ReactNode;
     paragraph1?: string;
     highlight?: string;
     image1?: BrandIntroductionImage;
@@ -19,7 +20,13 @@ export type BrandIntroductionProps = {
 export function BrandIntroduction({
     eyebrow = "Brand Introduction",
     title = "Professional Care for Stronger Movement",
-    description = `Under the direction of Dr. Priyanshi Pandya (PT), Postura by Physio provides professional physiotherapy and fitness care with an emphasis on posture correction, movement improvement, and long-term wellness.`,
+    description = (
+        <>
+            Under the direction of <strong>Dr. Priyanshi Pandya (PT)</strong>, Postura by Physio provides
+            professional physiotherapy and fitness care with an emphasis on posture correction, movement
+            improvement, and long-term wellness.
+        </>
+    ),
     paragraph1 = `We offer personalized care for orthopedic, neurological, geriatric, women's health, and lifestyle-related conditions. Our treatment approach combines evidence-based physiotherapy with guided fitness programs to ensure safe recovery and sustainable health improvement.`,
     highlight = `At Postura, our goal is simple — help you move better, feel stronger, and live a healthier life.`,
     image1 = { src: "/bi-1.jpg", alt: "Physiotherapy session" },

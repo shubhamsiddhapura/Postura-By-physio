@@ -315,11 +315,17 @@ export function HeroSection({
                 type="button"
                 onClick={() => goTo(index)}
                 aria-label={`Go to slide ${index + 1}`}
-                className={`rounded-full transition-all duration-300 ${index === current
-                    ? "w-6 h-2 bg-white"
-                    : "w-2 h-2 bg-white/50 hover:bg-white/75"
-                  }`}
-              />
+                className={[
+                  "rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FEF9E0]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20",
+                  index === current
+                    ? "w-8 h-4 border-2 border-[#FEF9E0] bg-transparent flex items-center justify-center"
+                    : "w-2 h-2 bg-[#FEF9E0]/55 hover:bg-[#FEF9E0]/85",
+                ].join(" ")}
+              >
+                {index === current && (
+                  <span className="block w-5 h-2 rounded-full bg-[#FEF9E0]" />
+                )}
+              </button>
             ))}
           </div>
         </FadeIn>

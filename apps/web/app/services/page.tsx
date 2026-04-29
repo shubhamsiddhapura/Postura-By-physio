@@ -7,6 +7,7 @@ import { ServicesSection } from "@/components/Home/ServicesSection";
 import { WellnessProgramsSection } from "@/components/Home/WellnessProgramsSection";
 import { SpecializedProgramsCarousel } from "@/components/Home/SpecializedProgramsCarousel";
 import { WhyChooseUs, type WhyChooseUsItem } from "@/components/Home/WhyChooseUs";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Our Services | Postura by Physio",
@@ -17,23 +18,23 @@ export const metadata: Metadata = {
 const whyChoosePosturaItems: WhyChooseUsItem[] = [
   {
     title: "Personalized assessment programs",
-    icon: ListChecks,
+    iconElement: <Image src="/s-svg-1.svg" alt="Personalized assessment programs" width={30} height={30} />,
   },
   {
     title: "Expert physiotherapist guidance",
-    icon: Flag,
+    iconElement: <Image src="/s-svg-2.svg" alt="Expert physiotherapist guidance" width={30} height={30} />,
   },
   {
     title: "Safe and structured approach",
-    icon: ShieldCheck,
+    iconElement: <Image src="/s-svg-3.svg" alt="Safe and structured approach" width={30} height={30} />,
   },
   {
     title: "Suitable for all age groups",
-    icon: Users,
+    iconElement: <Image src="/s-svg-4.svg" alt="Suitable for all age groups" width={30} height={30} />,
   },
   {
     title: "Focus on long-term results and prevention",
-    icon: ScanEye,
+    iconElement: <Image src="/s-svg-5.svg" alt="Focus on long-term results and prevention" width={30} height={30} />,
   },
 ];
 

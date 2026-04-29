@@ -85,7 +85,7 @@ export function Footer({
             <FadeIn direction="up" duration={800} distance={30} delay={180}>
               <PrimaryCTAButton
                 href="https://wa.me/916354011290"
-                label="Book Your Session"
+                label="Connect Now"
                 size="md"
                 className="cursor-pointer"
                 arrowVariant="dark"

@@ -1,7 +1,7 @@
  "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, CircleArrowDown, CircleArrowDownIcon } from "lucide-react";
 import Image from "next/image";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
@@ -114,8 +114,8 @@ export function FaqSection() {
                             : "border-secondary bg-secondary text-white"
                         }`}
                       >
-                        <ChevronDown
-                          className={`h-4 w-4 transition-transform duration-300 ${
+                        <CircleArrowDownIcon
+                          className={`h-5 w-5 transition-transform duration-300 ${
                             isOpen ? "rotate-180" : ""
                           }`}
                         />

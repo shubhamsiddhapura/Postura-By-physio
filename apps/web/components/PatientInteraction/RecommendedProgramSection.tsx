@@ -211,7 +211,7 @@ export function RecommendedProgramSection({
                   className={cn(
                     "rounded-tl-2xl rounded-br-2xl rounded-tr-md rounded-bl-md px-4 py-3 text-center text-xs font-semibold shadow-sm md:text-sm transition",
                     personalized && idx === 0
-                      ? "bg-primary text-[#FEF9E0] ring-2 ring-primary ring-offset-2 ring-offset-[#E5F7F6]"
+                      ? "bg-primary text-[#FEF9E0]"
                       : "bg-primary text-[#FEF9E0]"
                   )}
                 >

@@ -98,7 +98,6 @@ export default function PilatesProgramPage() {
           }
           description="A step-by-step approach designed to build strength safely and effectively."
           items={pilatesPrograms}
-          showControls={false}
         />
       </div>
 

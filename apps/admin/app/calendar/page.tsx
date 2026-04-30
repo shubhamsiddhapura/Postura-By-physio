@@ -3,8 +3,6 @@ import type {
   BlockedDateDto,
   BookingDto,
 } from "@repo/types";
-import { PageHeader } from "@/components/PageHeader";
-import { BookingsTabs } from "@/components/bookings/BookingsTabs";
 import { BookingsCalendar } from "@/components/bookings/BookingsCalendar";
 import { availabilityApi, bookingsApi } from "@/lib/api";
 
@@ -16,7 +14,7 @@ export const dynamic = "force-dynamic";
  * availability template + one-off blocked dates so the client
  * component can derive "available slots" counts per visible day.
  */
-export default async function BookingsCalendarPage() {
+export default async function CalendarPage() {
   let bookings: BookingDto[] = [];
   let slots: AvailabilitySlotDto[] = [];
   let blockedDates: BlockedDateDto[] = [];
@@ -32,32 +30,28 @@ export default async function BookingsCalendarPage() {
     slots = slotsRes.data;
     blockedDates = blockedRes.data;
   } catch (err) {
-    loadError =
-      err instanceof Error ? err.message : "Failed to load calendar data";
+    loadError = err instanceof Error ? err.message : "Failed to load calendar data";
   }
 
   return (
     <>
-      <PageHeader
-        title="Bookings"
-        description="Appointment requests submitted from the public site."
-      />
-      <BookingsTabs />
-
-      <div className="px-4 py-6 sm:px-6 lg:px-8">
+      <div className="h-full p-0">
         {loadError ? (
-          <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <div className="m-4 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700 sm:m-6 lg:m-8">
             <p className="font-medium">Could not load calendar</p>
             <p className="mt-1">{loadError}</p>
           </div>
         ) : (
-          <BookingsCalendar
-            bookings={bookings}
-            slots={slots}
-            blockedDates={blockedDates}
-          />
+          <div className="p-3 sm:p-4 lg:p-6">
+            <BookingsCalendar
+              bookings={bookings}
+              slots={slots}
+              blockedDates={blockedDates}
+            />
+          </div>
         )}
       </div>
     </>
   );
 }
+

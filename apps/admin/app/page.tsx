@@ -131,7 +131,6 @@ export default async function DashboardPage() {
             <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
               At a glance
             </h2>
-            <ApiStatusPill online={data.apiOnline} />
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard

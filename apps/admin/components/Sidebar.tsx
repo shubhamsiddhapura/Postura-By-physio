@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   CalendarCheck,
+  CalendarDays,
   ChevronLeft,
   ChevronRight,
   FileText,
@@ -26,6 +27,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
   { label: "Bookings", href: "/bookings", icon: CalendarCheck },
+  { label: "Calendar", href: "/calendar", icon: CalendarDays },
   { label: "Blogs", href: "/blogs", icon: FileText },
   { label: "Testimonials", href: "/testimonials", icon: MessageSquareQuote },
   { label: "Gallery", href: "/gallery", icon: ImageIcon },

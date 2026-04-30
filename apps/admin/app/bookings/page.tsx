@@ -57,6 +57,9 @@ export default async function BookingsListPage({
 
   // Small top-of-page summary: count pending actions prominently.
   const pendingCount = items.filter((b) => b.status === "pending").length;
+  const confirmedCount = items.filter((b) => b.status === "confirmed").length;
+  const completedCount = items.filter((b) => b.status === "completed").length;
+  const cancelledCount = items.filter((b) => b.status === "cancelled").length;
 
   return (
     <>
@@ -67,6 +70,51 @@ export default async function BookingsListPage({
       <BookingsTabs />
 
       <div className="space-y-4 px-4 py-6 sm:px-6 lg:px-8">
+        {!loadError ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            <div className="rounded-xl border border-gray-200 bg-white p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                Total
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-gray-900">
+                {total || items.length}
+              </p>
+            </div>
+            <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-amber-700">
+                Pending
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-amber-800">
+                {pendingCount}
+              </p>
+            </div>
+            <div className="rounded-xl border border-blue-200 bg-blue-50/60 p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-blue-700">
+                Confirmed
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-blue-800">
+                {confirmedCount}
+              </p>
+            </div>
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-700">
+                Completed
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-emerald-800">
+                {completedCount}
+              </p>
+            </div>
+            <div className="rounded-xl border border-red-200 bg-red-50/60 p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-red-700">
+                Cancelled
+              </p>
+              <p className="mt-1 text-2xl font-bold tracking-tight text-red-800">
+                {cancelledCount}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
         <form className="flex flex-wrap items-center gap-3" action="/bookings">
           <div className="relative min-w-[200px] max-w-sm flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />

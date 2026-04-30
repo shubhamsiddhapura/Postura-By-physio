@@ -33,6 +33,10 @@ type Props = {
 export function BookingsCalendar({ bookings, slots, blockedDates }: Props) {
   const [view, setView] = useState<View>("month");
   const [cursor, setCursor] = useState<Date>(() => startOfDay(new Date()));
+  const [hover, setHover] = useState<{
+    event: CalendarEvent;
+    rect: DOMRect;
+  } | null>(null);
 
   const events = useMemo(() => buildEvents(bookings), [bookings]);
   const eventsByDay = useMemo(() => groupByLocalDate(events), [events]);
@@ -42,27 +46,18 @@ export function BookingsCalendar({ bookings, slots, blockedDates }: Props) {
     [blockedDates]
   );
 
-  const monthStats = useMemo(
-    () =>
-      computeMonthStats({
-        cursor,
-        events,
-        slotsByDow,
-        blockedSet,
-      }),
-    [cursor, events, slotsByDow, blockedSet]
-  );
-
   const headerLabel = formatHeader(cursor, view);
 
   const gotoPrev = () => setCursor((c) => shift(c, view, -1));
   const gotoNext = () => setCursor((c) => shift(c, view, 1));
   const gotoToday = () => setCursor(startOfDay(new Date()));
 
+  const onHoverEvent = (event: CalendarEvent, rect: DOMRect) =>
+    setHover({ event, rect });
+  const onLeaveEvent = () => setHover(null);
+
   return (
     <div className="flex flex-col gap-4">
-      <StatsBar stats={monthStats} />
-
       <div className="flex flex-col gap-3 rounded-xl border border-gray-200 bg-white p-3 sm:p-4">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -124,95 +119,37 @@ export function BookingsCalendar({ bookings, slots, blockedDates }: Props) {
               setCursor(d);
               setView("day");
             }}
+            onHoverEvent={onHoverEvent}
+            onLeaveEvent={onLeaveEvent}
           />
         )}
         {view === "week" && (
-          <WeekView cursor={cursor} eventsByDay={eventsByDay} />
+          <WeekView
+            cursor={cursor}
+            eventsByDay={eventsByDay}
+            onHoverEvent={onHoverEvent}
+            onLeaveEvent={onLeaveEvent}
+          />
         )}
         {view === "day" && (
-          <DayView cursor={cursor} eventsByDay={eventsByDay} />
+          <DayView
+            cursor={cursor}
+            eventsByDay={eventsByDay}
+            onHoverEvent={onHoverEvent}
+            onLeaveEvent={onLeaveEvent}
+          />
         )}
         {view === "list" && (
-          <ListView cursor={cursor} events={events} />
+          <ListView
+            cursor={cursor}
+            events={events}
+            onHoverEvent={onHoverEvent}
+            onLeaveEvent={onLeaveEvent}
+          />
         )}
       </div>
-    </div>
-  );
-}
 
-// ---------------- Stats ----------------
-
-type MonthStats = {
-  total: number;
-  pending: number;
-  confirmed: number;
-  completed: number;
-  cancelled: number;
-  totalSlots: number;
-  availableSlots: number;
-};
-
-function StatsBar({ stats }: { stats: MonthStats }) {
-  const tiles: Array<{
-    label: string;
-    value: number;
-    accent: string;
-    dot: string;
-  }> = [
-    {
-      label: "Total bookings",
-      value: stats.total,
-      accent: "text-gray-900",
-      dot: "bg-gray-400",
-    },
-    {
-      label: "Pending",
-      value: stats.pending,
-      accent: "text-amber-700",
-      dot: "bg-amber-400",
-    },
-    {
-      label: "Confirmed",
-      value: stats.confirmed,
-      accent: "text-blue-700",
-      dot: "bg-blue-500",
-    },
-    {
-      label: "Completed",
-      value: stats.completed,
-      accent: "text-emerald-700",
-      dot: "bg-emerald-500",
-    },
-    {
-      label: "Cancelled",
-      value: stats.cancelled,
-      accent: "text-red-700",
-      dot: "bg-red-500",
-    },
-    {
-      label: "Available slots",
-      value: stats.availableSlots,
-      accent: "text-indigo-700",
-      dot: "bg-indigo-500",
-    },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-      {tiles.map((t) => (
-        <div
-          key={t.label}
-          className="rounded-lg border border-gray-200 bg-white p-3"
-        >
-          <div className="flex items-center gap-2 text-xs font-medium text-gray-500">
-            <span className={cn("h-2 w-2 rounded-full", t.dot)} />
-            {t.label}
-          </div>
-          <div className={cn("mt-1 text-2xl font-semibold", t.accent)}>
-            {t.value}
-          </div>
-        </div>
-      ))}
+      <HoverPopover hover={hover} />
     </div>
   );
 }
@@ -225,12 +162,16 @@ function MonthView({
   slotsByDow,
   blockedSet,
   onPickDay,
+  onHoverEvent,
+  onLeaveEvent,
 }: {
   cursor: Date;
   eventsByDay: Map<string, CalendarEvent[]>;
   slotsByDow: Record<DayOfWeek, number>;
   blockedSet: Set<string>;
   onPickDay: (d: Date) => void;
+  onHoverEvent: (event: CalendarEvent, rect: DOMRect) => void;
+  onLeaveEvent: () => void;
 }) {
   const gridStart = startOfWeek(startOfMonth(cursor));
   const gridEnd = endOfWeek(endOfMonth(cursor));
@@ -324,7 +265,13 @@ function MonthView({
 
                 <div className="mt-1 flex flex-col gap-0.5">
                   {dayEvents.slice(0, 3).map((e) => (
-                    <EventChip key={e.id} event={e} compact />
+                    <EventChip
+                      key={e.id}
+                      event={e}
+                      compact
+                      onHover={onHoverEvent}
+                      onLeave={onLeaveEvent}
+                    />
                   ))}
                   {dayEvents.length > 3 ? (
                     <span className="mt-0.5 text-[10px] font-medium text-gray-500">
@@ -370,9 +317,13 @@ function HoursGutter() {
 function TimeGridColumn({
   date,
   events,
+  onHoverEvent,
+  onLeaveEvent,
 }: {
   date: Date;
   events: CalendarEvent[];
+  onHoverEvent: (event: CalendarEvent, rect: DOMRect) => void;
+  onLeaveEvent: () => void;
 }) {
   const totalHours = DAY_END_HOUR - DAY_START_HOUR + 1;
   const dayEvents = events.filter((e) => sameLocalDate(e.at, date));
@@ -405,7 +356,12 @@ function TimeGridColumn({
             style={{ top, minHeight: 28 }}
             className="absolute inset-x-1"
           >
-            <EventChip event={e} showTime />
+            <EventChip
+              event={e}
+              showTime
+              onHover={onHoverEvent}
+              onLeave={onLeaveEvent}
+            />
           </div>
         );
       })}
@@ -416,9 +372,13 @@ function TimeGridColumn({
 function WeekView({
   cursor,
   eventsByDay,
+  onHoverEvent,
+  onLeaveEvent,
 }: {
   cursor: Date;
   eventsByDay: Map<string, CalendarEvent[]>;
+  onHoverEvent: (event: CalendarEvent, rect: DOMRect) => void;
+  onLeaveEvent: () => void;
 }) {
   const weekStart = startOfWeek(cursor);
   const days: Date[] = Array.from({ length: 7 }, (_, i) =>
@@ -464,6 +424,8 @@ function WeekView({
             key={d.toISOString()}
             date={d}
             events={flatEvents}
+            onHoverEvent={onHoverEvent}
+            onLeaveEvent={onLeaveEvent}
           />
         ))}
       </div>
@@ -474,9 +436,13 @@ function WeekView({
 function DayView({
   cursor,
   eventsByDay,
+  onHoverEvent,
+  onLeaveEvent,
 }: {
   cursor: Date;
   eventsByDay: Map<string, CalendarEvent[]>;
+  onHoverEvent: (event: CalendarEvent, rect: DOMRect) => void;
+  onLeaveEvent: () => void;
 }) {
   const events = eventsByDay.get(dateKey(cursor)) ?? [];
   const isToday = dateKey(cursor) === dateKey(new Date());
@@ -505,7 +471,12 @@ function DayView({
       </div>
       <div className="grid grid-cols-[64px_minmax(0,1fr)]">
         <HoursGutter />
-        <TimeGridColumn date={cursor} events={events} />
+        <TimeGridColumn
+          date={cursor}
+          events={events}
+          onHoverEvent={onHoverEvent}
+          onLeaveEvent={onLeaveEvent}
+        />
       </div>
     </div>
   );
@@ -516,9 +487,13 @@ function DayView({
 function ListView({
   cursor,
   events,
+  onHoverEvent,
+  onLeaveEvent,
 }: {
   cursor: Date;
   events: CalendarEvent[];
+  onHoverEvent: (event: CalendarEvent, rect: DOMRect) => void;
+  onLeaveEvent: () => void;
 }) {
   const monthStart = startOfMonth(cursor);
   const monthEnd = endOfMonth(cursor);
@@ -570,7 +545,13 @@ function ListView({
               <ul className="flex flex-col gap-1.5">
                 {list.map((e) => (
                   <li key={e.id}>
-                    <EventChip event={e} showTime detailed />
+                    <EventChip
+                      event={e}
+                      showTime
+                      detailed
+                      onHover={onHoverEvent}
+                      onLeave={onLeaveEvent}
+                    />
                   </li>
                 ))}
               </ul>
@@ -615,11 +596,15 @@ function EventChip({
   compact = false,
   showTime = false,
   detailed = false,
+  onHover,
+  onLeave,
 }: {
   event: CalendarEvent;
   compact?: boolean;
   showTime?: boolean;
   detailed?: boolean;
+  onHover?: (event: CalendarEvent, rect: DOMRect) => void;
+  onLeave?: () => void;
 }) {
   const styles = STATUS_STYLES[event.status];
   const timeStr = event.at.toLocaleTimeString(undefined, {
@@ -638,6 +623,11 @@ function EventChip({
         styles.text,
         compact ? "truncate" : "items-start"
       )}
+      onMouseEnter={(e) => {
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        onHover?.(event, rect);
+      }}
+      onMouseLeave={() => onLeave?.()}
     >
       {showTime || compact ? (
         <span className="shrink-0 tabular-nums">
@@ -661,11 +651,16 @@ type CalendarEvent = {
   title: string;
   status: BookingStatus;
   at: Date;
+  phone?: string;
+  program?: string;
+  consultationType?: string | null;
 };
 
 function buildEvents(bookings: BookingDto[]): CalendarEvent[] {
   const out: CalendarEvent[] = [];
   for (const b of bookings) {
+    // Calendar should only show actionable / upcoming items.
+    if (b.status !== "pending" && b.status !== "confirmed") continue;
     const raw = b.preferredDateTimeUtc ?? b.preferredDateTime;
     const d = new Date(raw);
     if (Number.isNaN(d.getTime())) continue;
@@ -674,9 +669,102 @@ function buildEvents(bookings: BookingDto[]): CalendarEvent[] {
       title: b.fullName,
       status: b.status,
       at: d,
+      phone: b.phone,
+      program: (b as any).program,
+      consultationType: (b as any).consultationType ?? null,
     });
   }
   return out;
+}
+
+function HoverPopover({
+  hover,
+}: {
+  hover: { event: CalendarEvent; rect: DOMRect } | null;
+}) {
+  if (!hover) return null;
+
+  const { event, rect } = hover;
+  const timeStr = event.at.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+  const dateStr = event.at.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+
+  const PAD = 12;
+  const WIDTH = 292;
+  const left = Math.min(
+    Math.max(PAD, rect.left + rect.width / 2 - WIDTH / 2),
+    window.innerWidth - WIDTH - PAD
+  );
+  const top = Math.max(PAD, rect.top - 10);
+
+  return (
+    <div
+      className="pointer-events-none fixed z-[60]"
+      style={{ left, top, width: WIDTH, transform: "translateY(-100%)" }}
+    >
+      <div className="rounded-2xl border border-gray-200 bg-white/95 p-3 shadow-xl backdrop-blur">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-gray-900">
+              {event.title}
+            </p>
+            <p className="mt-0.5 text-xs text-gray-500">
+              {dateStr} · {timeStr}
+            </p>
+          </div>
+          <span
+            className={cn(
+              "shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+              event.status === "pending"
+                ? "bg-amber-100 text-amber-800"
+                : "bg-blue-100 text-blue-800"
+            )}
+          >
+            {BOOKING_STATUS_LABELS[event.status]}
+          </span>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+          {event.program ? (
+            <div className="rounded-xl bg-gray-50 px-2.5 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                Program
+              </p>
+              <p className="mt-0.5 truncate font-medium text-gray-900">
+                {event.program}
+              </p>
+            </div>
+          ) : null}
+          {event.phone ? (
+            <div className="rounded-xl bg-gray-50 px-2.5 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                Phone
+              </p>
+              <p className="mt-0.5 truncate font-medium text-gray-900">
+                {event.phone}
+              </p>
+            </div>
+          ) : null}
+          {event.consultationType ? (
+            <div className="col-span-2 rounded-xl bg-gray-50 px-2.5 py-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-500">
+                Consultation
+              </p>
+              <p className="mt-0.5 truncate font-medium text-gray-900">
+                {event.consultationType}
+              </p>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function groupByLocalDate(
@@ -710,48 +798,6 @@ function groupSlotsByDow(
   };
   for (const s of slots) out[s.dayOfWeek] += 1;
   return out;
-}
-
-function computeMonthStats({
-  cursor,
-  events,
-  slotsByDow,
-  blockedSet,
-}: {
-  cursor: Date;
-  events: CalendarEvent[];
-  slotsByDow: Record<DayOfWeek, number>;
-  blockedSet: Set<string>;
-}): MonthStats {
-  const start = startOfMonth(cursor);
-  const end = endOfDay(endOfMonth(cursor));
-
-  const inMonth = events.filter((e) => e.at >= start && e.at <= end);
-
-  let totalSlots = 0;
-  let cur = start;
-  while (cur <= end) {
-    const isBlocked = blockedSet.has(dateKey(cur));
-    if (!isBlocked) {
-      totalSlots += slotsByDow[cur.getDay() as DayOfWeek] ?? 0;
-    }
-    cur = addDays(cur, 1);
-  }
-
-  const stats: MonthStats = {
-    total: inMonth.length,
-    pending: 0,
-    confirmed: 0,
-    completed: 0,
-    cancelled: 0,
-    totalSlots,
-    availableSlots: 0,
-  };
-  for (const e of inMonth) stats[e.status] += 1;
-  // A cancelled booking frees its slot back up — don't subtract it.
-  const consumed = stats.pending + stats.confirmed + stats.completed;
-  stats.availableSlots = Math.max(0, totalSlots - consumed);
-  return stats;
 }
 
 // ---------------- Date helpers ----------------

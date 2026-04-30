@@ -64,7 +64,7 @@ export function TestimonialPreviewCard({
   return (
     <article
       className={cn(
-        "flex h-full flex-col rounded-tl-[36px] rounded-br-[36px] rounded-tr-[12px] rounded-bl-[12px] bg-[#fafafa] p-6 shadow-sm",
+        "flex h-full flex-col rounded-tl-[36px] rounded-br-[36px] rounded-tr-[12px] rounded-bl-[12px] bg-white p-6 shadow-sm",
         className
       )}
     >
@@ -83,19 +83,12 @@ export function TestimonialPreviewCard({
 
       <div className="mt-6 flex items-center gap-3 border-t border-gray-100 pt-5">
         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-tl-[12px] rounded-br-[12px] rounded-tr-[4px] rounded-bl-[4px] bg-gray-100 ring-1 ring-black/5">
-          {avatar ? (
-            // Plain <img> (no onError) so this component stays a pure
-            // server component — event handlers can't cross the RSC
-            // boundary. `loading="lazy"` + explicit size avoids loading
-            // and decoding all 18 avatars up front, which was the main
-            // source of scroll jank on the admin list page.
-            // eslint-disable-next-line @next/next/no-img-element
+          {/* {avatar ? (
             <img
               src={avatar}
               alt=""
               width={48}
               height={48}
-              loading="lazy"
               decoding="async"
               className="h-full w-full object-cover"
             />
@@ -106,7 +99,7 @@ export function TestimonialPreviewCard({
             >
               {initials(name)}
             </span>
-          )}
+          )} */}
         </div>
         <p className="text-sm font-semibold text-gray-900">
           {name}

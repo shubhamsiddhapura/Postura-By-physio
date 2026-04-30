@@ -19,6 +19,8 @@ type Props = {
   tags: string[];
 };
 
+const ALL_TAGS_VALUE = "__all__";
+
 function buildUrl(pathname: string, params: Record<string, string | undefined>) {
   const sp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
@@ -43,16 +45,17 @@ export function TestimonialsFilters({
   const [published, setPublished] = useState<Props["initialPublished"]>(
     initialPublished
   );
-  const [tag, setTag] = useState(initialTag);
+  const [tag, setTag] = useState(initialTag || ALL_TAGS_VALUE);
 
   useEffect(() => {
     setSearch(initialSearch);
     setPublished(initialPublished);
-    setTag(initialTag);
+    setTag(initialTag || ALL_TAGS_VALUE);
   }, [initialPublished, initialSearch, initialTag]);
 
   const hasFilters = useMemo(
-    () => search.trim() !== "" || published !== "all" || tag.trim() !== "",
+    () =>
+      search.trim() !== "" || published !== "all" || tag !== ALL_TAGS_VALUE,
     [published, search, tag]
   );
 
@@ -61,7 +64,7 @@ export function TestimonialsFilters({
       const next = buildUrl(pathname, {
         search: search.trim() || undefined,
         published,
-        tag: tag.trim() || undefined,
+        tag: tag === ALL_TAGS_VALUE ? undefined : tag.trim() || undefined,
       });
       const cur = buildUrl(pathname, {
         search: (searchParams.get("search") ?? "").trim() || undefined,
@@ -109,7 +112,7 @@ export function TestimonialsFilters({
             <SelectValue placeholder="Tag" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All tags</SelectItem>
+            <SelectItem value={ALL_TAGS_VALUE}>All tags</SelectItem>
             {tags.map((t) => (
               <SelectItem key={t} value={t}>
                 {t}

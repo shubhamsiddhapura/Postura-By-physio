@@ -47,7 +47,7 @@ export default async function TestimonialsListPage({
     if (needsTagSource) {
       const [filteredRes, allRes] = await Promise.all([
         testimonialsApi.list({
-          limit: 200,
+          limit: 60,
           search,
           tag: tagFilter,
           published: publishedArg,
@@ -58,7 +58,7 @@ export default async function TestimonialsListPage({
       total = filteredRes.meta?.total ?? items.length;
       allTags = Array.from(new Set(allRes.data.map((t) => t.tag))).sort();
     } else {
-      const res = await testimonialsApi.list({ limit: 200 });
+      const res = await testimonialsApi.list({ limit: 60 });
       items = res.data;
       total = res.meta?.total ?? items.length;
       allTags = Array.from(new Set(res.data.map((t) => t.tag))).sort();
@@ -83,7 +83,7 @@ export default async function TestimonialsListPage({
         }
       />
 
-      <div className="mx-auto w-full max-w-6xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full space-y-4 px-4 py-6 sm:px-6 lg:px-8">
         <TestimonialsFilters
           initialSearch={search ?? ""}
           initialPublished={publishedFilter}
@@ -145,7 +145,37 @@ export default async function TestimonialsListPage({
  */
 function TestimonialCardTile({ testimonial }: { testimonial: TestimonialDto }) {
   return (
-    <div className="group relative flex flex-col">
+    <div
+      className="group flex flex-col"
+      style={{
+        contentVisibility: "auto",
+        contain: "layout paint",
+        containIntrinsicSize: "360px 420px",
+      }}
+    >
+      <div className="mb-2 flex items-center justify-between gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2">
+        <div className="flex items-center gap-1.5">
+          {testimonial.published ? (
+            <Badge tone="green">Published</Badge>
+          ) : (
+            <Badge tone="amber">Hidden</Badge>
+          )}
+          <span className="rounded-full bg-white px-2 py-0.5 text-[11px] font-medium text-gray-600 ring-1 ring-gray-200">
+            #{testimonial.order}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link href={`/testimonials/${testimonial.id}`}>
+            <Button variant="outline" size="sm">
+              <Pencil className="h-3.5 w-3.5" />
+              Edit
+            </Button>
+          </Link>
+          <DeleteTestimonialButton id={testimonial.id} label={testimonial.name} />
+        </div>
+      </div>
+
       <TestimonialPreviewCard
         data={{
           tag: testimonial.tag,
@@ -155,39 +185,8 @@ function TestimonialCardTile({ testimonial }: { testimonial: TestimonialDto }) {
           avatar: testimonial.avatar,
           rating: testimonial.rating,
         }}
-        className={
-          testimonial.published
-            ? undefined
-            : "opacity-70 ring-1 ring-amber-200"
-        }
+        className={testimonial.published ? undefined : "opacity-80 ring-1 ring-amber-200"}
       />
-
-      {/* Overlay: status + order pinned top-left so the tag pill on the
-          top-right of the public card stays unobstructed. */}
-      <div className="pointer-events-none absolute left-4 top-4 flex items-center gap-1.5">
-        {testimonial.published ? (
-          <Badge tone="green">Published</Badge>
-        ) : (
-          <Badge tone="amber">Hidden</Badge>
-        )}
-        <span className="rounded-full bg-white/90 px-2 py-0.5 text-[11px] font-medium text-gray-600 ring-1 ring-gray-200">
-          #{testimonial.order}
-        </span>
-      </div>
-
-      {/* Actions row below the card so they don't overlap the quote. */}
-      <div className="mt-3 flex items-center justify-end gap-2">
-        <Link href={`/testimonials/${testimonial.id}`}>
-          <Button variant="outline" size="sm">
-            <Pencil className="h-3.5 w-3.5" />
-            Edit
-          </Button>
-        </Link>
-        <DeleteTestimonialButton
-          id={testimonial.id}
-          label={testimonial.name}
-        />
-      </div>
     </div>
   );
 }

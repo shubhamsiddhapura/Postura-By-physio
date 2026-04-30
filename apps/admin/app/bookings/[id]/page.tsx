@@ -59,7 +59,7 @@ export default async function BookingDetailPage({
         }
       />
 
-      <div className="space-y-6 px-8 py-6">
+      <div className="mx-auto w-full space-y-4 px-4 py-5 sm:px-6 lg:px-8">
         <Link
           href="/bookings"
           className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900"
@@ -68,9 +68,9 @@ export default async function BookingDetailPage({
           Back to bookings
         </Link>
 
-        <div className="grid gap-6 lg:grid-cols-[1.4fr,1fr]">
+        <div className="grid gap-5 lg:grid-cols-[1.4fr,1fr]">
           {/* LEFT: customer-submitted details */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             <Card>
               <CardHeader>
                 <CardTitle>Appointment</CardTitle>
@@ -99,7 +99,7 @@ export default async function BookingDetailPage({
               <CardHeader>
                 <CardTitle>Contact</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-3">
                 <DetailRows
                   rows={[
                     ["Full name", booking.fullName],
@@ -166,7 +166,7 @@ export default async function BookingDetailPage({
           </div>
 
           {/* RIGHT: workflow */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             <BookingStatusForm booking={booking} />
 
             <Card>

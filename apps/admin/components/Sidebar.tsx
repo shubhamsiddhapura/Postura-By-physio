@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   Loader2,
   MessageSquareQuote,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,6 +38,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     setPendingHref(null);
@@ -222,6 +224,31 @@ export function Sidebar() {
               <ChevronLeft className="h-3.5 w-3.5" />
               <span className="text-xs font-medium">Collapse</span>
             </>
+          )}
+        </button>
+
+        {/* ── Logout ─────────────────────────────────────────── */}
+        <button
+          onClick={async () => {
+            if (loggingOut) return;
+            setLoggingOut(true);
+            try {
+              await fetch("/api/admin/logout", { method: "POST" });
+            } finally {
+              window.location.href = "/login";
+            }
+          }}
+          aria-label="Logout"
+          className={cn(
+            "mt-2 flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 py-2 text-white/60 transition-all hover:bg-white/10 hover:text-white",
+            collapsed && "h-9 w-9 mx-auto"
+          )}
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          {!collapsed && (
+            <span className="text-xs font-medium">
+              {loggingOut ? "Logging out…" : "Logout"}
+            </span>
           )}
         </button>
       </div>

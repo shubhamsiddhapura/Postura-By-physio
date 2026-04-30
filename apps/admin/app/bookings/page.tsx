@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Eye } from "lucide-react";
 import type { BookingDto, BookingStatus } from "@repo/types";
+import { BOOKING_PROGRAM_LABELS, BOOKING_PROGRAMS, BOOKING_STATUS_LABELS } from "@repo/types";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";

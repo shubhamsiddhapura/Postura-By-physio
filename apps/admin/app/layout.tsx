@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-import { Sidebar } from "@/components/Sidebar";
+import { AppShell } from "@/components/AppShell";
 
 const switzer = localFont({
   src: [
@@ -40,13 +39,7 @@ export default function RootLayout({
       <body
         className={`${switzer.variable} ${cabinetGrotesk.variable} font-switzer`}
       >
-        <NextTopLoader color="#008080" showSpinner={false} height={2} />
-        <div className="flex h-screen overflow-hidden bg-gray-50">
-          <Sidebar />
-          <main className="flex-1 overflow-y-auto overflow-x-hidden">
-            {children}
-          </main>
-        </div>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

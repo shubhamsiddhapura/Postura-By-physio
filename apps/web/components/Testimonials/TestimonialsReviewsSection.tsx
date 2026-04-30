@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
-import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
 /**
  * Rendered shape for a single card. Matches the public DTO but limited to
@@ -20,8 +19,25 @@ export type TestimonialCard = {
   rating?: number;
 };
 
-const INITIAL_COUNT = 12;
-const LOAD_MORE_COUNT = 6;
+const PAGE_SIZE = 12;
+
+function rangeWithEllipsis(current: number, total: number): Array<number | "…"> {
+  // Always show: 1, last, current, ±1 around current (with ellipses).
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const pages = new Set<number>([1, total, current - 1, current, current + 1].filter((p) => p >= 1 && p <= total));
+  const sorted = Array.from(pages).sort((a, b) => a - b);
+  const out: Array<number | "…"> = [];
+  for (let i = 0; i < sorted.length; i++) {
+    const p = sorted[i]!;
+    const prev = sorted[i - 1];
+    if (i > 0 && prev && p - prev > 1) out.push("…");
+    out.push(p);
+  }
+  // Ensure we don't end up with a cramped "… 2" at start or "total-1 … total" at end.
+  if (out[1] === "…") out.splice(1, 1, 2);
+  if (out[out.length - 2] === "…") out.splice(out.length - 2, 1, total - 1);
+  return out;
+}
 
 function StarRating({ value }: { value: number }) {
   return (
@@ -58,13 +74,21 @@ export function TestimonialsReviewsSection({
 }: {
   items: TestimonialCard[];
 }) {
-  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
+  const [page, setPage] = useState(1);
 
-  const visible = useMemo(() => items.slice(0, visibleCount), [items, visibleCount]);
-  const canShowMore = visibleCount < items.length;
+  const pageCount = useMemo(() => Math.max(1, Math.ceil(items.length / PAGE_SIZE)), [items.length]);
+  const currentPage = Math.min(page, pageCount);
+  const visible = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return items.slice(start, start + PAGE_SIZE);
+  }, [items, currentPage]);
 
-  const handleViewMore = () => {
-    setVisibleCount((c) => Math.min(c + LOAD_MORE_COUNT, items.length));
+  const goToPage = (p: number) => {
+    const next = Math.max(1, Math.min(pageCount, p));
+    setPage(next);
+    // Keep context: after switching pages, bring the grid back into view.
+    // This is especially helpful on mobile where the pagination may be below the fold.
+    document.getElementById("customer-reviews")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
@@ -117,19 +141,63 @@ export function TestimonialsReviewsSection({
           ))}
         </div>
 
-        {canShowMore ? (
+        {pageCount > 1 ? (
           <FadeIn direction="up" distance={20} duration={700} delay={120}>
-            <div className="mt-14 flex justify-center md:mt-16">
-              <PrimaryCTAButton
-                href="#customer-reviews"
-                label="View More"
-                size="md"
-                className=""
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleViewMore();
-                }}
-              />
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-2 md:mt-14">
+              <button
+                type="button"
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className={[
+                  "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                  currentPage <= 1
+                    ? "cursor-not-allowed border-gray-200 text-gray-300"
+                    : "border-gray-200 text-gray-900 hover:bg-gray-50",
+                ].join(" ")}
+                aria-label="Previous page"
+              >
+                Prev
+              </button>
+
+              <div className="flex items-center gap-1">
+                {rangeWithEllipsis(currentPage, pageCount).map((p, i) =>
+                  p === "…" ? (
+                    <span key={`ellipsis-${i}`} className="px-2 text-sm text-gray-400">
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => goToPage(p)}
+                      aria-current={p === currentPage ? "page" : undefined}
+                      className={[
+                        "grid h-10 min-w-10 place-items-center rounded-full border text-sm font-semibold transition",
+                        p === currentPage
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-gray-200 text-gray-900 hover:bg-gray-50",
+                      ].join(" ")}
+                    >
+                      {p}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage >= pageCount}
+                className={[
+                  "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                  currentPage >= pageCount
+                    ? "cursor-not-allowed border-gray-200 text-gray-300"
+                    : "border-gray-200 text-gray-900 hover:bg-gray-50",
+                ].join(" ")}
+                aria-label="Next page"
+              >
+                Next
+              </button>
             </div>
           </FadeIn>
         ) : null}

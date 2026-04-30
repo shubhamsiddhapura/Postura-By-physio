@@ -128,7 +128,12 @@ export function BookingDateTimeField({
   // popover into `document.body` and track that we've mounted client-side.
   const [mounted, setMounted] = useState(false);
   const [popoverPos, setPopoverPos] = useState<{
-    top: number;
+    // Either `top` (anchor to top edge) or `bottom` (anchor to bottom edge)
+    // is set, never both. We use `bottom` when flipping the popover above
+    // the trigger so its bottom edge sits flush with the trigger regardless
+    // of how much room there is above it.
+    top?: number;
+    bottom?: number;
     left: number;
     width: number;
     maxHeight: number;
@@ -235,21 +240,29 @@ export function BookingDateTimeField({
       if (left < padding) left = padding;
 
       // Prefer placing below the trigger; flip above when there isn't enough
-      // room and the space above is bigger.
+      // room and the space above is bigger. When flipping, anchor by `bottom`
+      // so the popover hugs the trigger instead of pinning to the viewport
+      // top when `spaceAbove` is large.
       const estimatedHeight = 440;
       const spaceBelow = viewportH - r.bottom - gap - padding;
       const spaceAbove = r.top - gap - padding;
-      let top: number;
-      let maxHeight: number;
       if (spaceBelow >= estimatedHeight || spaceBelow >= spaceAbove) {
-        top = r.bottom + gap;
-        maxHeight = Math.max(280, spaceBelow);
+        setPopoverPos({
+          top: r.bottom + gap,
+          left,
+          width,
+          maxHeight: Math.max(280, spaceBelow),
+          mode: "desktop",
+        });
       } else {
-        maxHeight = Math.max(280, spaceAbove);
-        top = Math.max(padding, r.top - gap - maxHeight);
+        setPopoverPos({
+          bottom: Math.max(padding, viewportH - r.top + gap),
+          left,
+          width,
+          maxHeight: Math.max(280, spaceAbove),
+          mode: "desktop",
+        });
       }
-
-      setPopoverPos({ top, left, width, maxHeight, mode: "desktop" });
     };
 
     update();
@@ -380,6 +393,7 @@ export function BookingDateTimeField({
                 aria-labelledby={`${id}-title`}
                 style={{
                   top: popoverPos.top,
+                  bottom: popoverPos.bottom,
                   left: popoverPos.left,
                   width: popoverPos.width,
                   maxHeight: popoverPos.maxHeight,

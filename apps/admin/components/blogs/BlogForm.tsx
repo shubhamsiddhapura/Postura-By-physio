@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -14,6 +14,7 @@ import {
   Settings,
   Trash2,
   User,
+  X,
 } from "lucide-react";
 import type {
   BlogDto,
@@ -30,6 +31,13 @@ import { Label } from "@/components/ui/Label";
 import { ApiError, blogsApi, type FieldErrors } from "@/lib/api";
 import { iconFor } from "@/lib/icons";
 import { ImageInput } from "@/components/blogs/ImageInput";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
 import { cn } from "@/lib/utils";
 
 /* ─────────────────────────────────────────────────────────── */
@@ -217,6 +225,7 @@ export function BlogForm({
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [metaOpen, setMetaOpen] = useState(false);
+  const [drawer, setDrawer] = useState<null | DrawerTarget>(null);
 
   const isEdit = mode === "edit";
 
@@ -412,6 +421,46 @@ export function BlogForm({
   /* ─────────────────────────────────────────────────── */
   /* Render — exact website structure                     */
   /* ─────────────────────────────────────────────────── */
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setDrawer(null);
+    }
+    if (drawer) window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [drawer]);
+
+  const drawerConfig = useMemo(() => {
+    if (!drawer) return null;
+    if (drawer === "cover") {
+      return {
+        title: "Cover image",
+        srcKey: "imageSrc" as const,
+        altKey: null,
+        flipKey: null,
+        placeholder: "/blog1-details.jpg",
+        errorKey: "imageSrc" as const,
+      };
+    }
+    if (drawer === "intro") {
+      return {
+        title: "Introduction image",
+        srcKey: "introImageSrc" as const,
+        altKey: "introImageAlt" as const,
+        flipKey: null,
+        placeholder: "/blog-intro.jpg",
+        errorKey: "introImageSrc" as const,
+      };
+    }
+    return {
+      title: "Symptoms image",
+      srcKey: "symptomsImageSrc" as const,
+      altKey: "symptomsImageAlt" as const,
+      flipKey: "symptomsFlipImage" as const,
+      placeholder: "/blog-symptoms.jpg",
+      errorKey: "symptomsImageSrc" as const,
+    };
+  }, [drawer]);
+
   return (
     <form onSubmit={handleSubmit} className="min-h-screen bg-white">
 
@@ -468,59 +517,116 @@ export function BlogForm({
       {/* SEO & meta panel */}
       {metaOpen && (
         <div className="border-b border-gray-200 bg-gray-50">
-          <div className="mx-auto max-w-6xl px-4 py-5 sm:px-6">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
-              SEO & Settings — these fields don&apos;t appear on the page but
-              control discoverability.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <MetaField label="Slug" hint="Auto-generated from title." error={err("slug")}>
-                <Input
-                  value={state.slug}
-                  onChange={(e) => set("slug", e.target.value)}
-                  placeholder="neck-pain-it-professionals"
-                  invalid={Boolean(err("slug"))}
-                />
-              </MetaField>
-              <MetaField label="Tags" hint="Comma-separated." error={err("tags")}>
-                <Input
-                  value={state.tagsInput}
-                  onChange={(e) => set("tagsInput", e.target.value)}
-                  placeholder="neck-pain, ergonomics"
-                />
-              </MetaField>
-              <MetaField
-                label="Excerpt"
-                hint="10–500 chars. Used for meta description."
-                required
-                error={err("excerpt")}
-              >
-                <Textarea
-                  value={state.excerpt}
-                  onChange={(e) => set("excerpt", e.target.value)}
-                  rows={2}
-                  invalid={Boolean(err("excerpt"))}
-                  required
-                />
-              </MetaField>
-              <div className="space-y-1.5">
-                <Label>Badges</Label>
-                <div className="flex flex-wrap items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-1.5 text-xs">
-                  {state.tagsInput
-                    .split(",")
-                    .map((t) => t.trim())
-                    .filter(Boolean)
-                    .map((t, i) => (
-                      <span
-                        key={i}
-                        className="rounded bg-primary/10 px-1.5 py-0.5 text-primary"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                  {!state.tagsInput.trim() && (
-                    <span className="text-gray-400">No tags yet</span>
-                  )}
+          <div className="px-4 py-6 sm:px-6 lg:px-8">
+            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <div className="flex flex-wrap items-start justify-between gap-3 border-b border-gray-100 px-5 py-4">
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    SEO & Settings
+                  </p>
+                  <p className="mt-0.5 text-xs text-gray-500">
+                    These fields don&apos;t appear on the page but control
+                    discoverability and sharing previews.
+                  </p>
+                </div>
+                <div className="rounded-full bg-primary/10 px-3 py-1 text-[11px] font-semibold text-primary">
+                  Optional tweaks
+                </div>
+              </div>
+
+              <div className="grid gap-5 p-5 lg:grid-cols-[1.2fr_0.8fr]">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <MetaField
+                    label="Slug"
+                    hint="Used in the URL. Leave blank to auto-generate from title."
+                    error={err("slug")}
+                  >
+                    <Input
+                      value={state.slug}
+                      onChange={(e) => set("slug", e.target.value)}
+                      placeholder="neck-pain-it-professionals"
+                      invalid={Boolean(err("slug"))}
+                    />
+                  </MetaField>
+
+                  <MetaField
+                    label="Tags"
+                    hint="Comma-separated. Keep them short and consistent."
+                    error={err("tags")}
+                  >
+                    <Input
+                      value={state.tagsInput}
+                      onChange={(e) => set("tagsInput", e.target.value)}
+                      placeholder="neck-pain, ergonomics"
+                    />
+                  </MetaField>
+
+                  <div className="sm:col-span-2">
+                    <MetaField
+                      label="Excerpt"
+                      hint="Used for meta description + cards. Keep it ~150–160 chars."
+                      required
+                      error={err("excerpt")}
+                    >
+                      <AutoGrowTextarea
+                        value={state.excerpt}
+                        onChange={(v) => set("excerpt", v)}
+                        minRows={2}
+                        maxRows={6}
+                        required
+                        className={cn(
+                          "w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10",
+                          Boolean(err("excerpt")) && "border-red-300 ring-1 ring-red-200"
+                        )}
+                        placeholder="Short summary shown in search / share previews…"
+                      />
+                    </MetaField>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    Preview
+                  </p>
+                  <div className="mt-3 space-y-3">
+                    <div className="rounded-lg border border-gray-200 bg-white p-3">
+                      <p className="text-[11px] font-semibold text-gray-500">
+                        Badges
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {state.tagsInput
+                          .split(",")
+                          .map((t) => t.trim())
+                          .filter(Boolean)
+                          .slice(0, 8)
+                          .map((t, i) => (
+                            <span
+                              key={i}
+                              className="rounded-full bg-primary/10 px-2 py-1 text-[11px] font-semibold text-primary"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        {!state.tagsInput.trim() ? (
+                          <span className="text-xs text-gray-400">
+                            Add tags to see badges
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className="rounded-lg border border-gray-200 bg-white p-3">
+                      <p className="text-[11px] font-semibold text-gray-500">
+                        Meta snippet
+                      </p>
+                      <p className="mt-2 line-clamp-3 text-sm text-gray-700">
+                        {state.excerpt.trim() || "Your excerpt will appear here."}
+                      </p>
+                      <p className="mt-2 text-[11px] text-gray-400">
+                        Length: {state.excerpt.trim().length}/500
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -634,11 +740,9 @@ export function BlogForm({
           <div className="relative z-10 mx-auto -mt-40 max-w-7xl px-4 md:-mt-60">
             <HoverImageEditor
               value={state.imageSrc}
-              onChange={(v) => set("imageSrc", v)}
               alt={state.title}
-              placeholder="/blog1-details.jpg"
               invalid={Boolean(err("imageSrc"))}
-              required
+              onRequestChange={() => setDrawer("cover")}
               className="relative h-[300px] w-full overflow-hidden rounded-tl-3xl rounded-tr-[84px] rounded-br-3xl rounded-bl-[84px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)] md:h-[580px]"
             />
             {err("imageSrc") && (
@@ -660,14 +764,9 @@ export function BlogForm({
               <div className="relative md:pl-16">
                 <HoverImageEditor
                   value={state.introImageSrc}
-                  onChange={(v) => set("introImageSrc", v)}
                   alt={state.introImageAlt}
-                  altEditable
-                  altValue={state.introImageAlt}
-                  onAltChange={(v) => set("introImageAlt", v)}
-                  placeholder="/blog-intro.jpg"
                   invalid={Boolean(err("introImageSrc"))}
-                  required
+                  onRequestChange={() => setDrawer("intro")}
                   className="relative h-[52vh] w-full overflow-hidden rounded-tl-[84px] rounded-tr-xl rounded-br-[84px] rounded-bl-xl bg-gray-100 md:h-[68vh] md:w-[32vw]"
                 />
                 {/* Watermark overlay */}
@@ -763,7 +862,7 @@ export function BlogForm({
           <section className="bg-white">
             <div className="mx-auto max-w-[90vw] py-16 md:px-4 md:py-10">
               {/* Heading split */}
-              <div className="grid gap-3 md:grid-cols-[1fr,1.2fr] md:items-end md:gap-10">
+              <div className="grid gap-3 md:grid-cols-[1fr,1.2fr] md:items-end md:gap-20">
                 <div className="text-center md:text-left">
                   <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-medium text-primary md:justify-start">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -781,11 +880,12 @@ export function BlogForm({
                       className={cn(inlineOnWhite, "max-w-md")}
                     />
                   </div>
-                  <textarea
+                  <AutoGrowTextarea
                     value={state.causesTitle}
-                    onChange={(e) => set("causesTitle", e.target.value)}
+                    onChange={(v) => set("causesTitle", v)}
                     placeholder="Common Causes of Neck Pain in Desk Jobs"
-                    rows={2}
+                    minRows={1}
+                    maxRows={3}
                     className={cn(
                       inlineOnWhite,
                       "mt-4 resize-none font-cabinet text-3xl font-bold tracking-tight text-gray-900 md:text-5xl"
@@ -793,19 +893,20 @@ export function BlogForm({
                   />
                 </div>
 
-                <div className="md:justify-self-end">
-                  <textarea
+                <div className="md:justify-self-end w-full">
+                  <AutoGrowTextarea
                     value={state.causesDescription}
-                    onChange={(e) => set("causesDescription", e.target.value)}
+                    onChange={(v) => set("causesDescription", v)}
                     placeholder="Description…"
-                    rows={3}
+                    minRows={2}
+                    maxRows={6}
                     className={cn(
                       inlineOnWhite,
-                      "max-w-xl resize-none text-center text-sm leading-6 text-gray-500 md:text-left"
+                      "w-full resize-none text-center text-sm leading-6 text-gray-500 md:text-left"
                     )}
                   />
                   {/* Column picker (admin-only control) */}
-                  <div className="mt-3 flex items-center justify-center gap-2 text-xs text-gray-400 md:justify-start">
+                  <div className="flex items-center justify-center gap-2 text-xs text-gray-400 md:justify-start">
                     <span>Desktop columns:</span>
                     {[2, 3, 4].map((n) => (
                       <button
@@ -867,36 +968,43 @@ export function BlogForm({
                             "w-full bg-transparent text-center text-lg font-semibold text-primary outline-none border-b border-transparent focus:border-primary/30 md:text-left"
                           )}
                         />
-                        <textarea
+                        <AutoGrowTextarea
                           value={item.description}
-                          onChange={(e) =>
+                          onChange={(v) =>
                             updateSectionItem("causesItems", idx, {
-                              description: e.target.value,
+                              description: v,
                             })
                           }
                           placeholder="Description…"
-                          rows={3}
+                          minRows={2}
+                          maxRows={8}
                           className={cn(
                             "mt-4 w-full resize-none bg-transparent text-center text-sm leading-6 text-gray-500 outline-none border-b border-transparent focus:border-gray-300 md:text-left"
                           )}
                         />
                         <div className="mt-2 flex items-center justify-center gap-1.5 md:justify-start">
                           <span className="text-[10px] text-gray-400">Icon:</span>
-                          <select
-                            value={item.icon}
-                            onChange={(e) =>
-                              updateSectionItem("causesItems", idx, {
-                                icon: e.target.value as IconName,
-                              })
-                            }
-                            className="cursor-pointer border-0 bg-transparent text-[11px] text-gray-500 outline-none"
-                          >
-                            {ICON_NAMES.map((n) => (
-                              <option key={n} value={n}>
-                                {n}
-                              </option>
-                            ))}
-                          </select>
+                          <div className="w-44">
+                            <Select
+                              value={item.icon}
+                              onValueChange={(v) =>
+                                updateSectionItem("causesItems", idx, {
+                                  icon: v as IconName,
+                                })
+                              }
+                            >
+                              <SelectTrigger className="h-8 border-0 bg-transparent px-0 text-[11px] text-gray-600 shadow-none focus-visible:ring-0">
+                                <SelectValue placeholder="Select icon" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {ICON_NAMES.map((n) => (
+                                  <SelectItem key={n} value={n}>
+                                    {n}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -947,24 +1055,26 @@ export function BlogForm({
                   />
                 </div>
 
-                <textarea
+                <AutoGrowTextarea
                   value={state.symptomsTitle}
-                  onChange={(e) => set("symptomsTitle", e.target.value)}
+                  onChange={(v) => set("symptomsTitle", v)}
                   placeholder="Common Symptoms to Watch"
-                  rows={2}
                   required
+                  minRows={1}
+                  maxRows={3}
                   className={cn(
                     inlineOnWhite,
                     "mt-2 resize-none font-cabinet text-3xl font-bold tracking-tight text-gray-900 md:text-5xl"
                   )}
                 />
 
-                <textarea
+                <AutoGrowTextarea
                   value={state.symptomsDescription}
-                  onChange={(e) => set("symptomsDescription", e.target.value)}
+                  onChange={(v) => set("symptomsDescription", v)}
                   placeholder="Description…"
-                  rows={3}
                   required
+                  minRows={2}
+                  maxRows={7}
                   className={cn(
                     inlineOnWhite,
                     "mt-4 resize-none text-sm leading-6 text-gray-500"
@@ -1016,19 +1126,10 @@ export function BlogForm({
               <div className="relative mt-8 w-full md:mt-0 md:w-[32vw] md:max-w-[520px] md:flex-shrink-0">
                 <HoverImageEditor
                   value={state.symptomsImageSrc}
-                  onChange={(v) => set("symptomsImageSrc", v)}
                   alt={state.symptomsImageAlt}
-                  altEditable
-                  altValue={state.symptomsImageAlt}
-                  onAltChange={(v) => set("symptomsImageAlt", v)}
-                  placeholder="/blog-symptoms.jpg"
                   invalid={Boolean(err("symptomsImageSrc"))}
                   flipX={state.symptomsFlipImage}
-                  flipToggle={{
-                    enabled: state.symptomsFlipImage,
-                    onToggle: (v) => set("symptomsFlipImage", v),
-                  }}
-                  required
+                  onRequestChange={() => setDrawer("symptoms")}
                   className="relative h-[52vh] min-h-[320px] w-full overflow-hidden rounded-tl-xl rounded-tr-[84px] rounded-br-xl rounded-bl-[84px] bg-gray-100 md:h-[68vh]"
                 />
                 <div className="pointer-events-none absolute -left-5 bottom-0 md:-left-10">
@@ -1084,23 +1185,23 @@ export function BlogForm({
                       className={cn(inlineOnWhite, "max-w-xs text-primary")}
                     />
                   </div>
-                  <textarea
+                  <AutoGrowTextarea
                     value={state.solutionsTitle}
-                    onChange={(e) => set("solutionsTitle", e.target.value)}
+                    onChange={(v) => set("solutionsTitle", v)}
                     placeholder={"Physiotherapy\nSolutions for\nNeck Pain"}
-                    rows={3}
+                    minRows={2}
+                    maxRows={5}
                     className={cn(
                       inlineOnWhite,
                       "mt-4 resize-none whitespace-pre-line font-cabinet text-3xl font-bold tracking-tight text-gray-900 md:text-5xl"
                     )}
                   />
-                  <textarea
+                  <AutoGrowTextarea
                     value={state.solutionsDescription}
-                    onChange={(e) =>
-                      set("solutionsDescription", e.target.value)
-                    }
+                    onChange={(v) => set("solutionsDescription", v)}
                     placeholder="Description…"
-                    rows={3}
+                    minRows={2}
+                    maxRows={7}
                     className={cn(
                       inlineOnWhite,
                       "mt-4 resize-none text-sm leading-6 text-gray-500 md:mt-6"
@@ -1131,15 +1232,16 @@ export function BlogForm({
                                 "w-full bg-transparent text-base font-semibold text-gray-900 outline-none border-b border-transparent focus:border-gray-300 md:text-lg"
                               )}
                             />
-                            <textarea
+                            <AutoGrowTextarea
                               value={item.description}
-                              onChange={(e) =>
+                              onChange={(v) =>
                                 updateSectionItem("solutionsItems", idx, {
-                                  description: e.target.value,
+                                  description: v,
                                 })
                               }
                               placeholder="Description…"
-                              rows={2}
+                              minRows={2}
+                              maxRows={8}
                               className={cn(
                                 "mt-2 w-full resize-none bg-transparent text-sm leading-6 text-gray-500 outline-none border-b border-transparent focus:border-gray-300"
                               )}
@@ -1148,21 +1250,27 @@ export function BlogForm({
                               <span className="text-[10px] text-gray-400">
                                 Icon:
                               </span>
-                              <select
-                                value={item.icon}
-                                onChange={(e) =>
-                                  updateSectionItem("solutionsItems", idx, {
-                                    icon: e.target.value as IconName,
-                                  })
-                                }
-                                className="cursor-pointer border-0 bg-transparent text-[11px] text-gray-500 outline-none"
-                              >
-                                {ICON_NAMES.map((n) => (
-                                  <option key={n} value={n}>
-                                    {n}
-                                  </option>
-                                ))}
-                              </select>
+                              <div className="w-44">
+                                <Select
+                                  value={item.icon}
+                                  onValueChange={(v) =>
+                                    updateSectionItem("solutionsItems", idx, {
+                                      icon: v as IconName,
+                                    })
+                                  }
+                                >
+                                  <SelectTrigger className="h-8 border-0 bg-transparent px-0 text-[11px] text-gray-600 shadow-none focus-visible:ring-0">
+                                    <SelectValue placeholder="Select icon" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {ICON_NAMES.map((n) => (
+                                      <SelectItem key={n} value={n}>
+                                        {n}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
                               <button
                                 type="button"
                                 onClick={() =>
@@ -1314,7 +1422,180 @@ export function BlogForm({
           </div>
         </div>
       </div>
+
+      {/* Right-side image drawer */}
+      {drawer && drawerConfig ? (
+        <ImageDrawer
+          title={drawerConfig.title}
+          srcValue={state[drawerConfig.srcKey]}
+          onSrcChange={(v) => set(drawerConfig.srcKey, v)}
+          srcPlaceholder={drawerConfig.placeholder}
+          srcError={err(drawerConfig.errorKey)}
+          altLabel={drawerConfig.altKey ? "Alt text" : undefined}
+          altValue={drawerConfig.altKey ? (state[drawerConfig.altKey] as string) : undefined}
+          onAltChange={
+            drawerConfig.altKey
+              ? (v) => set(drawerConfig.altKey as any, v)
+              : undefined
+          }
+          flipValue={
+            drawerConfig.flipKey ? (state[drawerConfig.flipKey] as boolean) : undefined
+          }
+          onFlipChange={
+            drawerConfig.flipKey
+              ? (v) => set(drawerConfig.flipKey as any, v)
+              : undefined
+          }
+          onClose={() => setDrawer(null)}
+        />
+      ) : null}
     </form>
+  );
+}
+
+function AutoGrowTextarea({
+  value,
+  onChange,
+  className,
+  placeholder,
+  required,
+  minRows = 1,
+  maxRows,
+  style,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  className?: string;
+  placeholder?: string;
+  required?: boolean;
+  minRows?: number;
+  maxRows?: number;
+  style?: React.CSSProperties;
+}) {
+  const [el, setEl] = useState<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    if (!el) return;
+    // Reset then size to content.
+    el.style.height = "0px";
+    const lineHeight = Number.parseFloat(
+      window.getComputedStyle(el).lineHeight || "16"
+    );
+    const maxHeight =
+      maxRows && lineHeight ? Math.round(maxRows * lineHeight) : undefined;
+    const next = Math.max(el.scrollHeight, Math.round(minRows * lineHeight));
+    el.style.height = `${Math.min(next, maxHeight ?? next)}px`;
+  }, [el, value, minRows, maxRows]);
+
+  return (
+    <textarea
+      ref={setEl}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      required={required}
+      rows={minRows}
+      className={cn("overflow-hidden", className)}
+      style={style}
+    />
+  );
+}
+
+type DrawerTarget = "cover" | "intro" | "symptoms";
+
+function ImageDrawer({
+  title,
+  srcValue,
+  onSrcChange,
+  srcPlaceholder,
+  srcError,
+  altLabel,
+  altValue,
+  onAltChange,
+  flipValue,
+  onFlipChange,
+  onClose,
+}: {
+  title: string;
+  srcValue: string;
+  onSrcChange: (v: string) => void;
+  srcPlaceholder: string;
+  srcError?: string;
+  altLabel?: string;
+  altValue?: string;
+  onAltChange?: (v: string) => void;
+  flipValue?: boolean;
+  onFlipChange?: (v: boolean) => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-[60]">
+      <button
+        type="button"
+        aria-label="Close drawer"
+        className="absolute inset-0 bg-black/35"
+        onClick={onClose}
+      />
+      <aside className="absolute right-0 top-0 h-full w-[min(520px,92vw)] border-l border-gray-200 bg-white shadow-2xl">
+        <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+          <div>
+            <p className="text-sm font-semibold text-gray-900">{title}</p>
+            <p className="text-xs text-gray-500">
+              Upload an image or paste a URL/path.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid h-9 w-9 place-items-center rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+            aria-label="Close"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="h-[calc(100%-56px)] overflow-y-auto p-4">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+            <Label required>Image source</Label>
+            <div className="mt-2">
+              <ImageInput
+                value={srcValue}
+                onChange={onSrcChange}
+                placeholder={srcPlaceholder}
+                invalid={Boolean(srcError)}
+                required
+              />
+            </div>
+            {srcError ? (
+              <p className="mt-2 text-xs text-red-600">{srcError}</p>
+            ) : null}
+
+            {altLabel && onAltChange ? (
+              <div className="mt-4">
+                <Label>{altLabel}</Label>
+                <Input
+                  value={altValue ?? ""}
+                  onChange={(e) => onAltChange(e.target.value)}
+                  placeholder="Describe the image for accessibility"
+                />
+              </div>
+            ) : null}
+
+            {onFlipChange !== undefined ? (
+              <label className="mt-4 flex cursor-pointer items-center gap-2 text-xs font-medium text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={Boolean(flipValue)}
+                  onChange={(e) => onFlipChange(e.target.checked)}
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/20"
+                />
+                Flip horizontally
+              </label>
+            ) : null}
+          </div>
+        </div>
+      </aside>
+    </div>
   );
 }
 
@@ -1381,79 +1662,64 @@ function SectionLabel({
 /* ─────────────────────────────────────────────────────────── */
 function HoverImageEditor({
   value,
-  onChange,
   alt,
-  altEditable,
-  altValue,
-  onAltChange,
-  placeholder,
   invalid,
-  required,
   className,
   flipX,
-  flipToggle,
+  onRequestChange,
 }: {
   value: string;
-  onChange: (v: string) => void;
   alt?: string;
-  altEditable?: boolean;
-  altValue?: string;
-  onAltChange?: (v: string) => void;
-  placeholder?: string;
   invalid?: boolean;
-  required?: boolean;
   className?: string;
   flipX?: boolean;
-  flipToggle?: { enabled: boolean; onToggle: (v: boolean) => void };
+  onRequestChange?: () => void;
 }) {
+  const base =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+  const resolvedSrc = value
+    ? value.startsWith("http")
+      ? value
+      : `${base}${value}`
+    : "";
+
   return (
-    <div className={cn("group", className, invalid && "ring-2 ring-red-400")}>
-      {value ? (
+    <div
+      className={cn(
+        "group relative",
+        className,
+        invalid && "ring-2 ring-red-400"
+      )}
+    >
+      {resolvedSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={value}
+          src={resolvedSrc}
           alt={alt || ""}
           className={cn(
             "h-full w-full object-cover",
             flipX && "scale-x-[-1]"
           )}
+          onError={(e) => {
+            // If the URL is wrong/missing, fade instead of hard-breaking the layout
+            (e.currentTarget as HTMLImageElement).style.opacity = "0.25";
+          }}
         />
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gray-100 text-gray-400">
           <ImageIcon className="h-10 w-10" />
-          <p className="text-xs">Hover to add an image</p>
+          <p className="text-xs">Add an image</p>
         </div>
       )}
-      {/* Hover overlay with controls */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/55 p-4 opacity-0 transition-opacity group-hover:opacity-100">
-        <div className="w-full max-w-xs space-y-2">
-          <ImageInput
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            invalid={invalid}
-            required={required}
-          />
-          {altEditable && (
-            <input
-              value={altValue ?? ""}
-              onChange={(e) => onAltChange?.(e.target.value)}
-              placeholder="Alt text…"
-              className="w-full rounded border border-white/30 bg-black/40 px-2 py-1.5 text-xs text-white placeholder:text-white/50 outline-none"
-            />
-          )}
-          {flipToggle && (
-            <label className="flex cursor-pointer items-center gap-2 text-xs text-white">
-              <input
-                type="checkbox"
-                checked={flipToggle.enabled}
-                onChange={(e) => flipToggle.onToggle(e.target.checked)}
-                className="rounded"
-              />
-              Flip horizontally
-            </label>
-          )}
-        </div>
+
+      <div className="pointer-events-none absolute inset-x-4 bottom-4 flex justify-end">
+        <button
+          type="button"
+          className="pointer-events-auto rounded-full border border-white/30 bg-white/85 px-3 py-1 text-xs font-semibold text-gray-900 shadow-sm backdrop-blur transition hover:bg-white"
+          onClick={onRequestChange}
+        >
+          Change image
+        </button>
       </div>
     </div>
   );
@@ -1470,17 +1736,33 @@ function OptionalToggle({
   onToggle: (v: boolean) => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-1.5 rounded-md border border-gray-200 bg-white px-2 py-1 text-[11px] font-medium shadow-sm">
-      <input
-        type="checkbox"
-        checked={enabled}
-        onChange={(e) => onToggle(e.target.checked)}
-        className="h-3.5 w-3.5 rounded border-gray-300 text-primary focus:ring-primary/20"
-      />
-      <span className={enabled ? "text-primary" : "text-gray-500"}>
-        {enabled ? "Included" : "Hidden"}
+    <button
+      type="button"
+      role="switch"
+      aria-checked={enabled}
+      onClick={() => onToggle(!enabled)}
+      className={cn(
+        "inline-flex items-center gap-2 rounded-full border bg-white px-2 py-1 text-[11px] font-semibold shadow-sm transition",
+        enabled
+          ? "border-primary/30 text-primary"
+          : "border-gray-200 text-gray-500 hover:border-gray-300"
+      )}
+    >
+      <span
+        className={cn(
+          "relative inline-flex h-4 w-7 items-center rounded-full transition-colors",
+          enabled ? "bg-primary" : "bg-gray-200"
+        )}
+      >
+        <span
+          className={cn(
+            "inline-block h-3 w-3 translate-x-0 rounded-full bg-white shadow transition-transform",
+            enabled ? "translate-x-3.5" : "translate-x-0.5"
+          )}
+        />
       </span>
-    </label>
+      <span>{enabled ? "Included" : "Hidden"}</span>
+    </button>
   );
 }
 

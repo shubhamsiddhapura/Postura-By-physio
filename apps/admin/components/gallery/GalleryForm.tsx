@@ -17,6 +17,13 @@ import { Label } from "@/components/ui/Label";
 import { Card, CardContent } from "@/components/ui/Card";
 import { ApiError, galleryApi, type FieldErrors } from "@/lib/api";
 import { ImageInput } from "@/components/blogs/ImageInput";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
 
 type Mode = "create" | "edit";
 
@@ -156,19 +163,21 @@ export function GalleryForm({
           <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-1.5">
               <Label required>Category</Label>
-              <select
+              <Select
                 value={state.category}
-                onChange={(e) =>
-                  updateField("category", e.target.value as GalleryCategory)
-                }
-                className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900/20"
+                onValueChange={(v) => updateField("category", v as GalleryCategory)}
               >
-                {GALLERY_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {GALLERY_CATEGORY_LABELS[cat]}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {GALLERY_CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {GALLERY_CATEGORY_LABELS[cat]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {err("category") ? (
                 <p className="text-xs text-red-600">{err("category")}</p>
               ) : null}

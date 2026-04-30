@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Pencil, Plus, Search } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 import type { TestimonialDto } from "@repo/types";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/Badge";
@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { DeleteTestimonialButton } from "@/components/testimonials/DeleteTestimonialButton";
 import { TestimonialPreviewCard } from "@/components/testimonials/TestimonialPreviewCard";
 import { testimonialsApi } from "@/lib/api";
+import { TestimonialsFilters } from "./TestimonialsFilters";
 
 export const dynamic = "force-dynamic";
 
@@ -82,58 +83,13 @@ export default async function TestimonialsListPage({
         }
       />
 
-      <div className="space-y-4 px-8 py-6">
-        <form
-          className="flex flex-wrap items-center gap-3"
-          action="/testimonials"
-        >
-          <div className="relative min-w-[240px] flex-1 max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <input
-              type="search"
-              name="search"
-              defaultValue={search ?? ""}
-              placeholder="Search by name or quote..."
-              className="h-9 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
-            />
-          </div>
-
-          <select
-            name="published"
-            defaultValue={publishedFilter}
-            className="h-9 rounded-md border border-gray-300 bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
-          >
-            <option value="all">All statuses</option>
-            <option value="true">Published</option>
-            <option value="false">Hidden</option>
-          </select>
-
-          <select
-            name="tag"
-            defaultValue={tagFilter ?? ""}
-            className="h-9 rounded-md border border-gray-300 bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
-          >
-            <option value="">All tags</option>
-            {allTags.map((t) => (
-              <option key={t} value={t}>
-                {t}
-              </option>
-            ))}
-          </select>
-
-          <Button variant="outline" type="submit" size="sm">
-            Apply
-          </Button>
-
-          {search || publishedFilter !== "all" || tagFilter ? (
-            <Link
-              href="/testimonials"
-              className="text-sm text-gray-500 underline-offset-4 hover:text-gray-900 hover:underline"
-            >
-              Clear
-            </Link>
-          ) : null}
-        </form>
+      <div className="mx-auto w-full max-w-6xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
+        <TestimonialsFilters
+          initialSearch={search ?? ""}
+          initialPublished={publishedFilter}
+          initialTag={tagFilter ?? ""}
+          tags={allTags}
+        />
 
         {loadError ? (
           <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">

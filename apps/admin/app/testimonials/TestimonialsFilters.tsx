@@ -10,16 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select";
+import { Button } from "@/components/ui/Button";
 
 type Props = {
   initialSearch: string;
   initialPublished: "true" | "false" | "all";
+  initialTag: string;
+  tags: string[];
 };
 
-function buildUrl(
-  pathname: string,
-  params: Record<string, string | undefined>
-): string {
+function buildUrl(pathname: string, params: Record<string, string | undefined>) {
   const sp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (!v || v === "" || v === "all") continue;
@@ -29,7 +29,12 @@ function buildUrl(
   return s ? `${pathname}?${s}` : pathname;
 }
 
-export function BlogsFilters({ initialSearch, initialPublished }: Props) {
+export function TestimonialsFilters({
+  initialSearch,
+  initialPublished,
+  initialTag,
+  tags,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -38,37 +43,36 @@ export function BlogsFilters({ initialSearch, initialPublished }: Props) {
   const [published, setPublished] = useState<Props["initialPublished"]>(
     initialPublished
   );
+  const [tag, setTag] = useState(initialTag);
 
-  // Keep local state in sync with URL (back/forward navigation).
   useEffect(() => {
     setSearch(initialSearch);
     setPublished(initialPublished);
-  }, [initialSearch, initialPublished]);
+    setTag(initialTag);
+  }, [initialPublished, initialSearch, initialTag]);
 
   const hasFilters = useMemo(
-    () => search.trim() !== "" || published !== "all",
-    [search, published]
+    () => search.trim() !== "" || published !== "all" || tag.trim() !== "",
+    [published, search, tag]
   );
 
-  // Debounced search apply.
   useEffect(() => {
     const t = window.setTimeout(() => {
       const next = buildUrl(pathname, {
         search: search.trim() || undefined,
         published,
-        page: undefined, // reset paging when filters change
+        tag: tag.trim() || undefined,
       });
-
-      // Avoid unnecessary replace loops.
       const cur = buildUrl(pathname, {
         search: (searchParams.get("search") ?? "").trim() || undefined,
-        published: (searchParams.get("published") as Props["initialPublished"]) ?? "all",
-        page: undefined,
+        published:
+          (searchParams.get("published") as Props["initialPublished"]) ?? "all",
+        tag: (searchParams.get("tag") ?? "").trim() || undefined,
       });
       if (next !== cur) router.replace(next);
     }, 250);
     return () => window.clearTimeout(t);
-  }, [pathname, published, router, search, searchParams]);
+  }, [pathname, published, router, search, searchParams, tag]);
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -78,7 +82,7 @@ export function BlogsFilters({ initialSearch, initialPublished }: Props) {
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by title or excerpt..."
+          placeholder="Search by name or quote..."
           className="h-9 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
         />
       </div>
@@ -94,23 +98,36 @@ export function BlogsFilters({ initialSearch, initialPublished }: Props) {
           <SelectContent>
             <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="true">Published</SelectItem>
-            <SelectItem value="false">Drafts</SelectItem>
+            <SelectItem value="false">Hidden</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="w-48">
+        <Select value={tag} onValueChange={(v) => setTag(v)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Tag" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">All tags</SelectItem>
+            {tags.map((t) => (
+              <SelectItem key={t} value={t}>
+                {t}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
       {hasFilters ? (
-        <button
+        <Button
           type="button"
-          onClick={() => {
-            setSearch("");
-            setPublished("all");
-            router.replace(pathname);
-          }}
-          className="text-sm font-medium text-gray-500 underline-offset-4 hover:text-gray-900 hover:underline"
+          variant="outline"
+          size="sm"
+          onClick={() => router.replace(pathname)}
         >
           Clear
-        </button>
+        </Button>
       ) : null}
     </div>
   );

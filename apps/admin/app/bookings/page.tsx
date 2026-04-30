@@ -1,12 +1,6 @@
 import Link from "next/link";
-import { Eye, Search } from "lucide-react";
+import { Eye } from "lucide-react";
 import type { BookingDto, BookingStatus } from "@repo/types";
-import {
-  BOOKING_PROGRAMS,
-  BOOKING_PROGRAM_LABELS,
-  BOOKING_STATUSES,
-  BOOKING_STATUS_LABELS,
-} from "@repo/types";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -14,6 +8,7 @@ import { BookingsTabs } from "@/components/bookings/BookingsTabs";
 import { bookingsApi } from "@/lib/api";
 import { BOOKING_STATUS_TONE } from "@/lib/bookings";
 import { BookingTime } from "@/components/bookings/BookingTime";
+import { BookingsFilters } from "./BookingsFilters";
 
 export const dynamic = "force-dynamic";
 
@@ -115,57 +110,11 @@ export default async function BookingsListPage({
           </div>
         ) : null}
 
-        <form className="flex flex-wrap items-center gap-3" action="/bookings">
-          <div className="relative min-w-[200px] max-w-sm flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <input
-              type="search"
-              name="search"
-              defaultValue={search ?? ""}
-              placeholder="Search by name / phone / email..."
-              className="h-9 w-full rounded-md border border-gray-300 bg-white pl-9 pr-3 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
-            />
-          </div>
-
-          <select
-            name="status"
-            defaultValue={statusFilter}
-            className="h-9 rounded-md border border-gray-300 bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
-          >
-            <option value="all">All statuses</option>
-            {BOOKING_STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {BOOKING_STATUS_LABELS[s]}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="program"
-            defaultValue={programFilter}
-            className="h-9 rounded-md border border-gray-300 bg-white px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/10"
-          >
-            <option value="all">All programs</option>
-            {BOOKING_PROGRAMS.map((p) => (
-              <option key={p} value={p}>
-                {BOOKING_PROGRAM_LABELS[p]}
-              </option>
-            ))}
-          </select>
-
-          <Button variant="outline" type="submit" size="sm">
-            Apply
-          </Button>
-
-          {search || statusFilter !== "all" || programFilter !== "all" ? (
-            <Link
-              href="/bookings"
-              className="text-sm text-gray-500 underline-offset-4 hover:text-gray-900 hover:underline"
-            >
-              Clear
-            </Link>
-          ) : null}
-        </form>
+        <BookingsFilters
+          initialSearch={search ?? ""}
+          initialStatus={statusFilter}
+          initialProgram={programFilter}
+        />
 
         {loadError ? (
           <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">

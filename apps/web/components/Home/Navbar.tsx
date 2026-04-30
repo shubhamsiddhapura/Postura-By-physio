@@ -25,6 +25,12 @@ export function Navbar() {
   const router = useRouter();
   const isHome = pathname === "/";
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    // Keep parent tabs active for nested routes (e.g. /blogs/[id]).
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       // Change background when scrolled past hero section (approximately 100vh)
@@ -103,7 +109,13 @@ export function Navbar() {
                 key={item.href}
                 href={item.href}
                 onClick={handleNavClick(item.href)}
-                className="text-sm font-normal transition-colors text-white hover:text-secondary"
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={[
+                  "relative text-sm font-normal transition-colors",
+                  isActive(item.href)
+                    ? "text-secondary font-semibold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-secondary"
+                    : "text-white hover:text-secondary",
+                ].join(" ")}
               >
                 {item.label}
               </Link>
@@ -143,17 +155,23 @@ export function Navbar() {
               ? "bg-primary/60"
               : "bg-white/10"
             } ${isMenuOpen
-              ? "max-h-96 opacity-100 p-4"
+              ? "max-h-[70vh] opacity-100 p-3 overflow-y-auto"
               : "max-h-0 opacity-0 p-0"
             }`}
         >
-          <nav className="flex flex-col gap-3">
+          <nav className="flex flex-col gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={handleNavClick(item.href, { closeMenu: true })}
-                className="text-sm font-medium transition-colors text-white hover:text-secondary "
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={[
+                  "rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+                  isActive(item.href)
+                    ? "bg-secondary/15 text-secondary"
+                    : "text-white hover:text-secondary",
+                ].join(" ")}
               >
                 {item.label}
               </Link>

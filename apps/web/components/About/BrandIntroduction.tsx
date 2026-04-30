@@ -37,7 +37,7 @@ export function BrandIntroduction({
     return (
         <section id="brand-introduction" className="bg-white">
             <div className="mx-auto max-w-[90vw] md:px-4 py-16 md:py-20">
-                <div className="grid md:gap-10 gap-5 md:grid-cols-[1fr,1.15fr] md:items-end text-center md:text-left">
+                <div className="grid md:gap-10 gap-3 md:grid-cols-[1fr,1.15fr] md:items-end text-center md:text-left">
                     <FadeIn direction="up" distance={32} duration={800} delay={0}>
                         <div className="text-center md:text-left">
                             <div className="flex items-center gap-2 text-sm font-medium text-gray-500 justify-center md:justify-start">
@@ -65,7 +65,7 @@ export function BrandIntroduction({
                             </p>
 
                             {hasHighlight && (
-                                <p className="mt-10 max-w-md text-lg font-semibold leading-7 text-primary">
+                                <p className="md:mt-10 mt-6 max-w-md text-lg font-semibold leading-7 text-primary">
                                     {highlight}
                                 </p>
                             )}

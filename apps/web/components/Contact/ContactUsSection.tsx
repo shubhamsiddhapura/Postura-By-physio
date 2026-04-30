@@ -331,8 +331,8 @@ function ContactInfo() {
           Vadodara — or guide you online, wherever you are.
         </p>
 
-        <dl className="mt-10 space-y-7">
-          <div>
+        <dl className="mt-10 divide-y divide-gray-200/70 md:divide-y-0">
+          <div className="py-6 first:pt-0 md:py-0">
             <dt className="text-sm font-semibold tracking-wide text-gray-400">Phone no.</dt>
             <dd className="mt-2">
               <a
@@ -343,15 +343,15 @@ function ContactInfo() {
               </a>
             </dd>
           </div>
-          <div>
+          <div className="py-6 md:py-0">
             <dt className="text-sm font-semibold tracking-wide text-gray-400">Email</dt>
             <dd className="mt-2 text-lg font-semibold text-gray-900">{CONTACT_EMAIL}</dd>
           </div>
-          <div>
+          <div className="py-6 md:py-0">
             <dt className="text-sm font-semibold tracking-wide text-gray-400">Location</dt>
             <dd className="mt-2 text-lg font-semibold text-gray-900">{LOCATION}</dd>
           </div>
-          <div>
+          <div className="py-6 last:pb-0 md:py-0">
             <dt className="text-sm font-semibold tracking-wide text-gray-400">Website</dt>
             <dd className="mt-2 text-lg font-semibold text-primary underline-offset-4 hover:underline">
               <a href={`https://${WEBSITE}`} target="_blank" rel="noreferrer noopener">

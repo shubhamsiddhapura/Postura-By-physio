@@ -315,13 +315,47 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
     [],
   );
 
-  const serviceOptions = useMemo(
-    () => [
-      { value: "", label: "Select service (optional)" },
-      ...BOOKING_SERVICES.map((s) => ({ value: s, label: s })),
-    ],
-    [],
-  );
+  const servicesByProgram = useMemo(() => {
+    const physiotherapyServices = new Set<(typeof BOOKING_SERVICES)[number]>([
+      "Orthopedic Physiotherapy",
+      "Sports Injury Rehab",
+      "Posture Correction",
+      "Pre & Post-Natal Care",
+      "Pediatric Physiotherapy",
+      "Geriatric Care",
+      "General Consultation",
+      "Other",
+    ]);
+
+    const fitnessServices = new Set<(typeof BOOKING_SERVICES)[number]>([
+      "Yoga Therapy",
+      "Pilates Therapy",
+      "Aerobics Program",
+      "Corporate Wellness",
+      "Society Exercise",
+      "General Consultation",
+      "Other",
+    ]);
+
+    return {
+      physiotherapy: BOOKING_SERVICES.filter((s) => physiotherapyServices.has(s)),
+      fitness: BOOKING_SERVICES.filter((s) => fitnessServices.has(s)),
+    } satisfies Record<ProgramId, Array<(typeof BOOKING_SERVICES)[number]>>;
+  }, []);
+
+  const serviceOptions = useMemo(() => {
+    const programServices = servicesByProgram[selectedProgram] ?? BOOKING_SERVICES;
+    return [
+      { value: "", label: "Select service" },
+      ...programServices.map((s) => ({ value: s, label: s })),
+    ];
+  }, [selectedProgram, servicesByProgram]);
+
+  useEffect(() => {
+    if (!service) return;
+    const validValues = new Set(serviceOptions.map((o) => o.value));
+    if (!validValues.has(service)) setService("");
+  }, [selectedProgram, service, serviceOptions]);
 
   const painAreaOptions = useMemo(
     () => [

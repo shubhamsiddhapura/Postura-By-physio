@@ -1,9 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import type { AvailabilityForDateDto, DateSlotDto } from "@repo/types";
 import { cn } from "../../lib/utils";
+
+// `useLayoutEffect` warns during SSR. The popover only ever opens after a user
+// click on the client, but we still alias to `useEffect` server-side so Next's
+// hydration pass stays clean.
+const useIsoLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -112,8 +119,25 @@ export function BookingDateTimeField({
   const id = idProp ?? autoId;
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [popoverPos, setPopoverPos] = useState<{ top: number; left: number; width: number } | null>(null);
+  // The form is wrapped in `FadeIn` components that apply `transform` to
+  // their wrapper. A non-`none` transform on an ancestor turns that element
+  // into the containing block for `position: fixed` descendants, which would
+  // misalign the popover against the viewport. We therefore portal the
+  // popover into `document.body` and track that we've mounted client-side.
+  const [mounted, setMounted] = useState(false);
+  const [popoverPos, setPopoverPos] = useState<{
+    top: number;
+    left: number;
+    width: number;
+    maxHeight: number;
+    mode: "mobile" | "desktop";
+  } | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // IANA timezone of the patient's browser. Captured once per mount — we
   // pass it to /api/availability so the server returns slots rendered for
@@ -151,8 +175,12 @@ export function BookingDateTimeField({
   useEffect(() => {
     if (!open) return;
     const onDocMouseDown = (e: MouseEvent) => {
-      const el = containerRef.current;
-      if (el && !el.contains(e.target as Node)) close();
+      const target = e.target as Node;
+      // The popover lives in a portal, so checking `containerRef` alone
+      // would treat clicks inside it as "outside". Check both.
+      if (containerRef.current?.contains(target)) return;
+      if (popoverRef.current?.contains(target)) return;
+      close();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
@@ -165,9 +193,12 @@ export function BookingDateTimeField({
     };
   }, [open, close]);
 
-  // Position the popover using fixed coordinates so it can render above modals
-  // that clip overflow (rounded corners), and stay visible with a high z-index.
-  useEffect(() => {
+  // Position the popover using fixed coordinates so it renders above other
+  // content. Because we portal into `document.body`, fixed positioning here
+  // is truly relative to the viewport (transformed ancestors no longer
+  // affect us). On phones we render as a centered modal sheet; on tablet+
+  // we anchor below (or above, when there isn't room) the trigger button.
+  useIsoLayoutEffect(() => {
     if (!open) return;
 
     const update = () => {
@@ -175,14 +206,50 @@ export function BookingDateTimeField({
       if (!btn) return;
       const r = btn.getBoundingClientRect();
       const viewportW = window.innerWidth;
-      const padding = 16; // keep away from edges
-      const maxW = 600;
-      const width = Math.min(maxW, Math.max(280, viewportW - padding * 2));
+      const viewportH = window.innerHeight;
+      const padding = 12;
+      const gap = 8;
+
+      if (viewportW < 768) {
+        // Mobile: centered modal sheet. We size to the screen (minus a small
+        // gutter) and cap height so the calendar can scroll internally rather
+        // than overflowing the viewport.
+        const width = Math.min(440, viewportW - padding * 2);
+        const left = Math.max(padding, Math.round((viewportW - width) / 2));
+        const desiredHeight = 600;
+        const maxAvailable = viewportH - padding * 2;
+        const top = Math.max(
+          padding,
+          Math.round((viewportH - Math.min(desiredHeight, maxAvailable)) / 2),
+        );
+        const maxHeight = Math.max(280, viewportH - top - padding);
+        setPopoverPos({ top, left, width, maxHeight, mode: "mobile" });
+        return;
+      }
+
+      // Desktop: anchor relative to the trigger.
+      const desiredWidth = 560;
+      const width = Math.min(desiredWidth, Math.max(320, viewportW - padding * 2));
       let left = r.left;
       if (left + width > viewportW - padding) left = viewportW - padding - width;
       if (left < padding) left = padding;
-      const top = r.bottom + 8;
-      setPopoverPos({ top, left, width });
+
+      // Prefer placing below the trigger; flip above when there isn't enough
+      // room and the space above is bigger.
+      const estimatedHeight = 440;
+      const spaceBelow = viewportH - r.bottom - gap - padding;
+      const spaceAbove = r.top - gap - padding;
+      let top: number;
+      let maxHeight: number;
+      if (spaceBelow >= estimatedHeight || spaceBelow >= spaceAbove) {
+        top = r.bottom + gap;
+        maxHeight = Math.max(280, spaceBelow);
+      } else {
+        maxHeight = Math.max(280, spaceAbove);
+        top = Math.max(padding, r.top - gap - maxHeight);
+      }
+
+      setPopoverPos({ top, left, width, maxHeight, mode: "desktop" });
     };
 
     update();
@@ -193,6 +260,17 @@ export function BookingDateTimeField({
       window.removeEventListener("scroll", update, true);
     };
   }, [open]);
+
+  // Lock body scroll while the mobile sheet is up so background content
+  // can't slide around behind the modal.
+  useEffect(() => {
+    if (!open || popoverPos?.mode !== "mobile") return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open, popoverPos?.mode]);
 
   // Refetch availability whenever the picked date changes. Abort pending
   // requests so stale responses can't overwrite a newer selection.
@@ -285,15 +363,30 @@ export function BookingDateTimeField({
         aria-hidden
       />
 
-      {open && popoverPos ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={`${id}-title`}
-          style={{ top: popoverPos.top, left: popoverPos.left, width: popoverPos.width }}
-          className="fixed z-[200] rounded-2xl border border-gray-100 bg-white p-4 shadow-lg sm:p-5"
-        >
-          <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-8">
+      {mounted && open && popoverPos
+        ? createPortal(
+            <>
+              {popoverPos.mode === "mobile" ? (
+                <div
+                  className="fixed inset-0 z-[199] bg-black/40"
+                  onClick={close}
+                  aria-hidden
+                />
+              ) : null}
+              <div
+                ref={popoverRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={`${id}-title`}
+                style={{
+                  top: popoverPos.top,
+                  left: popoverPos.left,
+                  width: popoverPos.width,
+                  maxHeight: popoverPos.maxHeight,
+                }}
+                className="fixed z-[200] overflow-y-auto overscroll-contain rounded-2xl border border-gray-100 bg-white p-4 shadow-xl sm:p-5"
+              >
+                <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-8">
             {/* Calendar — left, primary width */}
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
@@ -450,8 +543,11 @@ export function BookingDateTimeField({
               )}
             </div>
           </div>
-        </div>
-      ) : null}
+              </div>
+            </>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }

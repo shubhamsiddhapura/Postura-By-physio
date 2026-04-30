@@ -64,7 +64,7 @@ export default async function BlogDetailPage({ params }: PageProps) {
               {post.eyebrow}
             </p>
 
-            <h1 className="mt-4 max-w-4xl font-cabinet text-5xl font-bold leading-tight tracking-tight md:text-4xl lg:text-6xl lg:leading-[1.15] text-[#FEF9E0]">
+            <h1 className="mt-4 max-w-4xl font-cabinet text-[40px] font-bold leading-tight tracking-tight md:text-4xl lg:text-6xl lg:leading-[1.15] text-[#FEF9E0]">
               {post.title}
             </h1>
 

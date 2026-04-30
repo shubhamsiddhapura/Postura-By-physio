@@ -64,34 +64,34 @@ export default async function BlogDetailPage({ params }: PageProps) {
               {post.eyebrow}
             </p>
 
-            <h1 className="mt-4 max-w-4xl font-cabinet text-3xl font-bold leading-tight tracking-tight md:text-4xl lg:text-6xl lg:leading-[1.15] text-[#FEF9E0]">
+            <h1 className="mt-4 max-w-4xl font-cabinet text-5xl font-bold leading-tight tracking-tight md:text-4xl lg:text-6xl lg:leading-[1.15] text-[#FEF9E0]">
               {post.title}
             </h1>
 
             <div className="mt-8 flex flex-wrap items-center gap-20 md:gap-6 justify-center md:justify-start">
               <div className="flex items-center gap-3 flex-col md:flex-row">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
                   <Calendar
-                    className="h-[18px] w-[18px] md:h-5 md:w-5"
+                    className="h-6 w-6 md:h-5 md:w-5"
                     style={{ color: heroTeal }}
                     strokeWidth={2}
                     aria-hidden
                   />
                 </span>
-                <span className="text-sm font-medium md:text-base text-[#FEF9E0]">
+                <span className="font-medium md:text-base text-[#FEF9E0]">
                   {post.date}
                 </span>
               </div>
               <div className="flex items-center gap-3 flex-col md:flex-row">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
+                <span className="grid h-12  w-12 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
                   <User
-                    className="h-[18px] w-[18px] md:h-5 md:w-5"
+                    className="h-6 w-6 md:h-5 md:w-5"
                     style={{ color: heroTeal }}
                     strokeWidth={2}
                     aria-hidden
                   />
                 </span>
-                <span className="text-sm font-medium md:text-base text-[#FEF9E0]">
+                <span className="font-medium md:text-base text-[#FEF9E0]">
                   {post.author}
                 </span>
               </div>

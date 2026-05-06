@@ -64,7 +64,9 @@ export async function GET(req: NextRequest) {
 /**
  * POST /api/testimonials
  * Create a new testimonial. If `order` is omitted the new row is appended
- * to the end (max order + 1). `published` defaults to true.
+ * to the end (max order + 1). `published` defaults to true. Public
+ * submissions from `/share-your-story` send `published: false` and may
+ * include optional `photos` / `videos` arrays plus a nullable `avatar`.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -90,8 +92,10 @@ export async function POST(req: NextRequest) {
         quote: input.quote,
         name: input.name,
         age: input.age,
-        avatar: input.avatar,
+        avatar: input.avatar ?? null,
         rating: input.rating ?? 5,
+        photos: input.photos ?? [],
+        videos: input.videos ?? [],
         order,
         published: input.published ?? true,
       },

@@ -2,13 +2,44 @@ import { z } from "zod";
 
 /** URL or /public path. Reused across blog / gallery / testimonial. */
 const imageSrcSchema = z
-  .string({ error: "avatar is required" })
+  .string()
   .trim()
-  .min(1, "avatar is required")
+  .min(1)
   .refine(
     (v) => v.startsWith("/") || /^https?:\/\//i.test(v),
     "must be a relative path (starting with /) or an http(s) URL"
   );
+
+/**
+ * Optional avatar — the public share-your-story form lets the patient
+ * skip the photo entirely. We accept `""` or `null` as "no avatar" and
+ * normalise both to `null` so the database stores a single canonical
+ * "missing" marker.
+ */
+const optionalImageSrcSchema = z
+  .union([imageSrcSchema, z.literal(""), z.null()])
+  .optional()
+  .transform((v) => (v === "" || v === undefined ? null : v));
+
+/**
+ * URL of an uploaded media asset (image or video). Same rules as
+ * `imageSrcSchema` but error messaging is generic so it works for both
+ * photos and videos.
+ */
+const mediaUrlSchema = z
+  .string()
+  .trim()
+  .min(1, "media URL cannot be empty")
+  .refine(
+    (v) => v.startsWith("/") || /^https?:\/\//i.test(v),
+    "must be a relative path (starting with /) or an http(s) URL"
+  );
+
+const mediaArraySchema = z
+  .array(mediaUrlSchema)
+  .max(20, "at most 20 items")
+  .optional()
+  .transform((v) => v ?? []);
 
 export const createTestimonialSchema = z.object({
   tag: z
@@ -35,7 +66,7 @@ export const createTestimonialSchema = z.object({
     .min(1, "age must be at least 1")
     .max(120, "age must be at most 120"),
 
-  avatar: imageSrcSchema,
+  avatar: optionalImageSrcSchema,
 
   rating: z.coerce
     .number({ error: "rating must be a number" })
@@ -43,6 +74,9 @@ export const createTestimonialSchema = z.object({
     .min(1, "rating must be at least 1")
     .max(5, "rating must be at most 5")
     .optional(),
+
+  photos: mediaArraySchema,
+  videos: mediaArraySchema,
 
   order: z.coerce.number().int().min(0).max(10_000).optional(),
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Pencil, Plus } from "lucide-react";
+import { ImageIcon, Pencil, Play, Plus, Video } from "lucide-react";
 import type { TestimonialDto } from "@repo/types";
 import { PageHeader } from "@/components/PageHeader";
 import { Badge } from "@/components/ui/Badge";
@@ -182,11 +182,107 @@ function TestimonialCardTile({ testimonial }: { testimonial: TestimonialDto }) {
           quote: testimonial.quote,
           name: testimonial.name,
           age: testimonial.age,
-          avatar: testimonial.avatar,
+          // The DTO now allows `null` (patient skipped photo on the
+          // public submission form). The preview card's `data.avatar`
+          // is still typed as `string`, so coerce here — empty string
+          // already triggers the same fallback rendering.
+          avatar: testimonial.avatar ?? "",
           rating: testimonial.rating,
         }}
         className={testimonial.published ? undefined : "opacity-80 ring-1 ring-amber-200"}
       />
+
+      <PatientMediaStrip
+        photos={testimonial.photos ?? []}
+        videos={testimonial.videos ?? []}
+        ownerName={testimonial.name}
+      />
+    </div>
+  );
+}
+
+/**
+ * Compact strip of photo + video thumbnails attached to a single
+ * testimonial, rendered below the public-card preview in the admin
+ * list. Patients submit these via the public share-your-story form.
+ *
+ * Each thumbnail opens in a new tab so the admin can quickly verify
+ * the upload played correctly without leaving the listing page. We
+ * deliberately keep this lightweight (no lightbox / modal) — the goal
+ * here is moderation, not rich media browsing.
+ */
+function PatientMediaStrip({
+  photos,
+  videos,
+  ownerName,
+}: {
+  photos: string[];
+  videos: string[];
+  ownerName: string;
+}) {
+  if (photos.length === 0 && videos.length === 0) return null;
+
+  return (
+    <div className="mt-3 rounded-xl border border-gray-200 bg-white p-3">
+      <p className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-gray-500">
+        Patient media
+        {photos.length > 0 ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal text-gray-700">
+            <ImageIcon className="h-3 w-3" />
+            {photos.length} {photos.length === 1 ? "photo" : "photos"}
+          </span>
+        ) : null}
+        {videos.length > 0 ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal text-gray-700">
+            <Video className="h-3 w-3" />
+            {videos.length} {videos.length === 1 ? "video" : "videos"}
+          </span>
+        ) : null}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {photos.map((url, idx) => (
+          <a
+            key={`p-${idx}-${url}`}
+            href={url}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={`Open photo ${idx + 1} from ${ownerName}`}
+            className="group relative h-16 w-16 overflow-hidden rounded-lg ring-1 ring-gray-200 transition hover:ring-primary"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={url}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          </a>
+        ))}
+        {videos.map((url, idx) => (
+          <a
+            key={`v-${idx}-${url}`}
+            href={url}
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label={`Open video ${idx + 1} from ${ownerName}`}
+            className="group relative h-16 w-16 overflow-hidden rounded-lg bg-black ring-1 ring-gray-200 transition hover:ring-primary"
+          >
+            <video
+              src={url}
+              preload="metadata"
+              muted
+              playsInline
+              className="h-full w-full object-cover"
+            />
+            <span className="absolute inset-0 grid place-items-center bg-black/30 transition group-hover:bg-black/50">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-white/90 text-gray-900 shadow">
+                <Play className="ml-0.5 h-3.5 w-3.5 fill-current" />
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
     </div>
   );
 }

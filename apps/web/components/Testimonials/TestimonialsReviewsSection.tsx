@@ -8,13 +8,17 @@ import { FadeIn } from "../ui/FadeIn";
 /**
  * Rendered shape for a single card. Matches the public DTO but limited to
  * the fields actually shown so the component can be reused anywhere.
+ *
+ * `avatar` may be `null` for stories submitted via the public
+ * share-your-story form when the patient skipped the photo. The card
+ * falls back to a friendly initials avatar in that case.
  */
 export type TestimonialCard = {
   tag: string;
   quote: string;
   name: string;
   age: number;
-  avatar: string;
+  avatar: string | null;
   /** 1-5 stars. Older rows without this field fall back to 5. */
   rating?: number;
 };
@@ -67,6 +71,18 @@ function StarRating({ value }: { value: number }) {
 function clampRating(n: number | undefined): number {
   if (typeof n !== "number" || Number.isNaN(n)) return 5;
   return Math.max(1, Math.min(5, Math.round(n)));
+}
+
+/**
+ * Two-letter avatar fallback used when a patient submitted a testimonial
+ * without uploading a photo. Mirrors the public share-your-story form
+ * so the placeholder feels consistent across the site.
+ */
+function testimonialInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0]!.slice(0, 2).toUpperCase();
+  return (parts[0]![0]! + parts[parts.length - 1]![0]!).toUpperCase();
 }
 
 export function TestimonialsReviewsSection({
@@ -129,8 +145,14 @@ export function TestimonialsReviewsSection({
                   &ldquo;{t.quote}&rdquo;
                 </p>
                 <div className="mt-6 flex items-center gap-3 border-t border-gray-100 pt-5">
-                  <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-tl-[12px] rounded-br-[12px] rounded-tr-[4px] rounded-bl-[4px] ring-1 ring-black/5">
-                    <Image src={t.avatar} alt="" fill className="object-cover" sizes="44px" />
+                  <div className="relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-tl-[12px] rounded-br-[12px] rounded-tr-[4px] rounded-bl-[4px] bg-gray-100 ring-1 ring-black/5">
+                    {t.avatar ? (
+                      <Image src={t.avatar} alt="" fill className="object-cover" sizes="44px" />
+                    ) : (
+                      <span className="text-xs font-semibold uppercase text-gray-500">
+                        {testimonialInitials(t.name)}
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm font-semibold text-gray-900">
                     {t.name}{" "}

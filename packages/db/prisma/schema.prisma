@@ -75,11 +75,21 @@ model Testimonial {
   quote     String
   name      String
   age       Int
-  avatar    String
+  /// Profile photo URL. Optional — public submission form lets the patient
+  /// skip it; the public card falls back to an initials/avatar glyph.
+  avatar    String?
   // 1-5 star rating rendered at the top-left of each testimonial card.
   // Enforced at the API layer; stored as a plain int for simplicity.
   rating    Int      @default(5)
+  /// Extra photos uploaded alongside a testimonial (recovery before/after,
+  /// session shots, etc.). Stored as URL strings in submission order.
+  photos    String[] @default([])
+  /// Video URLs (e.g. patient story clips). Stored in submission order.
+  videos    String[] @default([])
   order     Int      @default(0)
+  /// New rows submitted via the public share-your-story form default to
+  /// `false` so the admin reviews them before they appear on the site.
+  /// Admin-created rows still default to `true`.
   published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -186,10 +186,15 @@ export interface UploadResultDto {
  *   - `tag`: small pill shown top-right ("IT Professional", "Student"...)
  *   - `quote`: review body in quotes
  *   - `name` + `age`: byline, rendered as "Rahul Shah (30)"
- *   - `avatar`: round profile image (URL or /public path)
+ *   - `avatar`: round profile image (URL or /public path). `null` if the
+ *     patient skipped the photo on the public submission form — the card
+ *     falls back to an initials avatar in that case.
  *   - `rating`: 1..5 stars rendered top-left
+ *   - `photos` / `videos`: optional media uploaded alongside the
+ *     testimonial via the public share-your-story form.
  *   - `order`: explicit sort (lower shows first)
- *   - `published`: false hides from the public page
+ *   - `published`: false hides from the public page (public submissions
+ *     default to false until an admin reviews them)
  */
 export interface TestimonialDto {
   id: string;
@@ -197,8 +202,10 @@ export interface TestimonialDto {
   quote: string;
   name: string;
   age: number;
-  avatar: string;
+  avatar: string | null;
   rating: number;
+  photos: string[];
+  videos: string[];
   order: number;
   published: boolean;
   createdAt: string;
@@ -210,8 +217,10 @@ export interface CreateTestimonialDto {
   quote: string;
   name: string;
   age: number;
-  avatar: string;
+  avatar?: string | null;
   rating?: number;
+  photos?: string[];
+  videos?: string[];
   order?: number;
   published?: boolean;
 }

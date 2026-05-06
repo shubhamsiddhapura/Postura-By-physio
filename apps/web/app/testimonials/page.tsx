@@ -5,6 +5,10 @@ import {
   TestimonialsReviewsSection,
   type TestimonialCard,
 } from "../../components/Testimonials/TestimonialsReviewsSection";
+import {
+  HearFromOurClientsSection,
+  type ClientMediaItem,
+} from "../../components/Testimonials/HearFromOurClientsSection";
 import { prisma } from "@repo/db";
 
 export const dynamic = "force-dynamic";
@@ -27,17 +31,24 @@ const testimonialsSlides = [
   },
 ];
 
+type TestimonialPageData = {
+  cards: TestimonialCard[];
+  media: ClientMediaItem[];
+};
+
 /**
  * Fetch only published testimonials, sorted the same way the API returns
- * them (order asc, then newest first). The section component handles the
- * "View More" progressive reveal on the client.
+ * them (order asc, then newest first). The reviews grid uses `cards`;
+ * the "Hear From Our Clients" media strip flattens every patient's
+ * uploaded photos + videos into a single shuffle-ready list.
  */
-async function getTestimonialCards(): Promise<TestimonialCard[]> {
+async function getTestimonialPageData(): Promise<TestimonialPageData> {
   const rows = await prisma.testimonial.findMany({
     where: { published: true },
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
   });
-  return rows.map((t) => ({
+
+  const cards: TestimonialCard[] = rows.map((t) => ({
     tag: t.tag,
     quote: t.quote,
     name: t.name,
@@ -45,15 +56,28 @@ async function getTestimonialCards(): Promise<TestimonialCard[]> {
     avatar: t.avatar,
     rating: t.rating,
   }));
+
+  const media: ClientMediaItem[] = [];
+  for (const t of rows) {
+    for (const url of t.photos) {
+      media.push({ type: "photo", url, name: t.name });
+    }
+    for (const url of t.videos) {
+      media.push({ type: "video", url, name: t.name });
+    }
+  }
+
+  return { cards, media };
 }
 
 export default async function TestimonialsPage() {
-  const items = await getTestimonialCards();
+  const { cards, media } = await getTestimonialPageData();
 
   return (
     <div className="md:overflow-x-visible">
       <HeroSection slides={testimonialsSlides} id="testimonials-hero" showBookSessionButton />
-      <TestimonialsReviewsSection items={items} />
+      <TestimonialsReviewsSection items={cards} />
+      <HearFromOurClientsSection items={media} />
       <Footer
         ctaTitle="Start Your Own Recovery Story"
         ctaDescription="Join our growing community and experience expert physiotherapy care designed to help you move better, feel stronger, and live healthier."

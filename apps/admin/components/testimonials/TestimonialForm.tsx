@@ -60,7 +60,12 @@ function formFromDto(t: TestimonialDto): FormState {
     quote: t.quote,
     name: t.name,
     age: String(t.age),
-    avatar: t.avatar,
+    // `avatar` may be null when the patient submitted the public
+    // share-your-story form without a photo. The form keeps a string
+    // FormState so an empty string represents "no avatar" and the
+    // existing controls (avatar URL field, upload button) continue to
+    // work without a separate "null" code path.
+    avatar: t.avatar ?? "",
     rating: clampRating(t.rating),
     order: String(t.order),
     published: t.published,

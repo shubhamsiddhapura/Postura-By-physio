@@ -82,8 +82,9 @@ export function TestimonialPreviewCard({
       </p>
 
       <div className="mt-6 flex items-center gap-3 border-t border-gray-100 pt-5">
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-tl-[12px] rounded-br-[12px] rounded-tr-[4px] rounded-bl-[4px] bg-gray-100 ring-1 ring-black/5">
-          {/* {avatar ? (
+        <div className="relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-tl-[12px] rounded-br-[12px] rounded-tr-[4px] rounded-bl-[4px] bg-gray-100 ring-1 ring-black/5">
+          {avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={avatar}
               alt=""
@@ -95,11 +96,11 @@ export function TestimonialPreviewCard({
           ) : (
             <span
               aria-hidden
-              className="grid h-full w-full place-items-center text-xs font-medium uppercase text-gray-400"
+              className="text-xs font-semibold uppercase text-gray-500"
             >
               {initials(name)}
             </span>
-          )} */}
+          )}
         </div>
         <p className="text-sm font-semibold text-gray-900">
           {name}

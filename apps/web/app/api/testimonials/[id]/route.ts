@@ -42,6 +42,8 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     if (input.age !== undefined) data.age = input.age;
     if (input.avatar !== undefined) data.avatar = input.avatar;
     if (input.rating !== undefined) data.rating = input.rating;
+    if (input.photos !== undefined) data.photos = { set: input.photos };
+    if (input.videos !== undefined) data.videos = { set: input.videos };
     if (input.order !== undefined) data.order = input.order;
     if (input.published !== undefined) data.published = input.published;
 

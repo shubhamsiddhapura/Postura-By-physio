@@ -150,7 +150,7 @@ export function HeroSection({
   return (
     <section
       id={id}
-      className={`relative w-full bg-primary ${heightClassName} overflow-hidden rounded-br-[120px] ${className}`}
+      className={`relative w-full bg-primary ${heightClassName} overflow-hidden rounded-br-[140px] ${className}`}
     >
       {/* Slides */}
       {resolvedSlides.map((slide, index) => (

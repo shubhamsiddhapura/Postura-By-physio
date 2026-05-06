@@ -262,10 +262,12 @@ export function AvailabilityEditor({
   );
 }
 
-const GRID_START_MINUTES = 6 * 60;
-const GRID_END_MINUTES = 22 * 60;
-const GRID_STEP_MINUTES = 30;
+// Morning block: 7 AM – 1 PM  |  Evening block: 5 PM – 9 PM
+const GRID_START_MINUTES = 7 * 60;   // 7:00 AM
+const GRID_END_MINUTES   = 21 * 60;  // 9:00 PM
+const GRID_STEP_MINUTES  = 60;       // 1-hour sessions
 const ROW_PX = 56;
+const SUNDAY: DayOfWeek = 0;
 
 type Range = { start: number; end: number };
 
@@ -298,7 +300,12 @@ function WeeklySlotTimeline({
     return out;
   }, []);
 
-  const blocks = useMemo(() => mergeIntoRanges(slotsByDay[day]), [slotsByDay, day]);
+  // Render each slot as its own 1-hour block so admins can remove single hours
+  // without wiping the whole contiguous range.
+  const blocks = useMemo(() => {
+    const sorted = [...slotsByDay[day]].sort((a, b) => a.sortKey - b.sortKey);
+    return sorted.map((s) => ({ start: s.sortKey, end: s.sortKey + GRID_STEP_MINUTES }));
+  }, [slotsByDay, day]);
 
   const clampToStep = (minutes: number) => {
     const clamped = Math.min(Math.max(minutes, GRID_START_MINUTES), GRID_END_MINUTES);
@@ -330,18 +337,28 @@ function WeeklySlotTimeline({
       {/* Day picker */}
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 bg-gray-50 p-2">
         {DAYS_OF_WEEK.map((d) => (
-          <button
-            key={d}
-            type="button"
-            disabled={busy}
-            onClick={() => setDay(d)}
-            className={cn(
-              "rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
-              day === d ? "bg-primary text-white" : "bg-white text-gray-700 hover:bg-gray-100"
-            )}
-          >
-            {DAY_OF_WEEK_LABELS[d]}
-          </button>
+          d === SUNDAY ? (
+            <span
+              key={d}
+              className="rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-400 bg-gray-100 cursor-not-allowed select-none"
+              title="Closed on Sundays"
+            >
+              {DAY_OF_WEEK_LABELS[d]} <span className="text-[10px]">(Closed)</span>
+            </span>
+          ) : (
+            <button
+              key={d}
+              type="button"
+              disabled={busy}
+              onClick={() => setDay(d)}
+              className={cn(
+                "rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
+                day === d ? "bg-primary text-white" : "bg-white text-gray-700 hover:bg-gray-100"
+              )}
+            >
+              {DAY_OF_WEEK_LABELS[d]}
+            </button>
+          )
         ))}
         <div className="ml-auto hidden items-center gap-2 text-xs text-gray-500 sm:flex">
           <span className="inline-flex items-center gap-1.5">
@@ -407,7 +424,7 @@ function WeeklySlotTimeline({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onRemoveRange(day, r.start, r.end);
+                  onRemoveSingle(day, r.start);
                 }}
                 className="absolute left-3 right-3 rounded-xl border border-primary/25 bg-primary/15 px-3 py-1.5 text-left shadow-sm transition hover:bg-primary/20 overflow-hidden"
                 style={{
@@ -451,12 +468,12 @@ function WeeklySlotTimeline({
             ) : null}
           </div>
 
-          {/* Quick add/remove single slot (optional, but keeps it easy) */}
+          {/* Quick add/remove single slot */}
           <div className="border-t border-gray-200 bg-gray-50 p-3 text-xs text-gray-600">
-            Want finer control? Click a time in the gutter to add/remove a single
-            slot:
+            Quick-toggle individual hour slots:
             <div className="mt-2 flex flex-wrap gap-2">
-              {[9 * 60, 12 * 60, 15 * 60, 18 * 60].map((m) => (
+              {/* Morning: 7 AM – 12 PM */}
+              {[7, 8, 9, 10, 11, 12].map((h) => h * 60).map((m) => (
                 <button
                   key={m}
                   type="button"
@@ -465,39 +482,46 @@ function WeeklySlotTimeline({
                     const exists = slotsByDay[day].some((s) => s.sortKey === m);
                     exists ? onRemoveSingle(day, m) : onAddSingle(day, m);
                   }}
-                  className="rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 font-semibold text-gray-700 hover:bg-gray-100"
+                  className={cn(
+                    "rounded-lg border px-2.5 py-1.5 font-semibold",
+                    slotsByDay[day].some((s) => s.sortKey === m)
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-gray-200 bg-white text-gray-700 hover:bg-gray-100"
+                  )}
+                >
+                  {formatMinutes(m)}
+                </button>
+              ))}
+              <span className="self-center text-gray-300">|</span>
+              {/* Evening: 5 PM – 8 PM */}
+              {[17, 18, 19, 20].map((h) => h * 60).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => {
+                    const exists = slotsByDay[day].some((s) => s.sortKey === m);
+                    exists ? onRemoveSingle(day, m) : onAddSingle(day, m);
+                  }}
+                  className={cn(
+                    "rounded-lg border px-2.5 py-1.5 font-semibold",
+                    slotsByDay[day].some((s) => s.sortKey === m)
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-gray-200 bg-white text-gray-700 hover:bg-gray-100"
+                  )}
                 >
                   {formatMinutes(m)}
                 </button>
               ))}
             </div>
+            <p className="mt-2 text-gray-400">
+              Clinic hours: <span className="font-medium text-gray-500">7 AM – 1 PM</span> &amp; <span className="font-medium text-gray-500">5 PM – 9 PM</span> · Closed on Sundays
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-function mergeIntoRanges(slots: AvailabilitySlotDto[]): Range[] {
-  const sorted = [...slots].sort((a, b) => a.sortKey - b.sortKey);
-  const out: Range[] = [];
-  let cur: Range | null = null;
-  for (const s of sorted) {
-    const start = s.sortKey;
-    const end = start + GRID_STEP_MINUTES;
-    if (!cur) {
-      cur = { start, end };
-      continue;
-    }
-    if (start === cur.end) {
-      cur.end = end;
-    } else {
-      out.push(cur);
-      cur = { start, end };
-    }
-  }
-  if (cur) out.push(cur);
-  return out;
 }
 
 function BlockedDateForm({

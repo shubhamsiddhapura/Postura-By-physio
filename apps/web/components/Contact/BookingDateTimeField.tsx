@@ -92,6 +92,28 @@ function formatSelection(date: Date, time: string) {
   return `${d}, ${time}`;
 }
 
+/** Format minutes-from-midnight as "H:MM AM/PM". */
+function fmtMinutes(minutes: number): string {
+  const h24 = Math.floor(minutes / 60) % 24;
+  const m = minutes % 60;
+  const period = h24 >= 12 ? "PM" : "AM";
+  const h12 = h24 % 12 || 12;
+  return `${h12}:${String(m).padStart(2, "0")} ${period}`;
+}
+
+/** Given a slot's sortKey (start minutes), return "H:MM – H:MM AM/PM" range label. */
+function slotRangeLabel(sortKey: number, durationMinutes = 60): string {
+  const start = fmtMinutes(sortKey);
+  const end = fmtMinutes(sortKey + durationMinutes);
+  // Compact: strip duplicate AM/PM prefix — e.g. "7:00 – 8:00 AM"
+  const [startTime, startPeriod] = start.split(" ");
+  const [endTime, endPeriod] = end.split(" ");
+  if (startPeriod === endPeriod) {
+    return `${startTime}–${endTime} ${endPeriod}`;
+  }
+  return `${start}–${end}`;
+}
+
 type BookingDateTimeFieldProps = {
   id?: string;
   /** Display text currently shown in the closed input. */
@@ -233,9 +255,10 @@ export function BookingDateTimeField({
       }
 
       // Desktop: anchor relative to the trigger.
-      const desiredWidth = 560;
+      const desiredWidth = 660;
       const width = Math.min(desiredWidth, Math.max(320, viewportW - padding * 2));
-      let left = r.left;
+      // Nudge slightly left so the calendar has room.
+      let left = r.left - 28;
       if (left + width > viewportW - padding) left = viewportW - padding - width;
       if (left < padding) left = padding;
 
@@ -327,6 +350,7 @@ export function BookingDateTimeField({
 
   const onPickDate = (date: Date) => {
     if (isBeforeDay(date, today)) return;
+    if (date.getDay() === 0) return; // Closed on Sundays
     setPickedDate(date);
     setPickedTime(null);
   };
@@ -402,7 +426,7 @@ export function BookingDateTimeField({
               >
                 <div className="flex flex-col gap-5 md:flex-row md:items-start md:gap-8">
             {/* Calendar — left, primary width */}
-            <div className="min-w-0 flex-1">
+            <div className="min-w-0 md:flex-1">
               <div className="flex items-center justify-between">
                 <h3 id={`${id}-title`} className="text-base font-bold text-gray-900">
                   {monthLabel}
@@ -444,7 +468,8 @@ export function BookingDateTimeField({
                   const isSelected = pickedDate && sameCalendarDay(date, pickedDate);
                   const isPast = isBeforeDay(date, today);
                   const isToday = sameCalendarDay(date, today);
-                  const disabled = isPast;
+                  const isSunday = date.getDay() === 0;
+                  const disabled = isPast || isSunday;
                   return (
                     <button
                       key={`${date.toISOString()}-${idx}`}
@@ -452,11 +477,13 @@ export function BookingDateTimeField({
                       onClick={() => onPickDate(date)}
                       disabled={disabled}
                       aria-disabled={disabled}
+                      title={isSunday ? "Closed on Sundays" : undefined}
                       className={cn(
                         "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition sm:h-9 sm:w-9",
                         !inMonth && !isSelected && "text-gray-300",
-                        inMonth && !isSelected && !isPast && "text-gray-900 hover:bg-gray-100",
-                        isPast && "cursor-not-allowed text-gray-300 line-through",
+                        inMonth && !isSelected && !isPast && !isSunday && "text-gray-900 hover:bg-gray-100",
+                        isPast && !isSunday && "cursor-not-allowed text-gray-300 line-through",
+                        isSunday && "cursor-not-allowed text-gray-300 opacity-40",
                         isToday && !isSelected && "ring-1 ring-primary/40",
                         isSelected && "bg-primary font-semibold text-white hover:bg-primary",
                       )}
@@ -469,7 +496,7 @@ export function BookingDateTimeField({
             </div>
 
             {/* Timeslots — right, flows wide / short */}
-            <div className="flex min-w-0 flex-col border-t border-gray-100 pt-4 md:w-[220px] md:shrink-0 md:border-l md:border-t-0 md:pl-6 md:pt-0 lg:w-[240px]">
+            <div className="flex min-w-0 flex-col border-t border-gray-100 pt-4 md:w-[360px] md:shrink-0 md:border-l md:border-t-0 md:pl-6 md:pt-0 lg:w-[380px]">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-bold text-gray-900">Timeslot</p>
                 {availability.status === "loading" ? (
@@ -479,6 +506,12 @@ export function BookingDateTimeField({
                   />
                 ) : null}
               </div>
+
+              {/* Operating hours note */}
+              <p className="mt-1 text-[10px] leading-snug text-gray-400">
+                Hours: <span className="font-medium text-gray-500">7 AM – 1 PM</span> &amp; <span className="font-medium text-gray-500">5 PM – 9 PM</span>
+                <br />Mon – Sat only
+              </p>
 
               {!pickedDate ? (
                 <p className="mt-2 text-xs text-gray-500">
@@ -514,7 +547,7 @@ export function BookingDateTimeField({
                 </div>
               ) : (
                 <>
-                  <div className="mt-2 grid grid-cols-4 gap-2 md:grid-cols-2">
+                  <div className="mt-2 grid grid-cols-2 gap-2">
                     {slots.map((slot) => {
                       const active = pickedTime === slot.time;
                       const disabled = !slot.available;
@@ -531,7 +564,7 @@ export function BookingDateTimeField({
                           disabled={disabled}
                           title={title}
                           className={cn(
-                            "rounded-full border px-2 py-1.5 text-center text-[11px] font-semibold transition sm:text-xs",
+                            "rounded-full border px-2 py-2 text-center text-[11px] font-semibold transition",
                             disabled &&
                               "cursor-not-allowed border-gray-200 text-gray-300 line-through",
                             !disabled &&
@@ -540,7 +573,7 @@ export function BookingDateTimeField({
                             !disabled && active && "border-primary bg-primary/10 text-primary",
                           )}
                         >
-                          {slot.time}
+                          {slotRangeLabel(slot.sortKey)}
                         </button>
                       );
                     })}

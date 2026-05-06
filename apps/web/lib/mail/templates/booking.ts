@@ -14,7 +14,7 @@ const TXT_LIGHT      = "#94a3b8";
 // Logo URL must be absolute — email clients fetch it from their own network.
 // NEXT_PUBLIC_API_BASE_URL resolves to the site root in production.
 const _base   = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
-const LOGO_URL = _base ? `${_base}/admin-logo.png` : "";
+const LOGO_URL = _base ? `${_base}/navbar-logo.png` : "";
 
 // ── Timezone helpers ──────────────────────────────────────────────────────────
 function patientDisplay(b: BookingDto): string {

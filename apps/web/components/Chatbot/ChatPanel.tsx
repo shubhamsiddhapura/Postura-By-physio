@@ -19,10 +19,12 @@ type ChatPanelProps = {
 };
 
 const QUICK_PROMPTS = [
+  "I have pain or injury",
+  "Physiotherapy treatment",
+  "Weight loss & fitness",
+  "Posture correction",
+  "Yoga, Pilates & Aerobics",
   "Book a session",
-  "Pre & post natal care",
-  "Pilates program",
-  "Workplace wellness",
 ];
 
 export function ChatPanel({

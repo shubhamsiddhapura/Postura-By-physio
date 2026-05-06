@@ -11,7 +11,7 @@ import type {
 const GREETING: ChatMessage = {
   role: "assistant",
   content:
-    "Hi! I'm Postura's assistant. Ask me about our physiotherapy or fitness programs, and I'll point you to the right page.",
+    "Hello, welcome to Postura by Physio! We offer physiotherapist-guided care for pain relief, posture correction, rehabilitation, and fitness programs (Aerobics, Yoga & Pilates).\n\nHow can I help you today?",
   suggestedLinks: [
     { label: "All Services", href: "/services" },
     { label: "Book a Session", href: "/book-a-session" },

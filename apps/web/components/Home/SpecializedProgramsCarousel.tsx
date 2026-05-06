@@ -3,7 +3,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { FadeIn } from "../ui/FadeIn";
 import { cn } from "../../lib/utils";
@@ -234,6 +234,11 @@ export function SpecializedProgramsCarousel({
   const [index, setIndex] = useState(0);
   /** Skip CSS transition on mobile track when wrapping last↔first (avoids animating through all slides). */
   const [mobileSkipTransition, setMobileSkipTransition] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocusWithin, setIsFocusWithin] = useState(false);
+  const [isTempPaused, setIsTempPaused] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Ellipse indicator constants ───────────────────────────────────────────
   const RX = 240;
@@ -297,6 +302,56 @@ export function SpecializedProgramsCarousel({
     runAnimation();
   }, [len, DOT_STEP, runAnimation]);
 
+  const pauseAutoFor = useCallback((ms: number) => {
+    setIsTempPaused(true);
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => setIsTempPaused(false), ms);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!mq) return;
+
+    const onChange = () => setPrefersReducedMotion(mq.matches);
+    onChange();
+
+    // Safari still uses addListener/removeListener in older versions.
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    }
+
+    const legacyMq = mq as unknown as {
+      addListener?: (listener: () => void) => void;
+      removeListener?: (listener: () => void) => void;
+    };
+
+    if (typeof legacyMq.addListener === "function") {
+      legacyMq.addListener(onChange);
+      return () => {
+        if (typeof legacyMq.removeListener === "function") legacyMq.removeListener(onChange);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (len <= 1) return;
+    if (prefersReducedMotion) return;
+    if (isHovered || isFocusWithin || isTempPaused) return;
+
+    const id = window.setInterval(() => {
+      goNext();
+    }, 4500);
+
+    return () => window.clearInterval(id);
+  }, [goNext, isFocusWithin, isHovered, isTempPaused, len, prefersReducedMotion]);
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, []);
+
   useLayoutEffect(() => {
     if (!mobileSkipTransition) return;
     const id = requestAnimationFrame(() => setMobileSkipTransition(false));
@@ -309,7 +364,15 @@ export function SpecializedProgramsCarousel({
   );
 
   return (
-    <section id={id} className={cn("bg-white py-5 md:py-10", className)}>
+    <section
+      id={id}
+      className={cn("bg-white py-5 md:py-10", className)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocusCapture={() => setIsFocusWithin(true)}
+      onBlurCapture={() => setIsFocusWithin(false)}
+      onPointerDown={() => pauseAutoFor(8000)}
+    >
       <div className="mx-auto max-w-[90vw] md:px-4">
         {/* Header */}
         <div className="grid gap-4 md:grid-cols-[1.1fr,1fr] md:items-end md:gap-10 lg:grid-cols-[1.15fr,0.95fr]">
@@ -376,7 +439,10 @@ export function SpecializedProgramsCarousel({
           <div className="mt-8 flex items-center justify-center gap-10">
             <button
               type="button"
-              onClick={goPrev}
+              onClick={() => {
+                pauseAutoFor(8000);
+                goPrev();
+              }}
               className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-secondary bg-white text-secondary shadow-sm transition hover:bg-secondary/5"
               aria-label="Previous slide"
             >
@@ -384,7 +450,10 @@ export function SpecializedProgramsCarousel({
             </button>
             <button
               type="button"
-              onClick={goNext}
+              onClick={() => {
+                pauseAutoFor(8000);
+                goNext();
+              }}
               className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary text-white shadow-sm transition hover:brightness-90"
               aria-label="Next slide"
             >
@@ -417,7 +486,10 @@ export function SpecializedProgramsCarousel({
         <div className="mt-10 hidden items-center justify-between gap-4 md:mt-12 md:flex">
           <button
             type="button"
-            onClick={goPrev}
+            onClick={() => {
+              pauseAutoFor(8000);
+              goPrev();
+            }}
             className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-secondary text-secondary transition hover:bg-secondary/10 md:h-12 md:w-12"
             aria-label="Previous slide"
           >
@@ -464,7 +536,10 @@ export function SpecializedProgramsCarousel({
 
           <button
             type="button"
-            onClick={goNext}
+            onClick={() => {
+              pauseAutoFor(8000);
+              goNext();
+            }}
             className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary text-white shadow-sm transition hover:brightness-90 md:h-12 md:w-12"
             aria-label="Next slide"
           >

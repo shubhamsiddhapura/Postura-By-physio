@@ -45,7 +45,7 @@ const defaultItems: WellnessProgramItem[] = [
   {
     title: "Flexibar Training",
     alt: "Flexibility and bar-assisted training",
-    imageSrc: "/services-4.jpg",
+    imageSrc: "/flexi-training.png",
     href: "/flexibar-training",
   },
 ];

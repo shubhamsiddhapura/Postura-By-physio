@@ -1,7 +1,7 @@
  "use client";
 
 import { useState } from "react";
-import { ChevronDown, CircleArrowDown, CircleArrowDownIcon } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
@@ -114,11 +114,20 @@ export function FaqSection() {
                             : "border-secondary bg-secondary text-white"
                         }`}
                       >
-                        <CircleArrowDownIcon
-                          className={`h-5 w-5 transition-transform duration-300 ${
-                            isOpen ? "rotate-180" : ""
-                          }`}
-                        />
+                        <span className="relative block h-5 w-5">
+                          <Plus
+                            className={`absolute inset-0 h-5 w-5 transition-all duration-300 ${
+                              isOpen ? "scale-75 opacity-0 rotate-90" : "scale-100 opacity-100 rotate-0"
+                            }`}
+                            strokeWidth={2.5}
+                          />
+                          <Minus
+                            className={`absolute inset-0 h-5 w-5 transition-all duration-300 ${
+                              isOpen ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                            }`}
+                            strokeWidth={2.5}
+                          />
+                        </span>
                       </span>
                     </span>
                   </button>

@@ -178,7 +178,7 @@ export function ServicesSection({
                       {service.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="flex-shrink-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-800 shadow-[0_10px_25px_rgba(15,23,42,0.08)] md:px-4"
+                          className="flex-shrink-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-800 md:px-4"
                         >
                           {tag}
                         </span>

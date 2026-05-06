@@ -37,7 +37,10 @@ export type AdvancedTreatmentCarouselProps = {
   description?: ReactNode;
   items: AdvancedTreatmentItem[];
   showControls?: boolean;
-  /** Auto-scroll interval in ms (default 3000). Set 0 to disable. */
+  /**
+   * Enables continuous auto-scroll when > 0.
+   * This value represents speed in px/sec (default 36). Set 0 to disable.
+   */
   autoScrollInterval?: number;
   /** Cards to advance per tick (default 4). */
   scrollBatch?: number;
@@ -76,110 +79,145 @@ export function AdvancedTreatmentCarousel({
   description = "We use evidence-based methods to ensure effective and safe recovery.",
   items,
   showControls = true,
-  autoScrollInterval = 3000,
+  autoScrollInterval = 80,
   scrollBatch = 4,
 }: AdvancedTreatmentCarouselProps) {
   const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const [edgeFaded, setEdgeFaded] = useState<Set<number>>(() => new Set());
   const hoveredRef = useRef(false);
-  const batchStartRef = useRef(0);
-  const snapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const manualPauseRef = useRef(false);
+  const manualPauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const lastTsRef = useRef<number | null>(null);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Duplicate items so we can smooth-scroll into the copy and snap back invisibly
   const loopItems = [...items, ...items];
 
-  // ── Edge-fade tracker ─────────────────────────────────────────────────────
+  // ── Seamless continuous auto-scroll (pause on hover) ──────────────────────
   useEffect(() => {
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!mq) return;
+
+    const onChange = () => setPrefersReducedMotion(mq.matches);
+    onChange();
+
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    }
+
+    const legacyMq = mq as unknown as {
+      addListener?: (listener: () => void) => void;
+      removeListener?: (listener: () => void) => void;
+    };
+    if (typeof legacyMq.addListener === "function") {
+      legacyMq.addListener(onChange);
+      return () => {
+        if (typeof legacyMq.removeListener === "function") legacyMq.removeListener(onChange);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia?.("(max-width: 767px)");
+    if (!mq) return;
+
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    }
+
+    const legacyMq = mq as unknown as {
+      addListener?: (listener: () => void) => void;
+      removeListener?: (listener: () => void) => void;
+    };
+    if (typeof legacyMq.addListener === "function") {
+      legacyMq.addListener(onChange);
+      return () => {
+        if (typeof legacyMq.removeListener === "function") legacyMq.removeListener(onChange);
+      };
+    }
+  }, []);
+
+  const isAutoScrollEnabled =
+    (autoScrollInterval ?? 0) > 0 && items.length > 1 && !prefersReducedMotion;
+
+  const pauseAutoFor = useCallback((ms: number) => {
+    if (!isAutoScrollEnabled) return;
+    manualPauseRef.current = true;
+    if (manualPauseTimerRef.current) clearTimeout(manualPauseTimerRef.current);
+    manualPauseTimerRef.current = setTimeout(() => {
+      manualPauseRef.current = false;
+      lastTsRef.current = null; // avoid large dt jump after pause
+    }, ms);
+  }, [isAutoScrollEnabled]);
+
+  useEffect(() => {
+    const speedPxPerSec = autoScrollInterval ?? 0;
+    if (!speedPxPerSec || speedPxPerSec <= 0) return;
+    if (items.length <= 1) return;
+    if (prefersReducedMotion) return;
+
     const el = scrollerRef.current;
     if (!el) return;
-    let raf = 0;
 
-    const update = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const containerRect = el.getBoundingClientRect();
-        const threshold = 24;
-        const next = new Set<number>();
-        const cards = Array.from(
-          el.querySelectorAll<HTMLElement>("[data-treatment-card]"),
-        );
-        cards.forEach((card, idx) => {
-          const r = card.getBoundingClientRect();
-          const visible =
-            r.right > containerRect.left && r.left < containerRect.right;
-          if (!visible) return;
-          if (
-            r.left < containerRect.left - threshold ||
-            r.right > containerRect.right + threshold
-          )
-            next.add(idx);
-        });
-        setEdgeFaded(next);
-      });
-    };
+    const loopWidth = el.scrollWidth / 2; // because we render [...items, ...items]
 
-    update();
-    el.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      cancelAnimationFrame(raf);
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [loopItems.length]);
+    const tick = (ts: number) => {
+      if (lastTsRef.current == null) lastTsRef.current = ts;
+      const dtMs = ts - lastTsRef.current;
+      lastTsRef.current = ts;
 
-  // ── Seamless 360 auto-scroll ──────────────────────────────────────────────
-  useEffect(() => {
-    if (!autoScrollInterval || autoScrollInterval <= 0) return;
+      if (!hoveredRef.current && !manualPauseRef.current) {
+        el.scrollLeft += (speedPxPerSec * dtMs) / 1000;
 
-    const timer = setInterval(() => {
-      if (hoveredRef.current) return;
-      const el = scrollerRef.current;
-      if (!el) return;
-
-      const nextStart = batchStartRef.current + scrollBatch;
-
-      if (nextStart >= items.length) {
-        // Smooth-scroll to the duplicate copy of card 0 (looks identical to real card 0)
-        scrollToCard(el, items.length, "smooth");
-        batchStartRef.current = items.length;
-
-        // After the smooth scroll finishes (~580ms), silently snap to real card 0
-        if (snapTimerRef.current) clearTimeout(snapTimerRef.current);
-        snapTimerRef.current = setTimeout(() => {
-          const container = scrollerRef.current;
-          if (!container) return;
-          container.scrollTo({ left: 0, behavior: "instant" as ScrollBehavior });
-          batchStartRef.current = 0;
-        }, 580);
-      } else {
-        scrollToCard(el, nextStart, "smooth");
-        batchStartRef.current = nextStart;
+        // If we've fully scrolled into the duplicated half, snap back by exactly one loop.
+        if (el.scrollLeft >= loopWidth) {
+          el.scrollLeft -= loopWidth;
+        }
       }
-    }, autoScrollInterval);
 
-    return () => {
-      clearInterval(timer);
-      if (snapTimerRef.current) clearTimeout(snapTimerRef.current);
+      rafRef.current = requestAnimationFrame(tick);
     };
-  }, [autoScrollInterval, scrollBatch, items.length]);
+
+    rafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      lastTsRef.current = null;
+    };
+  }, [autoScrollInterval, items.length, prefersReducedMotion]);
+
+  useEffect(() => {
+    return () => {
+      if (manualPauseTimerRef.current) clearTimeout(manualPauseTimerRef.current);
+    };
+  }, []);
 
   // ── Manual controls ───────────────────────────────────────────────────────
   const onPrev = useCallback(() => {
+    pauseAutoFor(2500);
     const el = scrollerRef.current;
     if (!el) return;
     const cardW = getCardWidth(el);
-    el.scrollBy({ left: -scrollBatch * cardW, behavior: "smooth" });
-  }, [scrollBatch]);
+    const step = (isMobile ? 1 : scrollBatch) * cardW;
+    el.scrollBy({ left: -step, behavior: "smooth" });
+  }, [isMobile, pauseAutoFor, scrollBatch]);
 
   const onNext = useCallback(() => {
+    pauseAutoFor(2500);
     const el = scrollerRef.current;
     if (!el) return;
     const cardW = getCardWidth(el);
-    el.scrollBy({ left: scrollBatch * cardW, behavior: "smooth" });
-  }, [scrollBatch]);
+    const step = (isMobile ? 1 : scrollBatch) * cardW;
+    el.scrollBy({ left: step, behavior: "smooth" });
+  }, [isMobile, pauseAutoFor, scrollBatch]);
 
-  const canScroll = items.length > 4 && showControls;
+  const canScroll = items.length > 1 && showControls;
 
   return (
     <section id={id} className={cn(backgroundClassName, className)}>
@@ -218,7 +256,7 @@ export function AdvancedTreatmentCarousel({
                 "flex gap-6 overflow-x-auto px-6 md:px-10 lg:px-12",
                 "scroll-pl-6 md:scroll-pl-10 lg:scroll-pl-12",
                 "scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-                "snap-x snap-mandatory scroll-smooth",
+                !isAutoScrollEnabled && "snap-x snap-mandatory scroll-smooth",
               )}
             >
               {loopItems.map((item, idx) => {
@@ -231,8 +269,7 @@ export function AdvancedTreatmentCarousel({
                     className={cn(
                       "snap-start shrink-0",
                       "basis-[78%] sm:basis-[46%] md:basis-[31%] lg:basis-[22.5%]",
-                      "transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                      edgeFaded.has(idx) ? "opacity-50" : "opacity-100",
+                      "opacity-100",
                     )}
                   >
                     {item.href ? (

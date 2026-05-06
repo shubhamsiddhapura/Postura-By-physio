@@ -48,8 +48,27 @@ export function CertificationsSection({
 }
 
 function CertificationsMarquee({ items }: { items: CertificationItem[] }) {
-  // Cycle the duration based on how many items there are so a small
-  // list still feels lively and a large list isn't blink-and-miss.
+  // The marquee animation translates the track by -50% to seamlessly
+  // loop, which works only when ONE copy of the items is wider than the
+  // viewport. With a small `items` list (e.g. 3-4 certifications), one
+  // copy ends up shorter than wide screens and the empty tail of the
+  // track peeks in before the loop resets — that's the "ending" the
+  // user sees.
+  //
+  // To guarantee an always-full lane we repeat the items inside each
+  // copy until each copy holds at least MIN_ITEMS_PER_COPY entries, then
+  // duplicate that copy once for the seamless seam.
+  const MIN_ITEMS_PER_COPY = 8;
+  const repeatsPerCopy = Math.max(
+    1,
+    Math.ceil(MIN_ITEMS_PER_COPY / items.length)
+  );
+  const oneCopy = Array.from({ length: repeatsPerCopy }).flatMap(() => items);
+  const loopItems = [...oneCopy, ...oneCopy];
+
+  // Tie the duration to the number of unique items (not the inflated
+  // copy length), so a small list still feels lively and a large list
+  // isn't blink-and-miss.
   const duration = `${Math.max(28, Math.min(80, items.length * 6))}s`;
 
   return (
@@ -57,19 +76,17 @@ function CertificationsMarquee({ items }: { items: CertificationItem[] }) {
       className="marquee-lane group/lane relative mt-8 overflow-hidden md:mt-10"
       style={{ "--marquee-duration": duration } as React.CSSProperties}
     >
-      <div className="marquee-track flex items-stretch gap-6 md:gap-8">
-        {[0, 1].map((copyIdx) => (
+      {/* No `gap` here — each wrapper carries its own right-margin so
+          every card slot is identical width. This makes -50% translate
+          land exactly at the start of the second copy (seamless loop). */}
+      <div className="marquee-track flex items-stretch">
+        {loopItems.map((item, idx) => (
           <div
-            key={copyIdx}
-            className="flex shrink-0 items-stretch gap-6 md:gap-8"
-            aria-hidden={copyIdx === 1 ? true : undefined}
+            key={`${idx}-${item.id}`}
+            className="shrink-0 mr-6 md:mr-8"
+            aria-hidden={idx >= oneCopy.length ? true : undefined}
           >
-            {items.map((item) => (
-              <CertificationCard
-                key={`${copyIdx}-${item.id}`}
-                item={item}
-              />
-            ))}
+            <CertificationCard item={item} />
           </div>
         ))}
       </div>

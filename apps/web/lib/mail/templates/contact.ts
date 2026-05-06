@@ -1,14 +1,20 @@
 import type { CreateContactInput } from "@/lib/validations/contact";
 
-/**
- * Inline-styled email templates for the simple contact form.
- * Palette matches the rest of the site (primary teal).
- */
+// ── Brand palette ─────────────────────────────────────────────────────────────
+const BRAND          = "#008080";
+const OUTER_BG       = "#f1f5f9";
+const SECTION_BG     = "#f8fafc";
+const SECTION_BORDER = "#e2e8f0";
+const TXT_DARK       = "#1e293b";
+const TXT_MED        = "#475569";
+const TXT_LIGHT      = "#94a3b8";
 
-const BRAND_PRIMARY = "#2f8f8b";
-const BRAND_BG = "#fafafa";
+// Logo URL must be absolute — email clients fetch it from their own network.
+const _base    = (process.env.NEXT_PUBLIC_API_BASE_URL ?? "").replace(/\/$/, "");
+const LOGO_URL = _base ? `${_base}/admin-logo.png` : "";
 
-function escape(v: string | null | undefined): string {
+// ── HTML primitives ───────────────────────────────────────────────────────────
+function esc(v: string | null | undefined): string {
   if (v == null) return "";
   return v
     .replace(/&/g, "&amp;")
@@ -20,89 +26,126 @@ function escape(v: string | null | undefined): string {
 function row(label: string, value: string | null | undefined): string {
   if (!value) return "";
   return `
-    <tr>
-      <td style="padding:6px 16px 6px 0;color:#6b7280;font-size:13px;vertical-align:top;white-space:nowrap;">
-        ${escape(label)}
-      </td>
-      <td style="padding:6px 0;color:#111827;font-size:14px;line-height:1.5;">
-        ${escape(value)}
-      </td>
-    </tr>`;
+  <tr>
+    <td style="padding:10px 16px 10px 0;font-size:11px;font-weight:700;color:${TXT_LIGHT};text-transform:uppercase;letter-spacing:.07em;vertical-align:top;white-space:nowrap;width:34%;">${esc(label)}</td>
+    <td style="padding:10px 0;font-size:14px;color:${TXT_DARK};line-height:1.6;vertical-align:top;">${esc(value)}</td>
+  </tr>`;
 }
 
 function section(title: string, innerRows: string): string {
   if (!innerRows.trim()) return "";
   return `
-    <div style="margin-top:20px;">
-      <h3 style="margin:0 0 8px;font-size:14px;font-weight:600;color:${BRAND_PRIMARY};text-transform:uppercase;letter-spacing:0.04em;">
-        ${escape(title)}
-      </h3>
-      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;">
+  <div style="margin-top:24px;">
+    <p style="margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:${BRAND};">${esc(title)}</p>
+    <div style="background:${SECTION_BG};border:1px solid ${SECTION_BORDER};border-radius:10px;padding:0 16px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">
         ${innerRows}
       </table>
-    </div>`;
+    </div>
+  </div>`;
 }
 
-function shell(innerHtml: string, preheader: string): string {
+function banner(
+  text: string,
+  opts: { bg: string; border: string; color: string }
+): string {
+  return `
+  <div style="background:${opts.bg};border-left:4px solid ${opts.border};border-radius:6px;padding:13px 16px;margin-bottom:24px;">
+    <p style="margin:0;font-size:14px;font-weight:600;color:${opts.color};">${esc(text)}</p>
+  </div>`;
+}
+
+function shell(innerHtml: string, preheader: string, accentColor = BRAND): string {
+  const logoImg = LOGO_URL
+    ? `<img src="${LOGO_URL}" alt="Postura by Physio" height="50" style="display:block;height:50px;width:auto;border:0;">`
+    : `<span style="font-size:18px;font-weight:700;color:#ffffff;letter-spacing:.04em;">Postura by Physio</span>`;
+
   return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/></head>
-<body style="margin:0;padding:0;background:${BRAND_BG};font-family:'Helvetica Neue',Arial,sans-serif;color:#111827;">
-  <span style="display:none;overflow:hidden;line-height:1px;opacity:0;max-height:0;max-width:0;">${escape(preheader)}</span>
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:${BRAND_BG};padding:32px 16px;">
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="light"/>
+</head>
+<body style="margin:0;padding:0;background:${OUTER_BG};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+
+  <!-- Preheader (hidden inbox preview text) -->
+  <div style="display:none;max-height:0;overflow:hidden;font-size:1px;color:${OUTER_BG};">${esc(preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+
+  <!-- Outer wrapper -->
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${OUTER_BG};padding:40px 16px;">
     <tr><td align="center">
-      <table role="presentation" cellpadding="0" cellspacing="0" width="600" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,0.04);">
+
+      <!-- Email card -->
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.09);">
+
+        <!-- ── Logo / brand header ── -->
         <tr>
-          <td style="padding:24px 28px;background:${BRAND_PRIMARY};color:#ffffff;">
-            <p style="margin:0;font-size:14px;letter-spacing:0.08em;opacity:0.85;">POSTURA BY PHYSIO</p>
+          <td style="background:${BRAND};padding:22px 32px;" align="left">
+            ${logoImg}
           </td>
         </tr>
-        <tr><td style="padding:28px;">${innerHtml}</td></tr>
+
+        <!-- Coloured accent strip -->
         <tr>
-          <td style="padding:18px 28px;border-top:1px solid #f1f5f9;font-size:12px;color:#9ca3af;">
-            Postura by Physio · Vadodara, India
+          <td style="background:${accentColor};height:4px;font-size:0;line-height:0;">&nbsp;</td>
+        </tr>
+
+        <!-- ── Body ── -->
+        <tr>
+          <td style="padding:32px 32px 28px;color:${TXT_DARK};">
+            ${innerHtml}
           </td>
         </tr>
+
+        <!-- ── Footer ── -->
+        <tr>
+          <td style="background:${SECTION_BG};border-top:1px solid ${SECTION_BORDER};padding:22px 32px;" align="center">
+            <p style="margin:0 0 2px;font-size:13px;font-weight:600;color:${TXT_MED};">Postura by Physio</p>
+            <p style="margin:0 0 12px;font-size:12px;color:${TXT_LIGHT};">Vadodara, Gujarat, India</p>
+            <p style="margin:0;font-size:11px;color:${TXT_LIGHT};">Questions? Reply to this email and we&rsquo;ll be happy to help.</p>
+          </td>
+        </tr>
+
       </table>
+      <!-- /Email card -->
+
     </td></tr>
   </table>
-</body></html>`;
+</body>
+</html>`;
 }
 
-/** Notification sent to the clinic / admin. */
+// ── Email builders ─────────────────────────────────────────────────────────────
+
+/** Notification sent to the clinic / admin when a contact form is submitted. */
 export function adminContactEmail(data: CreateContactInput) {
   const subject = `New contact message from ${data.fullName}`;
 
   const detailRows = [
-    row("Name", data.fullName),
-    row("Phone", data.phone),
-    row("Email", data.email),
+    row("Name",             data.fullName),
+    row("Phone",            data.phone),
+    row("Email",            data.email),
     row("Service interest", data.service ?? null),
-    row("Address", data.address ?? null),
+    row("Address",          data.address ?? null),
   ].join("");
 
   const html = shell(
     `
-      <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#111827;">
-        New contact enquiry
-      </h1>
-      <p style="margin:0 0 6px;color:#6b7280;font-size:14px;line-height:1.6;">
-        Someone just submitted the contact form on the website.
-        Reply to this email to write directly to them.
-      </p>
+    <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;color:${TXT_DARK};line-height:1.3;">New contact enquiry</h1>
+    <p style="margin:0 0 4px;font-size:14px;color:${TXT_MED};line-height:1.7;">
+      Someone just submitted the contact form on the website.
+      Reply to this email to respond directly to them.
+    </p>
 
-      ${section("Contact details", detailRows)}
-      ${
-        data.message
-          ? section(
-              "Message",
-              `<tr><td style="padding:6px 0;color:#111827;font-size:14px;line-height:1.6;">${escape(data.message)}</td></tr>`
-            )
-          : ""
-      }
+    ${section("Contact details", detailRows)}
+    ${data.message
+      ? section("Message", `<tr><td colspan="2" style="padding:10px 0;font-size:14px;color:${TXT_DARK};line-height:1.7;">${esc(data.message)}</td></tr>`)
+      : ""}
 
-      <p style="margin:24px 0 0;font-size:12px;color:#9ca3af;">
-        Received ${escape(new Date().toLocaleString("en-IN"))}
-      </p>
+    <p style="margin:28px 0 0;font-size:12px;color:${TXT_LIGHT};">
+      Received ${esc(new Date().toLocaleString("en-IN"))}
+    </p>
     `,
     `New contact message from ${data.fullName}.`
   );
@@ -120,44 +163,44 @@ export function adminContactEmail(data: CreateContactInput) {
   return { subject, html, text };
 }
 
-/** Confirmation sent to the person who filled the form. */
+/** Confirmation sent to the person who submitted the contact form. */
 export function customerContactEmail(data: CreateContactInput) {
   const firstName = data.fullName.split(/\s+/)[0] ?? data.fullName;
-  const subject = `We've received your message, ${firstName}`;
+  const subject   = `We've received your message, ${firstName}`;
 
   const detailRows = [
-    row("Name", data.fullName),
-    row("Phone", data.phone),
-    row("Email", data.email),
+    row("Name",             data.fullName),
+    row("Phone",            data.phone),
+    row("Email",            data.email),
     row("Service interest", data.service ?? null),
-    row("Address", data.address ?? null),
+    row("Address",          data.address ?? null),
   ].join("");
 
   const html = shell(
     `
-      <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#111827;">
-        Thanks, ${escape(firstName)} — we'll be in touch!
-      </h1>
-      <p style="margin:0 0 6px;color:#374151;font-size:14px;line-height:1.6;">
-        We've received your message and our team will get back to you shortly.
-        Here's a copy of what you submitted for your records.
-      </p>
+    ${banner("Message received — we'll be in touch soon", {
+      bg: "#eff6ff", border: "#3b82f6", color: "#1d4ed8",
+    })}
 
-      ${section("Your details", detailRows)}
-      ${
-        data.message
-          ? section(
-              "Your message",
-              `<tr><td style="padding:6px 0;color:#111827;font-size:14px;line-height:1.6;">${escape(data.message)}</td></tr>`
-            )
-          : ""
-      }
+    <h1 style="margin:0 0 10px;font-size:22px;font-weight:700;color:${TXT_DARK};line-height:1.3;">
+      Thanks, ${esc(firstName)} &mdash; we&rsquo;ll be in touch!
+    </h1>
+    <p style="margin:0;font-size:14px;color:${TXT_MED};line-height:1.7;">
+      We&rsquo;ve received your message and our team will get back to you shortly.
+      Here&rsquo;s a copy of what you submitted for your records.
+    </p>
 
-      <p style="margin:22px 0 0;color:#6b7280;font-size:13px;line-height:1.6;">
-        If anything looks off, just reply to this email and we'll sort it out.
-      </p>
+    ${section("Your details", detailRows)}
+    ${data.message
+      ? section("Your message", `<tr><td colspan="2" style="padding:10px 0;font-size:14px;color:${TXT_DARK};line-height:1.7;">${esc(data.message)}</td></tr>`)
+      : ""}
+
+    <p style="margin:26px 0 0;font-size:13px;color:${TXT_LIGHT};line-height:1.6;">
+      If anything looks incorrect, simply reply to this email and we&rsquo;ll sort it out.
+    </p>
     `,
-    `Your message has been received. We'll be in touch soon.`
+    `Your message has been received. We'll be in touch soon.`,
+    "#3b82f6"
   );
 
   const text =

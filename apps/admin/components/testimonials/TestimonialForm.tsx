@@ -3,7 +3,17 @@
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Camera, ChevronLeft, Loader2, Save, X } from "lucide-react";
+import {
+  Camera,
+  ChevronLeft,
+  Film,
+  ImagePlus,
+  Loader2,
+  Play,
+  Save,
+  Trash2,
+  X,
+} from "lucide-react";
 import type {
   CreateTestimonialDto,
   TestimonialDto,
@@ -32,6 +42,14 @@ type FormState = {
   age: string;
   avatar: string;
   rating: number;
+  /**
+   * Patient-submitted photo URLs. Stored as an array of fully-qualified
+   * Supabase public URLs so the form value can be sent straight to the
+   * API without any further resolving. Empty array means "no photos".
+   */
+  photos: string[];
+  /** Patient-submitted video URLs. Same shape as `photos`. */
+  videos: string[];
   order: string;
   published: boolean;
 };
@@ -44,6 +62,8 @@ function emptyForm(): FormState {
     age: "",
     avatar: "",
     rating: 5,
+    photos: [],
+    videos: [],
     order: "",
     published: true,
   };
@@ -67,6 +87,8 @@ function formFromDto(t: TestimonialDto): FormState {
     // work without a separate "null" code path.
     avatar: t.avatar ?? "",
     rating: clampRating(t.rating),
+    photos: t.photos ?? [],
+    videos: t.videos ?? [],
     order: String(t.order),
     published: t.published,
   };
@@ -123,6 +145,12 @@ export function TestimonialForm({
       age: Number.isNaN(parsedAge) ? (undefined as unknown as number) : parsedAge,
       avatar: state.avatar.trim(),
       rating: clampRating(state.rating),
+      // Always round-trip the media arrays so the admin can both save
+      // the patient-uploaded files and add/remove their own. Sending
+      // them explicitly (even when empty) is fine because the API
+      // treats `[]` as "no media" and a missing key as "don't touch".
+      photos: state.photos,
+      videos: state.videos,
       order: parsedOrder,
       published: state.published,
     };
@@ -224,6 +252,13 @@ export function TestimonialForm({
           avatar={state.avatar}
           onChange={updateField}
           orderError={err("order")}
+        />
+
+        <PatientMediaCard
+          photos={state.photos}
+          videos={state.videos}
+          onChangePhotos={(next) => updateField("photos", next)}
+          onChangeVideos={(next) => updateField("videos", next)}
         />
       </div>
 
@@ -611,6 +646,326 @@ function MetaStrip({
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+// ---------------- Patient media (photos + videos) ----------------
+
+const MAX_PHOTOS = 10;
+const MAX_VIDEOS = 4;
+
+/**
+ * Optional media uploads attached to a testimonial. Used by the public
+ * `/share-your-story` form to let patients send recovery shots / story
+ * clips, and editable here so admins can curate that media (add new
+ * items, remove unwanted ones, replace) before publishing.
+ *
+ * The card sits below `MetaStrip` because — unlike the in-card avatar
+ * — these media don't appear on the public testimonial card itself;
+ * they feed the "Hear From Our Clients" strip on `/testimonials` and
+ * reappear in the admin listing for moderation.
+ */
+function PatientMediaCard({
+  photos,
+  videos,
+  onChangePhotos,
+  onChangeVideos,
+}: {
+  photos: string[];
+  videos: string[];
+  onChangePhotos: (next: string[]) => void;
+  onChangeVideos: (next: string[]) => void;
+}) {
+  return (
+    <Card className="mt-6">
+      <CardContent className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Patient media
+            </p>
+            <p className="mt-0.5 text-[11px] text-gray-500">
+              Photos and videos attached to this testimonial. They power
+              the "Hear From Our Clients" strip on the public page.
+            </p>
+          </div>
+        </div>
+
+        <PhotoUploadGrid
+          values={photos}
+          onChange={onChangePhotos}
+          max={MAX_PHOTOS}
+        />
+
+        <div className="border-t border-gray-100" />
+
+        <VideoUploadGrid
+          values={videos}
+          onChange={onChangeVideos}
+          max={MAX_VIDEOS}
+        />
+      </CardContent>
+    </Card>
+  );
+}
+
+function PhotoUploadGrid({
+  values,
+  onChange,
+  max,
+}: {
+  values: string[];
+  onChange: (next: string[]) => void;
+  max: number;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  async function handleFiles(list: FileList) {
+    if (values.length >= max) return;
+    setUploadError(null);
+    setIsUploading(true);
+    try {
+      const remaining = max - values.length;
+      const files = Array.from(list).slice(0, remaining);
+      const uploaded: string[] = [];
+      for (const file of files) {
+        const result = await uploadsApi.image(file);
+        uploaded.push(result.url);
+      }
+      onChange([...values, ...uploaded]);
+    } catch (err) {
+      setUploadError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Upload failed"
+      );
+    } finally {
+      setIsUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  function removeAt(idx: number) {
+    onChange(values.filter((_, i) => i !== idx));
+  }
+
+  const reachedMax = values.length >= max;
+
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between">
+        <Label>Photos</Label>
+        <span className="text-[11px] font-medium text-gray-500">
+          {values.length} / {max}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
+        {values.map((url, idx) => (
+          <div
+            key={`p-${idx}-${url}`}
+            className="group relative aspect-square overflow-hidden rounded-lg bg-gray-100 ring-1 ring-gray-200"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={url}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => removeAt(idx)}
+              aria-label={`Remove photo ${idx + 1}`}
+              className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-white/95 text-gray-500 shadow ring-1 ring-gray-200 transition hover:text-red-600"
+            >
+              <Trash2 className="h-3 w-3" />
+            </button>
+          </div>
+        ))}
+
+        {!reachedMax ? (
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={isUploading}
+            className={cn(
+              "group flex aspect-square flex-col items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-gray-200 bg-white text-gray-400 transition",
+              "hover:border-primary/50 hover:text-primary",
+              isUploading && "cursor-wait opacity-70"
+            )}
+            aria-label="Upload photos"
+          >
+            {isUploading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <ImagePlus className="h-5 w-5" />
+            )}
+            <span className="text-[11px] font-semibold">
+              {isUploading ? "Uploading…" : "Add photo"}
+            </span>
+          </button>
+        ) : null}
+      </div>
+
+      {uploadError ? (
+        <p className="mt-2 text-xs text-red-600">{uploadError}</p>
+      ) : null}
+
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp,image/gif,image/avif,image/svg+xml"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            void handleFiles(e.target.files);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+function VideoUploadGrid({
+  values,
+  onChange,
+  max,
+}: {
+  values: string[];
+  onChange: (next: string[]) => void;
+  max: number;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [progressLabel, setProgressLabel] = useState<string | null>(null);
+
+  async function handleFiles(list: FileList) {
+    if (values.length >= max) return;
+    setUploadError(null);
+    setIsUploading(true);
+    try {
+      const remaining = max - values.length;
+      const files = Array.from(list).slice(0, remaining);
+      const uploaded: string[] = [];
+      for (const [i, file] of files.entries()) {
+        setProgressLabel(`Uploading ${i + 1} of ${files.length}…`);
+        const result = await uploadsApi.video(file);
+        uploaded.push(result.url);
+      }
+      onChange([...values, ...uploaded]);
+    } catch (err) {
+      setUploadError(
+        err instanceof ApiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Upload failed"
+      );
+    } finally {
+      setIsUploading(false);
+      setProgressLabel(null);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
+  function removeAt(idx: number) {
+    onChange(values.filter((_, i) => i !== idx));
+  }
+
+  const reachedMax = values.length >= max;
+
+  return (
+    <div>
+      <div className="mb-2 flex items-center justify-between">
+        <Label>Videos</Label>
+        <span className="text-[11px] font-medium text-gray-500">
+          {values.length} / {max}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        {values.map((url, idx) => (
+          <div
+            key={`v-${idx}-${url}`}
+            className="group relative aspect-video overflow-hidden rounded-lg bg-black ring-1 ring-gray-200"
+          >
+            <video
+              src={url}
+              preload="metadata"
+              muted
+              playsInline
+              controls
+              className="h-full w-full object-cover"
+            />
+            <span className="pointer-events-none absolute inset-0 grid place-items-center bg-black/15 opacity-0 transition group-hover:opacity-100">
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-white/95 text-gray-900 shadow">
+                <Play className="ml-0.5 h-4 w-4 fill-current" />
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={() => removeAt(idx)}
+              aria-label={`Remove video ${idx + 1}`}
+              className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-white/95 text-gray-500 shadow ring-1 ring-gray-200 transition hover:text-red-600"
+            >
+              <Trash2 className="h-3 w-3" />
+            </button>
+          </div>
+        ))}
+
+        {!reachedMax ? (
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={isUploading}
+            className={cn(
+              "flex aspect-video flex-col items-center justify-center gap-1.5 rounded-lg border-2 border-dashed border-gray-200 bg-white text-gray-400 transition",
+              "hover:border-primary/50 hover:text-primary",
+              isUploading && "cursor-wait opacity-70"
+            )}
+            aria-label="Upload videos"
+          >
+            {isUploading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Film className="h-5 w-5" />
+            )}
+            <span className="text-[11px] font-semibold">
+              {isUploading ? (progressLabel ?? "Uploading…") : "Add video"}
+            </span>
+          </button>
+        ) : null}
+      </div>
+
+      <p className="mt-2 text-[11px] text-gray-500">
+        MP4, MOV, or WebM up to 50&nbsp;MB. Around 30 seconds works best.
+      </p>
+
+      {uploadError ? (
+        <p className="mt-1 text-xs text-red-600">{uploadError}</p>
+      ) : null}
+
+      <input
+        ref={fileRef}
+        type="file"
+        accept="video/mp4,video/quicktime,video/webm,video/ogg"
+        multiple
+        className="hidden"
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            void handleFiles(e.target.files);
+          }
+        }}
+      />
+    </div>
   );
 }
 

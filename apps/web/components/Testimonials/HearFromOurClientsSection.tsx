@@ -63,13 +63,13 @@ export function HearFromOurClientsSection({
           items={topRow}
           direction="left"
           onSelect={setActive}
-          duration="55s"
+          duration="32s"
         />
         <Lane
           items={bottomRow}
           direction="right"
           onSelect={setActive}
-          duration="65s"
+          duration="38s"
         />
       </div>
 
@@ -306,10 +306,10 @@ function splitIntoRows(items: ClientMediaItem[]): {
  */
 function pickWidth(index: number): string {
   const widths = [
-    "w-[200px] md:w-[260px]",
-    "w-[240px] md:w-[300px]",
-    "w-[220px] md:w-[280px]",
-    "w-[260px] md:w-[320px]",
+    "w-[240px] md:w-[320px]",
+    "w-[280px] md:w-[380px]",
+    "w-[260px] md:w-[350px]",
+    "w-[300px] md:w-[420px]",
   ];
   return widths[index % widths.length]!;
 }

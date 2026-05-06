@@ -259,4 +259,21 @@ export const uploadsApi = {
     });
     return data;
   },
+
+  /**
+   * Uploads a single video file and returns the public URL. Backed by
+   * `/api/uploads/video` which writes to the dedicated `testimonial-videos`
+   * bucket so the per-file size limit can be larger than the image bucket
+   * allows. Mirror of `uploadsApi.image` — same calling convention, same
+   * return shape — so callers can reuse upload UI patterns.
+   */
+  video: async (file: File): Promise<UploadResultDto> => {
+    const form = new FormData();
+    form.append("file", file);
+    const { data } = await request<UploadResultDto>("/api/uploads/video", {
+      method: "POST",
+      body: form,
+    });
+    return data;
+  },
 };

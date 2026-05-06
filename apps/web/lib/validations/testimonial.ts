@@ -15,11 +15,17 @@ const imageSrcSchema = z
  * skip the photo entirely. We accept `""` or `null` as "no avatar" and
  * normalise both to `null` so the database stores a single canonical
  * "missing" marker.
+ *
+ * IMPORTANT — the `.optional()` MUST come AFTER `.transform()` so the
+ * transform only runs when the field is actually present in the
+ * payload. The PATCH route relies on `undefined` meaning "don't touch
+ * this column"; if we transformed missing → null at the schema layer
+ * the partial-update semantics would be impossible to express.
  */
 const optionalImageSrcSchema = z
   .union([imageSrcSchema, z.literal(""), z.null()])
-  .optional()
-  .transform((v) => (v === "" || v === undefined ? null : v));
+  .transform((v) => (v === "" ? null : v))
+  .optional();
 
 /**
  * URL of an uploaded media asset (image or video). Same rules as
@@ -35,11 +41,17 @@ const mediaUrlSchema = z
     "must be a relative path (starting with /) or an http(s) URL"
   );
 
+/**
+ * Photos/videos arrays are kept fully optional WITHOUT a default-to-`[]`
+ * transform so that PATCH payloads which omit the field leave the
+ * existing rows untouched. An explicit empty array `[]` still means
+ * "clear all media" — the route layer handles the "missing → []"
+ * default for create.
+ */
 const mediaArraySchema = z
   .array(mediaUrlSchema)
   .max(20, "at most 20 items")
-  .optional()
-  .transform((v) => v ?? []);
+  .optional();
 
 export const createTestimonialSchema = z.object({
   tag: z

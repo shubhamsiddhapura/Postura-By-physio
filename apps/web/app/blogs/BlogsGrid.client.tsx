@@ -32,7 +32,7 @@ export default function BlogsGrid({
 
   return (
     <>
-      <div className="mt-10 grid gap-6 md:mt-12 md:grid-cols-3">
+      <div className="mt-10 grid gap-6 md:mt-12 md:grid-cols-2 lg:grid-cols-3">
         {visiblePosts.map((post) => (
           <FadeIn
             key={post.id}

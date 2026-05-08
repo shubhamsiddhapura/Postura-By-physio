@@ -50,7 +50,8 @@ export function StructuredFitnessSolutions({
     if (count <= 1) return "md:grid-cols-1 md:max-w-[320px] md:mx-auto";
     if (count === 2) return "md:grid-cols-2";
     if (count === 3) return "md:grid-cols-3";
-    return "md:grid-cols-4";
+    // Tablet-portrait (md, < lg) gets 2 cols; desktop (lg+) keeps 4 cols.
+    return "md:grid-cols-2 lg:grid-cols-4";
   };
 
   return (

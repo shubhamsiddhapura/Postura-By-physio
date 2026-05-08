@@ -369,7 +369,11 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
     <section className={`relative bg-white md:py-20 py-10 ${className ?? ""}`}>
       <div className="mx-auto md:w-[90vw] max-w-7xl">
         <div className="p-6 md:p-10">
-          <div className="grid gap-10 md:grid-cols-2 md:items-stretch md:gap-12">
+          {/* Outer grid stacks on tablet-portrait so the form has full width
+              and its inner two-column field layout (lg+) doesn't get
+              crushed below ~340px. Desktop (lg+) keeps the side-by-side
+              programs/form layout. */}
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-12">
             {/* Left: Select service — flex column fills grid cell to match form height */}
             <FadeIn
               className="flex h-full min-h-0 flex-col"

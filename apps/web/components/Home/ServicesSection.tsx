@@ -39,7 +39,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageSrc: "/aerobics.png",
     tags: ["Weight loss", "Stamina", "Energy"],
     imageWrapperClass:
-      "-bottom-12 left-1/2 -translate-x-1/2 scale-[1.25] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-36 md:right-0 md:w-full md:h-full md:max-w-full",
+      "-bottom-12 left-1/2 -translate-x-1/2 scale-[1.25] lg:scale-100 h-[55%] w-[60%] lg:left-auto lg:translate-x-0 lg:-bottom-36 lg:right-0 lg:w-full lg:h-full lg:max-w-full",
     iconSrc: "/aerobics-icon.svg",
     href: "/aerobics-program",
   },
@@ -50,7 +50,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageSrc: "/Pilates.png",
     tags: ["Core", "Posture", "Injury Prevention"],
     imageWrapperClass:
-      "bottom-0 left-1/2 -translate-x-1/2 scale-[1.5] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-20 md:right-10 md:w-full md:h-full md:max-w-full",
+      "bottom-0 left-1/2 -translate-x-1/2 scale-[1.5] lg:scale-100 h-[55%] w-[60%] lg:left-auto lg:translate-x-0 lg:-bottom-20 lg:right-10 lg:w-full lg:h-full lg:max-w-full",
     iconSrc: "/plates-icon.svg",
     href: "/pilates-program",
   },
@@ -61,7 +61,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageSrc: "/yoga.png",
     tags: ["Stress", "Flexibility", "Balance"],
     imageWrapperClass:
-      "-bottom-16 left-1/2 -translate-x-1/2 scale-[1.5] md:scale-100 h-[55%] w-[60%] md:left-auto md:translate-x-0 md:-bottom-40 md:right-0 md:w-full md:h-full md:max-w-full",
+      "-bottom-16 left-1/2 -translate-x-1/2 scale-[1.5] lg:scale-100 h-[55%] w-[60%] lg:left-auto lg:translate-x-0 lg:-bottom-40 lg:right-0 lg:w-full lg:h-full lg:max-w-full",
     iconSrc: "/yoga-icon.svg",
     href: "/yoga-program",
   },
@@ -72,7 +72,7 @@ const defaultCards: ServicesSectionCard[] = [
     imageSrc: "/Physiotherapy.png",
     tags: ["Pain", "Recovery", "Mobility"],
     imageWrapperClass:
-      "-bottom-20 left-1/2 -translate-x-1/2 scale-[2] md:scale-100 h-[70%] w-[60%] md:left-auto md:translate-x-0 md:bottom-auto md:top-0 md:right-0 md:w-full md:h-[100vh] md:max-w-full",
+      "-bottom-20 left-1/2 -translate-x-1/2 scale-[2] lg:scale-100 h-[70%] w-[60%] lg:left-auto lg:translate-x-0 lg:bottom-auto lg:top-0 lg:right-0 lg:w-full lg:h-[100vh] lg:max-w-full",
     iconSrc: "/Physiotherapy-icon.svg",
     href: "/physiotherapy",
   },
@@ -121,7 +121,7 @@ export function ServicesSection({
                 ) : null}
                 <span>{eyebrow}</span>
               </div>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">{title}</h2>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-3xl lg:text-5xl">{title}</h2>
             </div>
           </FadeIn>
 
@@ -144,8 +144,8 @@ export function ServicesSection({
                   href={service.href}
                   className="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#E5F7F6]"
                 >
-                  <article className="relative h-[400px] overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl bg-[#FFFDF1] p-4 text-center shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:scale-[1.02] md:h-[60vh] md:px-5 md:py-5 md:text-left">
-                    <div className="flex flex-col items-center md:items-start">
+                  <article className="relative h-[400px] overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl bg-[#FFFDF1] p-4 text-center shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:scale-[1.02] md:h-[460px] lg:h-[60vh] lg:px-5 lg:py-5 lg:text-left">
+                    <div className="flex flex-col items-center lg:items-start">
                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
                         <Image
                           src={service.iconSrc}
@@ -174,11 +174,11 @@ export function ServicesSection({
                       />
                     </div>
 
-                    <div className="absolute bottom-8 right-1/2 z-10 mt-5 flex max-w-[95%] translate-x-1/2 flex-nowrap justify-center gap-2 overflow-x-auto md:max-w-none md:flex-wrap md:gap-3">
+                    <div className="absolute bottom-8 right-1/2 z-10 mt-5 flex max-w-[95%] translate-x-1/2 flex-nowrap justify-center gap-2 overflow-x-auto lg:max-w-none lg:flex-wrap lg:gap-3">
                       {service.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="flex-shrink-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-800 md:px-4"
+                          className="flex-shrink-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-800 lg:px-4"
                         >
                           {tag}
                         </span>
@@ -187,8 +187,8 @@ export function ServicesSection({
                   </article>
                 </Link>
               ) : (
-                <article className="relative h-[400px] overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl bg-[#FFFDF1] p-4 text-center shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:scale-[1.02] md:h-[60vh] md:px-5 md:py-5 md:text-left">
-                <div className="flex flex-col items-center md:items-start">
+                <article className="relative h-[400px] overflow-hidden rounded-bl-xl rounded-tl-[48px] rounded-br-[48px] rounded-tr-xl bg-[#FFFDF1] p-4 text-center shadow-[0_18px_40px_rgba(15,23,42,0.08)] transition-transform duration-300 hover:scale-[1.02] md:h-[460px] lg:h-[60vh] lg:px-5 lg:py-5 lg:text-left">
+                <div className="flex flex-col items-center lg:items-start">
                   <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary">
                     <Image
                       src={service.iconSrc}
@@ -217,11 +217,11 @@ export function ServicesSection({
                   />
                 </div>
 
-                <div className="absolute bottom-8 right-1/2 z-10 mt-5 flex max-w-[95%] translate-x-1/2 flex-nowrap justify-center gap-2 overflow-x-auto md:max-w-none md:flex-wrap md:gap-3">
+                <div className="absolute bottom-8 right-1/2 z-10 mt-5 flex max-w-[95%] translate-x-1/2 flex-nowrap justify-center gap-2 overflow-x-auto lg:max-w-none lg:flex-wrap lg:gap-3">
                   {service.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="flex-shrink-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-800 shadow-[0_10px_25px_rgba(15,23,42,0.08)] md:px-4"
+                      className="flex-shrink-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-xs font-medium text-gray-800 shadow-[0_10px_25px_rgba(15,23,42,0.08)] lg:px-4"
                     >
                       {tag}
                     </span>

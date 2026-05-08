@@ -217,7 +217,7 @@ export function HeroSection({
           )}
 
           {/* Text Content */}
-          <div className="absolute bottom-40 left-0 right-0 md:bottom-auto md:top-40 flex flex-col px-6 md:px-16 lg:px-24 md:max-w-3xl">
+          <div className="absolute bottom-40 left-0 right-0 md:bottom-auto md:top-32 lg:top-40 flex flex-col px-6 md:px-10 lg:px-24 md:max-w-xl lg:max-w-3xl">
             {/* Tag */}
             <FadeIn direction="up" distance={30} duration={800} delay={0}>
               <p className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] mb-4 md:mb-5 justify-center md:justify-start">
@@ -236,7 +236,7 @@ export function HeroSection({
               >
                 <h1
                   className={[
-                    "text-4xl md:text-6xl font-bold text-[#FEF9E0] leading-tight text-center md:text-left",
+                    "text-4xl md:text-5xl lg:text-6xl font-bold text-[#FEF9E0] leading-tight text-center md:text-left",
                     bookSessionButtonPlacement === "below" ? "mb-4 md:mb-5" : "",
                   ].join(" ")}
                   dangerouslySetInnerHTML={{ __html: slide.headline }}

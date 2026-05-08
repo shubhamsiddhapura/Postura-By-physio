@@ -66,11 +66,13 @@ const defaultItems: WhyChooseUsItem[] = [
   },
 ];
 
+// Tablet-portrait (md, < lg) gets a friendlier column count; desktop (lg+)
+// preserves the original column count for each `mdColumns` selection.
 const mdColClass: Record<NonNullable<WhyChooseUsProps["mdColumns"]>, string> = {
   2: "md:grid-cols-2",
   3: "md:grid-cols-3",
-  4: "md:grid-cols-4",
-  5: "md:grid-cols-5",
+  4: "md:grid-cols-2 lg:grid-cols-4",
+  5: "md:grid-cols-3 lg:grid-cols-5",
 };
 
 function ItemIcon({ item }: { item: WhyChooseUsItem }) {

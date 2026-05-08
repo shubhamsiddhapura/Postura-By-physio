@@ -123,7 +123,9 @@ export function ContactUsSection({ className }: { className?: string }) {
     return (
       <section className={cn("relative bg-white py-10 md:py-20", className)}>
         <div className="mx-auto w-[92vw] max-w-7xl">
-          <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-12">
+          {/* Stack on tablet-portrait so the two-column field rows below
+              keep enough room; restore side-by-side layout on lg+. */}
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12">
             <FadeIn direction="up" duration={800} distance={26} delay={0}>
               <div className="flex min-h-[360px] flex-col items-center justify-center rounded-[28px] bg-[#fafafa] p-6 text-center md:p-10">
                 <CheckCircle2 className="mb-4 h-14 w-14 text-primary" />
@@ -164,7 +166,9 @@ export function ContactUsSection({ className }: { className?: string }) {
   return (
     <section className={cn("relative bg-white py-10 md:py-20", className)}>
       <div className="mx-auto w-[92vw] max-w-7xl">
-        <div className="grid gap-10 md:grid-cols-2 md:items-start md:gap-12">
+        {/* Stack on tablet-portrait so the two-column field rows below
+            keep enough room; restore side-by-side layout on lg+. */}
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12">
           <FadeIn direction="up" duration={800} distance={26} delay={0}>
             <div className="rounded-[28px] bg-[#fafafa] p-6 md:p-10">
               <h2 className="text-2xl font-bold text-gray-900 md:text-4xl">

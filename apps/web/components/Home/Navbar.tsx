@@ -103,7 +103,7 @@ export function Navbar() {
             />
           </Link>
 
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-7 lg:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -127,13 +127,13 @@ export function Navbar() {
               href="/book-a-session"
               label="Book Session"
               size="md"
-              className="hidden md:block mr-6"
+              className="hidden lg:block mr-6"
             />
 
             <button
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden pr-5 transition-transform duration-200"
+              className="lg:hidden pr-5 transition-transform duration-200"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
@@ -149,9 +149,9 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Collapsed menu (shown on mobile + tablet-portrait, ≤ 1023px) */}
         <div
-          className={`mt-2 rounded-lg backdrop-blur-md md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isScrolled
+          className={`mt-2 rounded-lg backdrop-blur-md lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isScrolled
               ? "bg-primary/60"
               : "bg-white/10"
             } ${isMenuOpen

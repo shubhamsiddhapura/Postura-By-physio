@@ -101,7 +101,7 @@ export function WhoCanJoin({
           </FadeIn>
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
+        <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {cards.map((card, index) => (
             <FadeIn key={card.title} direction="up" delay={index * 50} duration={800}>
             {card.href ? (

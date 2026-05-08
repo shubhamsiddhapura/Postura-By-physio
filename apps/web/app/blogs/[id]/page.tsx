@@ -55,45 +55,47 @@ export default async function BlogDetailPage({ params }: PageProps) {
       {/* Hero: teal panel + overlapping image */}
       <section className="relative pb-0">
         <div
-          className="relative overflow-hidden rounded-br-[clamp(3rem,12vw,7.5rem)] rounded-bl-3xl pb-[clamp(8rem,22vw,14rem)] flex items-center pt-10 md:pt-14 md:h-screen h-[90vh]"
+          className="relative overflow-hidden rounded-br-[clamp(3rem,12vw,7.5rem)] rounded-bl-3xl pb-[clamp(8rem,22vw,14rem)] flex items-center pt-10 md:pt-14 h-[90vh] md:h-[62vh] lg:h-screen"
           style={{ backgroundColor: heroTeal }}
         >
-          <div className="px-4 md:mx-32 text-center md:text-left">
-            <p className="flex items-center gap-2 md:text-sm text-xs font-medium text-[#FEF9E0] justify-center md:justify-start">
-              <span>✦</span>
-              {post.eyebrow}
-            </p>
+          <div className="mx-auto w-full max-w-7xl px-4">
+            <div className="mx-auto w-full min-[480px]:w-[92%] sm:w-[88%] md:w-[86%] lg:w-[90%] xl:w-full text-center md:text-left">
+              <p className="flex items-center gap-2 md:text-sm text-xs font-medium text-[#FEF9E0] justify-center md:justify-start">
+                <span>✦</span>
+                {post.eyebrow}
+              </p>
 
-            <h1 className="mt-4 max-w-4xl font-cabinet text-[40px] font-bold leading-tight tracking-tight md:text-4xl lg:text-6xl lg:leading-[1.15] text-[#FEF9E0]">
-              {post.title}
-            </h1>
+              <h1 className="mt-4 max-w-4xl font-cabinet text-[40px] font-bold leading-tight tracking-tight md:text-5xl md:leading-[1.15] lg:text-6xl lg:leading-[1.15] text-[#FEF9E0]">
+                {post.title}
+              </h1>
 
-            <div className="mt-8 flex flex-wrap items-center gap-20 md:gap-6 justify-center md:justify-start">
-              <div className="flex items-center gap-3 flex-col md:flex-row">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
-                  <Calendar
-                    className="h-6 w-6 md:h-5 md:w-5"
-                    style={{ color: heroTeal }}
-                    strokeWidth={2}
-                    aria-hidden
-                  />
-                </span>
-                <span className="font-medium md:text-base text-[#FEF9E0]">
-                  {post.date}
-                </span>
-              </div>
-              <div className="flex items-center gap-3 flex-col md:flex-row">
-                <span className="grid h-12  w-12 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
-                  <User
-                    className="h-6 w-6 md:h-5 md:w-5"
-                    style={{ color: heroTeal }}
-                    strokeWidth={2}
-                    aria-hidden
-                  />
-                </span>
-                <span className="font-medium md:text-base text-[#FEF9E0]">
-                  {post.author}
-                </span>
+              <div className="mt-8 flex flex-wrap items-center gap-20 md:gap-6 justify-center md:justify-start">
+                <div className="flex items-center gap-3 flex-col md:flex-row">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
+                    <Calendar
+                      className="h-6 w-6 md:h-5 md:w-5"
+                      style={{ color: heroTeal }}
+                      strokeWidth={2}
+                      aria-hidden
+                    />
+                  </span>
+                  <span className="font-medium md:text-base text-[#FEF9E0]">
+                    {post.date}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 flex-col md:flex-row">
+                  <span className="grid h-12  w-12 shrink-0 place-items-center rounded-lg md:h-11 md:w-11 bg-[#FEF9E0]">
+                    <User
+                      className="h-6 w-6 md:h-5 md:w-5"
+                      style={{ color: heroTeal }}
+                      strokeWidth={2}
+                      aria-hidden
+                    />
+                  </span>
+                  <span className="font-medium md:text-base text-[#FEF9E0]">
+                    {post.author}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

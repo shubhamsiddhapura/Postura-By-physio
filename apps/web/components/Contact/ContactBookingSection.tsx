@@ -411,7 +411,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                           onClick={() => setSelectedProgram(program.id)}
                           aria-pressed={isSelected}
                           className={cn(
-                            "group relative flex w-full flex-col overflow-hidden rounded-bl-xl rounded-tl-[36px] rounded-br-[36px] rounded-tr-xl bg-gray-100 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:min-h-0 md:flex-1",
+                            "group relative flex w-full flex-col overflow-hidden rounded-bl-xl rounded-tl-[36px] rounded-br-[36px] rounded-tr-xl bg-gray-100 text-left outline-none transition focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 lg:min-h-0 lg:flex-1",
                             isSelected
                               ? "border-2 border-primary p-3 shadow-sm"
                               : "border-2 border-transparent p-0",
@@ -419,7 +419,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                         >
                           <div
                             className={cn(
-                              "relative aspect-[4/3] w-full overflow-hidden rounded-bl-lg rounded-tl-3xl rounded-br-3xl rounded-tr-lg md:aspect-auto md:min-h-0 md:flex-1",
+                              "relative aspect-[4/3] w-full overflow-hidden rounded-bl-lg rounded-tl-3xl rounded-br-3xl rounded-tr-lg lg:aspect-auto lg:min-h-0 lg:flex-1",
                             )}
                           >
                             <Image
@@ -427,7 +427,7 @@ export function ContactBookingSection({ className }: ContactBookingSectionProps)
                               alt={program.alt}
                               fill
                               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
-                              sizes="(min-width: 768px) 40vw, 50vw"
+                              sizes="(min-width: 1024px) 40vw, (min-width: 768px) 90vw, 50vw"
                             />
                             <div className="absolute inset-0 bg-black/10" />
 

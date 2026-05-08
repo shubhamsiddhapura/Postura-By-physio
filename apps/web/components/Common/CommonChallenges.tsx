@@ -55,40 +55,40 @@ export function CommonChallenges({
   return (
     <section id={id} className={backgroundClassName}>
       <div className="mx-auto max-w-[90vw] py-12 md:px-4 md:py-10">
-        <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           {/* Left image */}
           <FadeIn direction="right" duration={900} distance={60} delay={120}>
-            <div className="relative md:pl-16">
-              <div className="relative overflow-hidden rounded-bl-xl rounded-tl-[84px] rounded-br-[84px] rounded-tr-xl bg-gray-100 md:w-[32vw]">
-                <div className="relative h-[52vh] w-full md:h-[68vh]">
+            <div className="relative md:mx-auto md:max-w-[480px] lg:mx-0 lg:max-w-none lg:pl-16">
+              <div className="relative overflow-hidden rounded-bl-xl rounded-tl-[84px] rounded-br-[84px] rounded-tr-xl bg-gray-100 md:w-full lg:w-[32vw]">
+                <div className="relative h-[52vh] w-full md:h-[55vh] lg:h-[68vh]">
                   <Image
                     src={image.src}
                     alt={image.alt}
                     fill
                     className={flipImageX ? "object-cover scale-x-[-1]" : "object-cover"}
-                    sizes="(min-width: 768px) 40vw, 90vw"
+                    sizes="(min-width: 1024px) 40vw, (min-width: 768px) 60vw, 90vw"
                     priority={false}
                   />
                 </div>
               </div>
 
               {/* Watermark overlay */}
-              <div className="pointer-events-none absolute -left-6 bottom-0 md:left-6">
+              <div className="pointer-events-none absolute -left-6 bottom-0 md:left-2 lg:left-6">
                 <Image
                   src={watermarkSrc}
                   alt=""
                   width={190}
                   height={320}
-                  className="h-auto w-[150px] opacity-60 md:w-[220px]"
+                  className="h-auto w-[150px] opacity-60 md:w-[180px] lg:w-[220px]"
                 />
               </div>
             </div>
           </FadeIn>
 
           {/* Right content */}
-          <div className="max-w-xl text-center md:text-left">
+          <div className="max-w-xl text-center md:mx-auto lg:mx-0 lg:text-left">
             <FadeIn direction="up" duration={800} distance={30} delay={140}>
-              <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-500 md:justify-start">
+              <div className="flex items-center justify-center gap-2 text-sm font-medium text-gray-500 lg:justify-start">
                 <Image
                   src="/sparkle.svg"
                   alt=""

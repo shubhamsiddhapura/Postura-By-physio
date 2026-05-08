@@ -55,7 +55,7 @@ export function GalleryMasonrySection({
       <div className="mx-auto w-full max-w-[90vw] px-4">
         <div
           ref={dividerInView.ref}
-          className="relative my-10 flex items-center justify-center md:my-12"
+          className="relative my-10 flex items-center justify-center lg:my-12"
           style={{
             opacity: dividerInView.isInView ? 1 : 0,
             transform: dividerInView.isInView
@@ -70,7 +70,7 @@ export function GalleryMasonrySection({
             className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-primary"
             aria-hidden
           />
-          <div className="relative flex items-center gap-2 bg-white px-3 md:px-4">
+          <div className="relative flex items-center gap-2 bg-white px-3 lg:px-4">
             <Image
               src="/sparkle.svg"
               alt=""
@@ -78,17 +78,17 @@ export function GalleryMasonrySection({
               height={18}
               className="h-[18px] w-[18px] shrink-0"
             />
-            <span className="text-center text-sm font-medium text-primary md:text-[15px]">
+            <span className="text-center text-sm font-medium text-primary lg:text-[15px]">
               {sectionTitle}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-12 md:gap-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-12 lg:gap-4">
           <Tile
             tile={a}
-            className="col-span-2 aspect-[16/10] w-full overflow-hidden rounded-3xl bg-gray-100 md:col-span-3 md:aspect-auto md:h-[50vh] md:rounded-none md:rounded-tl-[72px] md:rounded-br-[72px] md:rounded-tr-[24px] md:rounded-bl-[24px] rounded-tl-[18px] rounded-br-[18px] rounded-tr-[48px] rounded-bl-[48px]"
-            sizes="(min-width: 768px) 25vw, 100vw"
+            className="col-span-2 aspect-[16/10] w-full overflow-hidden rounded-3xl bg-gray-100 lg:col-span-3 lg:aspect-auto lg:h-[50vh] lg:rounded-none lg:rounded-tl-[72px] lg:rounded-br-[72px] lg:rounded-tr-[24px] lg:rounded-bl-[24px] rounded-tl-[18px] rounded-br-[18px] rounded-tr-[48px] rounded-bl-[48px]"
+            sizes="(min-width: 1024px) 25vw, 100vw"
             category={category}
             loaded={a?.src ? !!loaded[a.src] : true}
             onLoaded={markLoaded}
@@ -96,8 +96,8 @@ export function GalleryMasonrySection({
           />
           <Tile
             tile={b}
-            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 md:col-span-5 md:aspect-auto md:rounded-none md:rounded-tr-[72px] md:rounded-bl-[72px] md:rounded-tl-[24px] md:rounded-br-[24px] rounded-tl-[48px] rounded-br-[48px] rounded-tr-[18px] rounded-bl-[18px]"
-            sizes="(min-width: 768px) 42vw, 45vw"
+            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 lg:col-span-5 lg:aspect-auto lg:rounded-none lg:rounded-tr-[72px] lg:rounded-bl-[72px] lg:rounded-tl-[24px] lg:rounded-br-[24px] rounded-tl-[48px] rounded-br-[48px] rounded-tr-[18px] rounded-bl-[18px]"
+            sizes="(min-width: 1024px) 42vw, 45vw"
             category={category}
             loaded={b?.src ? !!loaded[b.src] : true}
             onLoaded={markLoaded}
@@ -105,8 +105,8 @@ export function GalleryMasonrySection({
           />
           <Tile
             tile={c}
-            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 md:col-span-4 md:aspect-auto md:rounded-none md:rounded-tl-[72px] md:rounded-br-[72px] md:rounded-tr-[24px] md:rounded-bl-[24px] rounded-tl-[18px] rounded-br-[18px] rounded-tr-[48px] rounded-bl-[48px]"
-            sizes="(min-width: 768px) 34vw, 45vw"
+            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 lg:col-span-4 lg:aspect-auto lg:rounded-none lg:rounded-tl-[72px] lg:rounded-br-[72px] lg:rounded-tr-[24px] lg:rounded-bl-[24px] rounded-tl-[18px] rounded-br-[18px] rounded-tr-[48px] rounded-bl-[48px]"
+            sizes="(min-width: 1024px) 34vw, 45vw"
             category={category}
             loaded={c?.src ? !!loaded[c.src] : true}
             onLoaded={markLoaded}
@@ -114,8 +114,8 @@ export function GalleryMasonrySection({
           />
           <Tile
             tile={d}
-            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 md:col-span-5 md:aspect-auto md:h-[50vh] md:rounded-none md:rounded-tr-[72px] md:rounded-bl-[72px] md:rounded-tl-[24px] md:rounded-br-[24px] rounded-tl-[48px] rounded-br-[48px] rounded-tr-[18px] rounded-bl-[18px]"
-            sizes="(min-width: 768px) 42vw, 45vw"
+            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 lg:col-span-5 lg:aspect-auto lg:h-[50vh] lg:rounded-none lg:rounded-tr-[72px] lg:rounded-bl-[72px] lg:rounded-tl-[24px] lg:rounded-br-[24px] rounded-tl-[48px] rounded-br-[48px] rounded-tr-[18px] rounded-bl-[18px]"
+            sizes="(min-width: 1024px) 42vw, 45vw"
             category={category}
             loaded={d?.src ? !!loaded[d.src] : true}
             onLoaded={markLoaded}
@@ -123,8 +123,8 @@ export function GalleryMasonrySection({
           />
           <Tile
             tile={e}
-            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 md:col-span-4 md:aspect-auto md:rounded-none md:rounded-tl-[72px] md:rounded-br-[72px] md:rounded-tr-[24px] md:rounded-bl-[24px] rounded-tl-[18px] rounded-br-[18px] rounded-tr-[48px] rounded-bl-[48px]"
-            sizes="(min-width: 768px) 34vw, 45vw"
+            className="col-span-1 aspect-square w-full overflow-hidden rounded-3xl bg-gray-100 lg:col-span-4 lg:aspect-auto lg:rounded-none lg:rounded-tl-[72px] lg:rounded-br-[72px] lg:rounded-tr-[24px] lg:rounded-bl-[24px] rounded-tl-[18px] rounded-br-[18px] rounded-tr-[48px] rounded-bl-[48px]"
+            sizes="(min-width: 1024px) 34vw, 45vw"
             category={category}
             loaded={e?.src ? !!loaded[e.src] : true}
             onLoaded={markLoaded}

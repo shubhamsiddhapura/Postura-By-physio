@@ -34,19 +34,19 @@ export function MeetPhysiotherapist({
   return (
     <section id="about" className="bg-white">
       <div className="py-10 md:py-16">
-          <div className="relative overflow-hidden md:h-auto rounded-bl-xl md:rounded-tl-[180px] rounded-tl-[90px] md:rounded-br-[180px] rounded-br-[90px] md:rounded-tr-2xl rounded-tr-xl bg-primary px-6 pt-10 md:px-10 md:py-12">
-            <div className="grid items-start md:items-center gap-8 md:gap-10 md:grid-cols-[1.1fr,0.9fr]">
+          <div className="relative overflow-hidden md:h-auto rounded-bl-xl md:rounded-tl-[180px] rounded-tl-[90px] md:rounded-br-[180px] rounded-br-[90px] md:rounded-tr-2xl rounded-tr-xl bg-primary px-6 pt-10 md:px-10 md:pt-12 lg:pb-12">
+            <div className="grid items-start lg:items-center gap-8 lg:gap-10 lg:grid-cols-[1.1fr,0.9fr]">
               {/* Left */}
-              <div className="text-white md:pl-20 text-center md:text-left">
+              <div className="text-white lg:pl-20 text-center lg:text-left">
                 <FadeIn direction="up" duration={800} distance={28} delay={100}>
-                  <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center md:justify-start ">
+                  <div className="flex items-center gap-2 text-sm font-medium text-[#FEF9E0] justify-center lg:justify-start ">
                     <Image src="/white-sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
                     <span>{eyebrow}</span>
                   </div>
                 </FadeIn>
 
                 <FadeIn direction="up" duration={800} distance={28} delay={230}>
-                  <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
+                  <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
                     {heading}
                   </h2>
                 </FadeIn>
@@ -89,9 +89,9 @@ export function MeetPhysiotherapist({
 
               {/* Right */}
               <FadeIn direction="left" duration={900} distance={60} delay={200}>
-              <div className="relative h-[350px] md:h-[450px]">
+              <div className="relative h-[350px] md:h-[400px] lg:h-[450px]">
                 {/* Watermark SVG behind doctor */}
-                <div className="pointer-events-none absolute md:right-5 -top-12 -right-10 z-5">
+                <div className="pointer-events-none absolute lg:right-5 -top-12 -right-10 z-5">
                   <Image
                     src="/white-logo-svg.png"
                     alt=""
@@ -101,7 +101,7 @@ export function MeetPhysiotherapist({
                   />
                 </div>
 
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-[80%] h-[110%] md:left-auto md:translate-x-0 md:-bottom-32 md:-right-8 md:w-[40vw] md:h-[600px]">
+                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-[80%] h-[110%] lg:left-auto lg:translate-x-0 lg:-bottom-32 lg:-right-8 lg:w-[40vw] lg:h-[600px]">
                   <Image
                     src="/doctor.png"
                     alt="Physiotherapist"

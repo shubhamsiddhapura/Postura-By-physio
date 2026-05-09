@@ -40,7 +40,7 @@ export default function PhysiotherapyServicePage() {
 
       <OurApproachTimeline id="our-approach" steps={approachSteps} />
 
-<div className="md:mt-40"> 
+<div className="lg:mt-40"> 
 
       <WhoCanJoin
         id="physiotherapy-services"

@@ -129,7 +129,7 @@ export default function AerobicsProgramPage() {
                 />
             </div>
 
-            <div className="md:mt-60 mt-10 md:pb-10 bg-white">
+            <div className="lg:mt-60 mt-10 md:pb-10 bg-white">
                 <CommonChallenges
                     eyebrow="Benefits"
                     title={"Benefits of Aerobics Training"}

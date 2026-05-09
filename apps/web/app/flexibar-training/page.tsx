@@ -103,7 +103,7 @@ export default function FlexibarTrainingPage() {
         />
       </div>
 
-      <div className="md:mt-60 mt-10 md:pb-10">
+      <div className="lg:mt-60 mt-10 md:pb-10">
         <CommonChallenges
           backgroundClassName="bg-[#E0EFEF] py-10"
           eyebrow="Benefits"

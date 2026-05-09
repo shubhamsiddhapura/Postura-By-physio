@@ -95,9 +95,22 @@ export function OurApproachTimeline({
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
+    const mq = window.matchMedia("(min-width: 1024px)");
     setIsDesktop(mq.matches);
     const onChange = () => setIsDesktop(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  // Tablet (768–1023px) keeps the vertical timeline but stretches the
+  // connector so the ring + step content fill the available width instead
+  // of clustering on the left. Drives the inline peel transform distance
+  // to match the longer arm at this width.
+  const [isTablet, setIsTablet] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
+    setIsTablet(mq.matches);
+    const onChange = () => setIsTablet(mq.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
   }, []);
@@ -344,8 +357,8 @@ export function OurApproachTimeline({
           </FadeIn>
         </div>
 
-        {/* ── Mobile: vertical timeline ─────────────────────────────────── */}
-        <div ref={mobileSectionRef} className="relative mt-10 pb-10 md:hidden">
+        {/* ── Mobile + tablet: vertical timeline (tablet stretches right) ─ */}
+        <div ref={mobileSectionRef} className="relative mt-10 pb-10 md:mt-16 md:pb-16 lg:hidden">
           {/* vertical dashed line */}
           <div
             aria-hidden
@@ -372,61 +385,67 @@ export function OurApproachTimeline({
             </div>
           ) : null}
 
-          <div className="space-y-10">
-            {steps.map((step, idx) => (
-              <div key={step.key} className="relative pl-40">
-                {/* intersection dot on dashed line (static) */}
-                <div
-                  ref={setMobileJunctionRef(idx)}
-                  className="absolute left-10 top-10 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary"
-                />
-                {/* connector from line to step marker */}
-                <div className="absolute left-10 top-10 z-0 h-px w-28 -translate-y-1/2 bg-primary" />
-                {/* ring dot at end of connector */}
-                <div className="absolute left-[9.5rem] top-10 z-10 flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-visible rounded-full border-2 border-primary bg-white">
-                  {!reducedMotion && pingingSteps.includes(idx) ? (
-                    <>
-                      <span
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 z-0 animate-ping rounded-full bg-primary/50 [animation-duration:0.95s]"
-                      />
-                      <span
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 z-0 animate-ping rounded-full bg-primary/35 [animation-delay:220ms] [animation-duration:1.65s]"
-                      />
-                    </>
-                  ) : null}
-                  <div className="relative z-10 h-2 w-2 rounded-full bg-primary" />
-                </div>
-
-                {/* Flying peel: only for active step, sequential */}
-                {!reducedMotion && peelingIdx === idx ? (
+          <div className="space-y-10 md:space-y-12">
+            {steps.map((step, idx) => {
+              const verticalPeelArm = isTablet ? "18rem" : "7rem";
+              return (
+                <div key={step.key} className="relative pl-40 md:pl-[21rem]">
+                  {/* intersection dot on dashed line (static) */}
                   <div
-                    aria-hidden
-                    className="absolute left-10 top-10 z-[16] h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,0.92)]"
-                    style={{
-                      ...flyingPeelTransition,
-                      transform: peelAnimOn
-                        ? "translate(-50%, -50%) translateX(7rem)"
-                        : "translate(-50%, -50%) translateX(0)",
-                    }}
+                    ref={setMobileJunctionRef(idx)}
+                    className="absolute left-10 top-10 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary"
                   />
-                ) : null}
-
-                {/* step label */}
-                <div className="pt-5 pl-5">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-lg font-semibold text-[#FEF9E0]">
-                    {step.key}
+                  {/* connector from line to step marker */}
+                  <div className="absolute left-10 top-10 z-0 h-px w-28 -translate-y-1/2 bg-primary md:w-72" />
+                  {/* ring dot at end of connector */}
+                  <div className="absolute left-[9.5rem] top-10 z-10 flex h-4 w-4 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-visible rounded-full border-2 border-primary bg-white md:left-[20.5rem]">
+                    {!reducedMotion && pingingSteps.includes(idx) ? (
+                      <>
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 z-0 animate-ping rounded-full bg-primary/50 [animation-duration:0.95s]"
+                        />
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 z-0 animate-ping rounded-full bg-primary/35 [animation-delay:220ms] [animation-duration:1.65s]"
+                        />
+                      </>
+                    ) : null}
+                    <div className="relative z-10 h-2 w-2 rounded-full bg-primary" />
                   </div>
-                  <div className="mt-3 text-base font-semibold text-slate-900">{step.title}</div>
+
+                  {/* Flying peel: only for active step, sequential */}
+                  {!reducedMotion && peelingIdx === idx ? (
+                    <div
+                      aria-hidden
+                      className="absolute left-10 top-10 z-[16] h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_0_2px_rgba(255,255,255,0.92)]"
+                      style={{
+                        ...flyingPeelTransition,
+                        transform: peelAnimOn
+                          ? `translate(-50%, -50%) translateX(${verticalPeelArm})`
+                          : "translate(-50%, -50%) translateX(0)",
+                      }}
+                    />
+                  ) : null}
+
+                  {/* step label — stacked on mobile, inline on tablet so the
+                      title fills the empty right-hand space */}
+                  <div className="pt-5 pl-5 md:flex md:items-center md:gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-lg font-semibold text-[#FEF9E0] md:flex-shrink-0">
+                      {step.key}
+                    </div>
+                    <div className="mt-3 text-base font-semibold text-slate-900 md:mt-0 md:text-lg">
+                      {step.title}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
         {/* ── Desktop: horizontal timeline ──────────────────────────────── */}
-        <div className="relative mt-48 hidden md:block">
+        <div className="relative mt-48 hidden lg:block">
           <div
             aria-hidden
             className="timeline-dash timeline-dash--h timeline-dash--loop absolute left-0 right-0 top-1/2 z-0 h-1 -translate-y-1/2"

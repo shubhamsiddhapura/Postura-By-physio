@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FadeIn } from "../ui/FadeIn";
 import { CheckCheckIcon } from "lucide-react";
+import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 
 function CheckBullet({ inverted = false }: { inverted?: boolean }) {
   return (
@@ -113,6 +114,17 @@ export function VisionMission() {
             </div>
           </FadeIn>
         </div>
+
+        <FadeIn direction="up" delay={320} className="mt-10 flex justify-center">
+          <PrimaryCTAButton
+            href="/contact-us"
+            label="Contact Us"
+            size="sm"
+            variant="filled"
+            arrowVariant="dark"
+            className="hover:scale-100"
+          />
+        </FadeIn>
       </div>
     </section>
   );

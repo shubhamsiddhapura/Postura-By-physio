@@ -6,6 +6,7 @@ import { MeetPhysiotherapist } from "../components/Home/MeetPhysiotherapist";
 import { ServicesSection } from "../components/Home/ServicesSection";
 import { MomentsOfProgress } from "../components/Home/MomentsOfProgress";
 import { FaqSection } from "../components/Home/FaqSection";
+import { RecoveryResultsBanner } from "../components/Home/RecoveryResultsBanner";
 import { AskPhysioSection } from "../components/Home/AskPhysioSection";
 import { Footer } from "../components/Home/Footer";
 
@@ -20,6 +21,7 @@ export default function HomePage() {
       <ServicesSection />
       <MomentsOfProgress />
       <FaqSection />
+      <RecoveryResultsBanner />
       <AskPhysioSection />
       <Footer />
     </div>

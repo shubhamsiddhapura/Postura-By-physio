@@ -9,6 +9,7 @@ import { MeetPhysiotherapist } from "../../components/Home/MeetPhysiotherapist";
 import { TreatmentPhilosophy } from "@/components/About/TreatmentPhilosophy";
 import { VisionMission } from "@/components/About/VisionMission";
 import { prisma } from "@repo/db";
+import { RecoveryResultsBanner } from "@/components/Home/RecoveryResultsBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +57,7 @@ export default async function AboutPage() {
       <CertificationsSection items={certifications} />
       <TreatmentPhilosophy />
       <VisionMission />
+      <RecoveryResultsBanner />
       <Footer />
     </div>
   );

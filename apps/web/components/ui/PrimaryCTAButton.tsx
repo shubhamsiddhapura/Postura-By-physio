@@ -6,6 +6,8 @@ import { ArrowUpRight } from "lucide-react";
 type PrimaryCTAButtonProps = {
   href: string;
   label: string;
+  /** Button surface styling */
+  variant?: "filled" | "inverse";
   size?: "sm" | "md";
   /** Visual style of the arrow circle + icon only */
   arrowVariant?: "light" | "dark";
@@ -18,6 +20,7 @@ type PrimaryCTAButtonProps = {
 export function PrimaryCTAButton({
   href,
   label,
+  variant = "filled",
   size = "md",
   arrowVariant = "light",
   className,
@@ -26,7 +29,12 @@ export function PrimaryCTAButton({
   type = "button",
 }: PrimaryCTAButtonProps) {
   const baseButtonClasses =
-    "inline-flex items-center rounded-full bg-secondary text-[#FEF9E0] shadow-sm transition hover:brightness-90";
+    "inline-flex items-center rounded-full shadow-sm transition hover:brightness-90";
+
+  const surfaceClasses =
+    variant === "inverse"
+      ? "bg-[#FEF9E0] text-primary"
+      : "bg-secondary text-[#FEF9E0]";
 
   // Left padding: visual breathing room before text.
   // Right padding: reserves space so the label ends before the badge circle
@@ -59,7 +67,7 @@ export function PrimaryCTAButton({
     ? "opacity-60 cursor-not-allowed pointer-events-none hover:brightness-100"
     : "";
 
-  const innerClass = `${baseButtonClasses} ${sizeClasses} ${buttonStateClasses}`;
+  const innerClass = `${baseButtonClasses} ${surfaceClasses} ${sizeClasses} ${buttonStateClasses}`;
 
   return (
     <div

@@ -18,7 +18,7 @@ export type MeetPhysiotherapistProps = {
 export function MeetPhysiotherapist({
   eyebrow = "About Us",
   heading = "Meet Your Physiotherapist...",
-  paragraph1 = `Postura by Physio is led by Dr. Priyanshi Pandya (MPT GPC-6673, MIAFT), a qualified and registered physiotherapist with strong academic and clinical experience. With a passion for preventive healthcare and functional rehabilitation, she is committed to delivering evidence-based, compassionate, and result-oriented care.`,
+  paragraph1 = `Postura by Physio is led by Dr. Priyanshi Pandya (PT) MPT in cardiopulmonary conditions,MIAFT a qualified and NCAHP registered physiotherapist with strong academic and clinical experience. With a passion for preventive healthcare and functional rehabilitation, she is committed to delivering evidence-based, compassionate, and result-oriented care.`,
   paragraph2 = `Her vision is to make quality physiotherapy accessible, reliable, and impactful for every individual.`,
   paragraph3 = ``,
   ctaLabel = "Start Your Recovery Journey",
@@ -26,9 +26,9 @@ export function MeetPhysiotherapist({
   whatsappMessage = "Hi! I’d like to start my recovery journey and book a session.",
 }: MeetPhysiotherapistProps) {
   /** Matches home copy `Dr. Priyanshi Pandya (PT)` and about copy `Dr. Priyanshi Pandya(PT)`. */
-  const doctorNameSplit = /(Dr\.\s*Priyanshi\s+Pandya\s*\(MPT GPC-6673, MIAFT\))/g;
+  const doctorNameSplit = /(Dr\.\s*Priyanshi\s+Pandya\s*\(PT\))/g;
   const isDoctorNameChunk = (s: string) =>
-    /^Dr\.\s*Priyanshi\s+Pandya\s*\(MPT GPC-6673, MIAFT\)$/.test(s);
+    /^Dr\.\s*Priyanshi\s+Pandya\s*\(PT\)$/.test(s);
   const paragraph1Parts = paragraph1.split(doctorNameSplit);
 
   return (

@@ -847,7 +847,7 @@ function SubmitButton({ loading }: { loading: boolean }) {
       <button
         type="submit"
         disabled={loading}
-        className="inline-flex items-center gap-3 rounded-full bg-secondary px-6 py-3 pr-11 text-xs font-semibold text-white shadow-sm transition hover:brightness-90 disabled:opacity-60 md:text-sm"
+        className="inline-flex min-w-[170px] items-center justify-center gap-3 whitespace-nowrap rounded-full bg-secondary px-6 py-3 pr-11 text-xs font-semibold text-white shadow-sm transition hover:brightness-90 disabled:opacity-60 md:min-w-[200px] md:text-sm"
       >
         {loading ? (
           <>

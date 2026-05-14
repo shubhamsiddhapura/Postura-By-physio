@@ -12,12 +12,14 @@ export function RecoveryResultsBanner() {
             <div className="flex flex-col gap-8 md:flex-row items-center md:justify-between md:gap-8">
               <div className="min-w-0 text-center md:text-left space-y-4">
                 <h3 className="text-4xl font-semibold tracking-tight md:text-5xl">
-                  Where Recovery Meets Results
+                  Let&apos;s find what bothers you
                 </h3>
                 <p className="mt-2 max-w-2xl text-[#FEF9E0]/90 leading-6">
-                  Whether it’s pain, stiffness, posture issues, or reduced
-                  mobility, our experts are here to understand your condition
-                  and guide you towards the right recovery and wellness program.
+                  Postura by Physio blends evidence-based physiotherapy with
+                  structured fitness for posture, mobility, and long-term
+                  wellness. Answer a few questions about your lifestyle, pain, and
+                  goals—we&apos;ll suggest the right program before you book a
+                  session.
                 </p>
               </div>
 

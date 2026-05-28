@@ -22,7 +22,7 @@ export function BrandIntroduction({
     title = "Professional Care for Stronger Movement",
     description = (
         <>
-            Under the direction of <strong>Dr. Priyanshi Pandya (MPT GPC-6673, MIAFT)</strong>, Postura by Physio provides
+            Under the direction of <strong>Dr. Priyanshi Pandya (MPT, MIAFT)</strong>, Postura by Physio provides
             professional physiotherapy and fitness care with an emphasis on posture correction, movement
             improvement, and long-term wellness.
         </>

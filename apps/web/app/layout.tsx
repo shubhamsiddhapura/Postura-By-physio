@@ -28,7 +28,7 @@ const cabinetGrotesk = localFont({
 
 export const metadata: Metadata = {
   title: "Postura by Physio",
-  description: "Dr Priyanshi Pandya(MPT GPC-6673, MIAFT)",
+  description: "Dr Priyanshi Pandya(MPT, MIAFT)",
 };
 
 export default function RootLayout({

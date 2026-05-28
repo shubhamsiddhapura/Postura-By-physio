@@ -82,7 +82,7 @@ export default function PilatesProgramPage() {
           }
           description="At Postura by Physio, our Pilates Program focuses on developing deep core strength, improving posture, and enhancing body control through structured and precise movements."
           description2="Unlike traditional workouts, Pilates emphasizes quality over quantity — helping you move better, reduce strain on joints, and build a strong foundation for daily activities and overall fitness."
-          image={{ src: "/pilates-program-1.png", alt: "pilates program" }}
+          image={{ src: "/pilates-program-1.jpg", alt: "pilates program" }}
           watermarkSrc="/logo-svg.png"
         />
       </div>

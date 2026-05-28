@@ -37,7 +37,7 @@ export const SITE_KNOWLEDGE: readonly KnowledgeEntry[] = [
     title: "Home",
     category: "core",
     summary:
-      "Landing page introducing Postura by Physio (Dr Priyanshi Pandya, MPT GPC-6673, MIAFT) — combining evidence-based physiotherapy with structured fitness programs for posture, mobility, and long-term wellness.",
+      "Landing page introducing Postura by Physio (Dr Priyanshi Pandya, MPT, MIAFT) — combining evidence-based physiotherapy with structured fitness programs for posture, mobility, and long-term wellness.",
     keywords: ["home", "homepage", "main", "overview", "postura"],
   },
   {
@@ -45,7 +45,7 @@ export const SITE_KNOWLEDGE: readonly KnowledgeEntry[] = [
     title: "About Us",
     category: "core",
     summary:
-      "Learn about Dr Priyanshi Pandya (MPT GPC-6673, MIAFT), the brand's vision and mission, treatment philosophy, and the story behind Postura by Physio.",
+      "Learn about Dr Priyanshi Pandya (MPT, MIAFT), the brand's vision and mission, treatment philosophy, and the story behind Postura by Physio.",
     keywords: ["about", "doctor", "physiotherapist", "story", "mission", "vision"],
   },
   {

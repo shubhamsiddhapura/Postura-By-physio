@@ -1,4 +1,6 @@
+import { prisma } from "@repo/db";
 import type { ApiResponse, BlogDto } from "@repo/types";
+import { serializeBlog } from "@/lib/api/serializers";
 
 /**
  * Server-side fetcher for the public web pages.
@@ -33,6 +35,16 @@ async function fetchJson<T>(
 export async function getPublishedBlogs(): Promise<BlogDto[]> {
   const res = await fetchJson<BlogDto[]>("/api/blogs?published=true&limit=100");
   return res?.data ?? [];
+}
+
+export async function getPublishedBlogsForSitemap(): Promise<BlogDto[]> {
+  const blogs = await prisma.blog.findMany({
+    where: { published: true },
+    orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
+    take: 100,
+  });
+
+  return blogs.map(serializeBlog);
 }
 
 export async function getBlogByIdOrSlug(

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { getPublishedBlogs } from "@/lib/blogs";
+import { getPublishedBlogsForSitemap } from "@/lib/blogs";
 
 const SITE_URL = "https://www.posturabyphysio.com";
 
@@ -35,9 +35,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Intentionally omitted: /share-your-story (noindex)
   ];
 
-  const blogs = await getPublishedBlogs();
+  const blogs = await getPublishedBlogsForSitemap();
   const blogRoutes: MetadataRoute.Sitemap = blogs.map((b) => ({
-    url: `${SITE_URL}/blogs/${encodeURIComponent(b.id)}`,
+    url: `${SITE_URL}/blogs/${encodeURIComponent(b.slug ?? b.id)}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.6,

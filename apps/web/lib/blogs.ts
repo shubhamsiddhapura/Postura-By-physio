@@ -33,11 +33,6 @@ async function fetchJson<T>(
 }
 
 export async function getPublishedBlogs(): Promise<BlogDto[]> {
-  const res = await fetchJson<BlogDto[]>("/api/blogs?published=true&limit=100");
-  return res?.data ?? [];
-}
-
-export async function getPublishedBlogsForSitemap(): Promise<BlogDto[]> {
   const blogs = await prisma.blog.findMany({
     where: { published: true },
     orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
@@ -45,6 +40,10 @@ export async function getPublishedBlogsForSitemap(): Promise<BlogDto[]> {
   });
 
   return blogs.map(serializeBlog);
+}
+
+export async function getPublishedBlogsForSitemap(): Promise<BlogDto[]> {
+  return getPublishedBlogs();
 }
 
 export async function getBlogByIdOrSlug(

@@ -2,24 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { useState, useEffect } from "react";
 import { scrollToHash, useSmoothHashScroll } from "../../lib/scroll";
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Who Can Join", href: "#who-can-join" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "FAQs", href: "#faqs" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Gallery", href: "/gallery" },
+  { label: "Blog", href: "/blogs" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHome = pathname === "/";
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    // Keep parent tabs active for nested routes (e.g. /blogs/[id]).
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,9 +48,34 @@ export function Navbar() {
 
   useSmoothHashScroll({ extraOffsetPx: 12 });
 
+  const handleNavClick = (href: string, opts?: { closeMenu?: boolean }) => (e: React.MouseEvent) => {
+    // Let normal navigation happen for non-hash links
+    if (!href.startsWith("#")) {
+      if (opts?.closeMenu) setIsMenuOpen(false);
+      return;
+    }
+
+    // Hash links:
+    // - on Home: smooth scroll
+    // - on other pages: navigate to home with hash
+    e.preventDefault();
+    if (opts?.closeMenu) setIsMenuOpen(false);
+
+    if (isHome) {
+      scrollToHash(href, { extraOffsetPx: 12 });
+    } else {
+      router.push(`/${href}`);
+    }
+  };
+
   return (
-    <header className="fixed inset-x-0 top-3 z-50">
-      <div className="mx-auto max-w-[90vw] md:px-4 py-3">
+    <header className="fixed inset-x-0 top-0 z-50 pt-3">
+      {/* Ensures the top padding area (above the pill) doesn't show page content while scrolling */}
+      <div
+        aria-hidden
+        className={`pointer-events-none mx-auto max-w-[88vw] md:max-w-[86vw] lg:max-w-[88vw] lg:h-auto h-14 rounded-bl-3xl rounded-br-lg absolute inset-0 -z-10 backdrop-blur-sm transition-colors duration-300`}
+      />
+      <div className="mx-auto max-w-[90vw] md:px-4">
         <div
           data-scroll-header
           className={`flex items-center justify-between rounded-tl-lg rounded-bl-3xl rounded-tr-3xl rounded-br-lg backdrop-blur-md pl-4 py-3 shadow-sm transition-all duration-300 ${isScrolled
@@ -49,10 +84,12 @@ export function Navbar() {
             }`}
         >
           <Link
-            href="#home"
+            href="/"
             onClick={(e) => {
-              e.preventDefault();
-              scrollToHash("#home", { extraOffsetPx: 12 });
+              if (isHome) {
+                e.preventDefault();
+                scrollToHash("#home", { extraOffsetPx: 12 });
+              }
             }}
             className="flex items-center gap-3"
           >
@@ -66,16 +103,19 @@ export function Navbar() {
             />
           </Link>
 
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-7 lg:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToHash(item.href, { extraOffsetPx: 12 });
-                }}
-                className="text-sm font-medium transition-colors text-white hover:text-secondary"
+                onClick={handleNavClick(item.href)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={[
+                  "relative text-sm font-normal transition-colors",
+                  isActive(item.href)
+                    ? "text-secondary font-semibold after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:rounded-full after:bg-secondary"
+                    : "text-white hover:text-secondary",
+                ].join(" ")}
               >
                 {item.label}
               </Link>
@@ -84,16 +124,16 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <PrimaryCTAButton
-              href="https://wa.me/916354011290"
+              href="/book-a-session"
               label="Book Session"
               size="md"
-              className="hidden pr-8 md:block"
+              className="hidden lg:block mr-6"
             />
 
             <button
               type="button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden pr-5 transition-transform duration-200"
+              className="lg:hidden pr-5 transition-transform duration-200"
               aria-label="Toggle menu"
             >
               {isMenuOpen ? (
@@ -109,34 +149,36 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Collapsed menu (shown on mobile + tablet-portrait, ≤ 1023px) */}
         <div
-          className={`mt-2 rounded-lg backdrop-blur-md md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isScrolled
+          className={`mt-2 rounded-lg backdrop-blur-md lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isScrolled
               ? "bg-primary/60"
               : "bg-white/10"
             } ${isMenuOpen
-              ? "max-h-96 opacity-100 p-4"
+              ? "max-h-[70vh] opacity-100 p-3 overflow-y-auto"
               : "max-h-0 opacity-0 p-0"
             }`}
         >
-          <nav className="flex flex-col gap-3">
+          <nav className="flex flex-col gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setIsMenuOpen(false);
-                  scrollToHash(item.href, { extraOffsetPx: 0 });
-                }}
-                className="text-sm font-medium transition-colors text-white hover:text-secondary "
+                onClick={handleNavClick(item.href, { closeMenu: true })}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={[
+                  "rounded-md px-2 py-1.5 text-sm font-medium transition-colors",
+                  isActive(item.href)
+                    ? "bg-secondary/15 text-secondary"
+                    : "text-white hover:text-secondary",
+                ].join(" ")}
               >
                 {item.label}
               </Link>
             ))}
             <div className="pt-2">
               <PrimaryCTAButton
-                href="https://wa.me/916354011290"
+                href="/book-a-session"
                 label="Book Session"
                 size="sm"
                 className="justify-center"

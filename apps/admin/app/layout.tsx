@@ -1,12 +1,32 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
+import { AppShell } from "@/components/AppShell";
 
-const inter = Inter({ subsets: ["latin"] });
+const switzer = localFont({
+  src: [
+    {
+      path: "../public/fonts/Switzer-Variable.ttf",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/Switzer-VariableItalic.ttf",
+      style: "italic",
+    },
+  ],
+  variable: "--font-switzer",
+  display: "swap",
+});
+
+const cabinetGrotesk = localFont({
+  src: "../public/fonts/CabinetGrotesk-Variable.ttf",
+  variable: "--font-cabinet",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: "Admin — Dr Priyanshi Pandya(PT)",
-  description: "Admin dashboard for Dr Priyanshi Pandya(PT)",
+  title: "Admin — Postura by Physio",
+  description: "Admin dashboard for Postura by Physio",
 };
 
 export default function RootLayout({
@@ -16,7 +36,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body
+        className={`${switzer.variable} ${cabinetGrotesk.variable} font-switzer`}
+      >
+        <AppShell>{children}</AppShell>
+      </body>
     </html>
   );
 }

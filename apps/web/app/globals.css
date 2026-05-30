@@ -21,3 +21,41 @@ h1, h2, h3, h4, h5, h6 {
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
+
+/*
+ * Infinite horizontal marquee used by the "Hear From Our Clients"
+ * media strip on /testimonials. The track renders the items twice and
+ * translates by -50%, so the loop is seamless. Hovering the lane
+ * pauses the animation for both directions; users with
+ * prefers-reduced-motion see a static row.
+ */
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll var(--marquee-duration, 40s) linear infinite;
+  /* `width: max-content` lets the duplicated children determine the
+     track width so the -50% translate lands exactly one set of items
+     in. Without it, flex would compress the items and break the loop. */
+  width: max-content;
+}
+
+.marquee-track-reverse {
+  animation-direction: reverse;
+}
+
+.marquee-lane:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

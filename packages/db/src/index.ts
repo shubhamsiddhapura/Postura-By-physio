@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -20,8 +20,13 @@ export type {
   Blog,
   Testimonial,
   GalleryImage,
+  Certification,
   Service,
   AdminUser,
+  Booking,
+  AvailabilitySlot,
 } from "@prisma/client";
 
 export { Prisma } from "@prisma/client";
+
+export type BlockedDate = Prisma.BlockedDateGetPayload<{}>;

@@ -1,7 +1,7 @@
  "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import Image from "next/image";
 import { PrimaryCTAButton } from "../ui/PrimaryCTAButton";
 import { FadeIn } from "../ui/FadeIn";
@@ -46,14 +46,14 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section id="faqs" className="bg-white py-16 md:pb-24 pt-5 md:pt-10 overflow-x-hidden">
+    <section id="faqs" className="bg-white py-10 overflow-x-hidden">
       <div className="mx-auto max-w-[90vw] md:px-4">
         <div className="grid gap-10 md:grid-cols-[0.9fr,1.4fr] md:items-start">
           {/* Left copy */}
           <div className="text-center md:text-left">
             <FadeIn direction="up" duration={800} distance={28} delay={0}>
               <div className="flex items-center gap-2 text-xs justify-center md:justify-start font-semibold uppercase tracking-[0.18em] text-primary">
-                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="Sparkle icon" width={16} height={16} className="h-4 w-4" />
                 <span>You Ask. We Answer.</span>
               </div>
               <h2 className="mt-4 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
@@ -114,11 +114,20 @@ export function FaqSection() {
                             : "border-secondary bg-secondary text-white"
                         }`}
                       >
-                        <ChevronDown
-                          className={`h-4 w-4 transition-transform duration-300 ${
-                            isOpen ? "rotate-180" : ""
-                          }`}
-                        />
+                        <span className="relative block h-5 w-5">
+                          <Plus
+                            className={`absolute inset-0 h-5 w-5 transition-all duration-300 ${
+                              isOpen ? "scale-75 opacity-0 rotate-90" : "scale-100 opacity-100 rotate-0"
+                            }`}
+                            strokeWidth={2.5}
+                          />
+                          <Minus
+                            className={`absolute inset-0 h-5 w-5 transition-all duration-300 ${
+                              isOpen ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                            }`}
+                            strokeWidth={2.5}
+                          />
+                        </span>
                       </span>
                     </span>
                   </button>
@@ -141,7 +150,7 @@ export function FaqSection() {
               href="#contact"
               label="Still have question?"
               size="sm"
-              className="md:hidden flex justify-center items-center w-40"
+              className="md:hidden"
               arrowVariant="dark"
               onClick={(e) => {
                 e.preventDefault();

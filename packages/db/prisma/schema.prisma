@@ -1,5 +1,9 @@
 generator client {
   provider = "prisma-client-js"
+  // "native" builds the engine for your local OS (Windows here); the RHEL
+  // target is required for Vercel/AWS Lambda serverless runtimes. Without
+  // it, Prisma crashes on cold start in production with no helpful body.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -10,46 +14,135 @@ datasource db {
 
 model Blog {
   id          String    @id @default(cuid())
-  title       String
   slug        String    @unique
-  excerpt     String
-  content     String    @db.Text
-  coverImage  String?
-  published   Boolean   @default(false)
-  publishedAt DateTime?
-  tags        String[]
-  author      String    @default("Dr. Name")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
+  // --- Hero (required) ---
+  title     String
+  eyebrow   String
+  excerpt   String
+  imageSrc  String
+  author    String    @default("Dr. Priyanshi Pandya")
+  tags      String[]  @default([])
+  published Boolean   @default(false)
+  publishedAt DateTime?
+
+  // --- Introduction section (required) ---
+  introEyebrow      String
+  introTitle        String
+  introDescription  String
+  introDescription2 String?
+  introImageSrc     String
+  introImageAlt     String?
+
+  // --- Causes section (optional) ---
+  // `causesItems` is a JSON array of { title, description, icon }
+  causesEyebrow     String?
+  causesTitle       String?
+  causesDescription String?
+  causesColumns     Int?
+  causesItems       Json?
+
+  // --- Symptoms section (required) ---
+  symptomsEyebrow     String
+  symptomsTitle       String
+  symptomsDescription String
+  symptomsBullets     String[] @default([])
+  symptomsImageSrc    String
+  symptomsImageAlt    String?
+  symptomsFlipImage   Boolean  @default(false)
+
+  // --- Solutions section (optional) ---
+  // `solutionsItems` is a JSON array of { title, description, icon }
+  solutionsEyebrow     String?
+  solutionsTitle       String?
+  solutionsDescription String?
+  solutionsItems       Json?
+
+  // --- Conclusion section (optional) ---
+  conclusionTitle      String?
+  conclusionParagraphs String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published, publishedAt])
   @@map("blogs")
 }
 
 model Testimonial {
   id        String   @id @default(cuid())
+  tag       String
+  quote     String
   name      String
-  role      String?
-  content   String
-  rating    Int      @default(5)
+  age       Int
+  /// Profile photo URL. Optional — public submission form lets the patient
+  /// skip it; the public card falls back to an initials/avatar glyph.
   avatar    String?
-  featured  Boolean  @default(false)
-  approved  Boolean  @default(false)
+  // 1-5 star rating rendered at the top-left of each testimonial card.
+  // Enforced at the API layer; stored as a plain int for simplicity.
+  rating    Int      @default(5)
+  /// Extra photos uploaded alongside a testimonial (recovery before/after,
+  /// session shots, etc.). Stored as URL strings in submission order.
+  photos    String[] @default([])
+  /// Video URLs (e.g. patient story clips). Stored in submission order.
+  videos    String[] @default([])
+  order     Int      @default(0)
+  /// New rows submitted via the public share-your-story form default to
+  /// `false` so the admin reviews them before they appear on the site.
+  /// Admin-created rows still default to `true`.
+  published Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([published, order])
   @@map("testimonials")
 }
 
-model GalleryImage {
+/// A professional certification displayed on the public About page.
+///
+/// Rendered in a hover-pausable horizontal marquee. The admin uploads
+/// the certificate scan/photo plus a short label ("Certification of
+/// Cupping therapy") and the order they should appear in.
+model Certification {
   id        String   @id @default(cuid())
-  url       String
-  publicId  String
-  caption   String?
-  category  String?
+  /// Public URL of the certificate image (CDN URL or `/public/...` path).
+  imageUrl  String
+  /// Caption rendered below the image on the About page.
+  title     String
+  /// Alt text for accessibility / SEO.
+  alt       String
   order     Int      @default(0)
+  /// `false` keeps the certificate in the admin list but hides it from
+  /// the public site. New rows default to `true`.
+  published Boolean  @default(true)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+  @@index([published, order])
+  @@map("certifications")
+}
+
+model GalleryImage {
+  id        String          @id @default(cuid())
+  url       String
+  alt       String
+  category  GalleryCategory
+  order     Int             @default(0)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([category, order])
   @@map("gallery_images")
+}
+
+enum GalleryCategory {
+  physiotherapy
+  aerobics
+  yoga
+  pilates
+  corporate
+
+  @@map("gallery_category")
 }
 
 model Service {
@@ -65,6 +158,112 @@ model Service {
   updatedAt   DateTime @updatedAt
 
   @@map("services")
+}
+
+/// Appointment request from the public site.
+///
+/// Created by POST /api/bookings from either:
+///   - /book-a-session directly, or
+///   - /patient-interaction -> confirm -> /book-a-session
+/// When coming from the patient-interaction flow the optional profile*,
+/// activityLevel, discomfortArea, and possibleCause fields are filled
+/// from the on-page questionnaire.
+model Booking {
+  id                String         @id @default(cuid())
+
+  // --- Program selection + contact ---
+  program           BookingProgram
+  fullName          String
+  phone             String
+  email             String
+
+  /// Canonical UTC timestamp of the requested appointment. This is the
+  /// single source of truth — the admin UI renders it in the admin's
+  /// browser timezone, customer emails render it in `patientTimezone`,
+  /// and admin emails render it in the clinic timezone.
+  /// Nullable only because bookings predating timezone support exist;
+  /// every new booking populates it.
+  preferredDateTimeUtc DateTime?
+  /// IANA timezone the customer's browser reported at submission time
+  /// (e.g. "America/New_York"). Kept for auditing and for formatting
+  /// reschedule / confirmation emails in the patient's own timezone.
+  patientTimezone   String?
+  /// Patient-local display string captured at submission
+  /// ("Apr 20, 2026, 10:00 AM"). Kept for quick display and legacy rows.
+  preferredDateTime String
+
+  // Optional on the public form
+  consultationType  String? // "Home visit" | "Online" | "Phone" | "Society / group" | null
+  /// Specific service the patient requested when booking (e.g.
+  /// "Orthopedic Physiotherapy", "Yoga Therapy"). Stored as free-form
+  /// text so the catalog can grow without a DB migration; the canonical
+  /// list lives in `BOOKING_SERVICES` in @repo/types.
+  service           String?
+  address           String?
+  message           String?
+
+  // --- Optional questionnaire answers (only set if user came from /patient-interaction) ---
+  profileAbout      String? // e.g. "IT / Software Professional"
+  activityLevel     String? // e.g. "6 - 8 hours sitting"
+  discomfortArea    String? // e.g. "Lower Back"
+  possibleCause     String? // e.g. "Prolonged sitting / Poor posture"
+
+  // --- Admin workflow ---
+  status            BookingStatus  @default(pending)
+  notes             String? // admin-only internal notes
+
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([status, createdAt])
+  @@map("bookings")
+}
+
+enum BookingProgram {
+  physiotherapy
+  fitness
+
+  @@map("booking_program")
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  completed
+  cancelled
+
+  @@map("booking_status")
+}
+
+/// Weekly availability template. One row per (dayOfWeek x time) slot the
+/// clinic is willing to offer. Absence of a row for a given day = no
+/// bookings accepted that day. Queried by the public booking calendar and
+/// edited in the admin "Availability" tab.
+model AvailabilitySlot {
+  id        String @id @default(cuid())
+  dayOfWeek Int // 0 = Sunday ... 6 = Saturday (matches JS Date.getDay())
+  time      String // Display string, e.g. "10:00 AM" — shown verbatim to customers
+  sortKey   Int // Minutes-of-day (e.g. 600 for 10:00 AM) for chronological sort
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([dayOfWeek, time])
+  @@index([dayOfWeek, sortKey])
+  @@map("availability_slots")
+}
+
+/// Specific dates blocked entirely (public holidays, clinic closure,
+/// personal leave). Overrides the weekly template.
+model BlockedDate {
+  id     String   @id @default(cuid())
+  date   DateTime @unique @db.Date
+  reason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blocked_dates")
 }
 
 model AdminUser {

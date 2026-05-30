@@ -1,6 +1,7 @@
- "use client";
+"use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRef, useEffect } from "react";
 import { FadeIn } from "../ui/FadeIn";
@@ -124,7 +125,7 @@ export function MomentsOfProgress() {
           <FadeIn direction="up" duration={800} distance={30} delay={0}>
             <div className="text-center md:text-left">
               <div className="flex items-center gap-2 text-sm justify-center md:justify-start font-medium text-primary">
-                <Image src="/sparkle.svg" alt="" width={16} height={16} className="h-4 w-4" />
+                <Image src="/sparkle.svg" alt="Sparkle icon" width={16} height={16} className="h-4 w-4" />
                 <span>Moments of Progress</span>
               </div>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight text-gray-900 md:text-5xl">
@@ -136,11 +137,21 @@ export function MomentsOfProgress() {
           </FadeIn>
 
           <FadeIn direction="up" duration={800} distance={30} delay={150}>
-            <p className="max-w-lg text-sm leading-6 text-gray-500 md:text-[13px] text-center md:text-left">
-              See how we bring physiotherapy and fitness together in real-life
-              settings — helping people move better, feel stronger, and live
-              healthier.
-            </p>
+            <div className="mx-auto flex max-w-lg flex-col text-center justify-between md:mx-0 md:text-left">
+              <p className="text-sm leading-6 text-gray-500 md:text-[13px]">
+                See how we bring physiotherapy and fitness together in real-life
+                settings — helping people move better, feel stronger, and live
+                healthier.
+              </p>
+              <Link
+                href="/gallery"
+                prefetch
+                className="mt-5 inline-flex items-center justify-center gap-1.5 text-sm font-medium text-primary underline decoration-primary decoration-2 underline-offset-[10px] transition hover:text-primary/90 md:justify-start"
+              >
+                View Gallery
+                <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+              </Link>
+            </div>
           </FadeIn>
         </div>
 
